@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edna Pedraza</title>
+  <meta name="description" content="Clon de estudio no oficial del portafolio de Edna Pedraza, Directora Creativa y Estilista de Moda: selección de proyectos de dirección creativa, estilismo y dirección de arte.">
+  <meta name="theme-color" content="#f2ce3d">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body class="page-home" data-page="home">
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <div class="home-bg" data-home-bg aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <h1 class="brand__name">Edna Pedraza</h1>
+      <p class="brand__role">Directora Creativa y Estilista de Moda</p>
+    </a>
+
+    <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="site-menu">
+      <span class="menu-toggle__labels" aria-hidden="true">
+        <span class="menu-toggle__label menu-toggle__label--menu">Menu</span>
+        <span class="menu-toggle__label menu-toggle__label--close">Close</span>
+      </span>
+      <span class="visually-hidden">Menú</span>
+    </button>
+    <nav class="site-menu" id="site-menu" aria-label="Principal">
+      <ul class="site-menu__list">
+        <li class="site-menu__item" style="--i: 0"><a class="site-menu__link" href="index.html" aria-current="page"><span>00.</span><span lang="en">Home</span></a></li>
+        <li class="site-menu__item" style="--i: 1"><a class="site-menu__link" href="about.html"><span>01.</span><span lang="en">About</span></a></li>
+        <li class="site-menu__item" style="--i: 2"><a class="site-menu__link" href="contact.html"><span>02.</span><span lang="en">Contact</span></a></li>
+        <li class="site-menu__item" style="--i: 3"><a class="site-menu__link" href="index.html"><span>03.</span><span lang="en">Works</span></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="home" tabindex="-1">
+    <h2 class="visually-hidden">Proyectos</h2>
+    <ul class="work-list" data-work-list></ul>
+    <ul class="work-grid" data-work-grid></ul>
+    <noscript>
+      <p class="noscript-note">La lista de proyectos se genera con JavaScript a partir de <code>js/data.js</code>. Activa JavaScript para verla, o visita <a href="about.html">About</a> y <a href="contact.html">Contact</a>.</p>
+    </noscript>
+  </main>
+</body>
+</html>
