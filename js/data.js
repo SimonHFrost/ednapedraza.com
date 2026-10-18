@@ -15,9 +15,9 @@
  *   description Array of text runs; runs at odd positions are rendered bold
  *   credits     Credit lines in the right-hand column
  *
- * Everything marked "ejemplo" is PLACEHOLDER content: the photographs,
- * descriptions and credits of the original site are intentionally not copied.
- * Swap in licensed images and approved copy here (see README.md).
+ * description and credits may be empty arrays: the project page then omits
+ * that block. Images are still placeholder illustrations; swap in the real
+ * photographs here.
  */
 (function () {
   'use strict';
@@ -30,21 +30,6 @@
     return list;
   }
 
-  var PLACEHOLDER_CREDITS = ['Fotografía: Nombre Apellido', 'Producción: Nombre Apellido'];
-
-  var SHORT_COPY = [
-    'Texto de ejemplo: aquí va una breve descripción del proyecto, con una ',
-    'frase destacada en negritas',
-    ' y una línea final sobre el concepto. Sustituye este párrafo por el texto aprobado.'
-  ];
-
-  var LONG_COPY = [
-    'Texto de ejemplo para la descripción del proyecto. Este párrafo ocupa más o menos el mismo espacio que el original para conservar la composición: ',
-    'nombre de la publicación',
-    ', concepto general y una idea sobre la colección o la campaña. Reemplázalo por la descripción real y verificada del ',
-    'proyecto y su temporada.'
-  ];
-
   window.PROJECTS = [
     {
       slug: 'frutifantastimeow',
@@ -55,8 +40,8 @@
       pill: 'rgb(250, 20, 250)',
       hero: IMG + 'frutifantastimeow-hero.svg',
       gallery: gallery('frutifantastimeow', 4),
-      description: LONG_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'coca-cola-alina',
@@ -67,8 +52,8 @@
       pill: 'rgb(89, 41, 41)',
       hero: null, // the live page shows an empty media frame here
       gallery: gallery('coca-cola-alina', 3),
-      description: LONG_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'fabrica-social',
@@ -79,8 +64,8 @@
       pill: 'rgb(34, 54, 61)',
       hero: IMG + 'fabrica-social-hero.svg',
       gallery: gallery('fabrica-social', 4),
-      description: SHORT_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'harpers-mx',
@@ -91,8 +76,8 @@
       pill: 'rgb(21, 31, 56)',
       hero: IMG + 'harpers-mx-hero.svg',
       gallery: gallery('harpers-mx', 4),
-      description: SHORT_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'crocs-meow',
@@ -103,8 +88,8 @@
       pill: 'rgb(37, 38, 38)',
       hero: IMG + 'crocs-meow-hero.svg',
       gallery: gallery('crocs-meow', 4),
-      description: LONG_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'tqm-meow',
@@ -115,8 +100,8 @@
       pill: 'rgb(51, 71, 46)',
       hero: IMG + 'tqm-meow-hero.svg',
       gallery: gallery('tqm-meow', 3),
-      description: SHORT_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'mabel-meow',
@@ -127,8 +112,8 @@
       pill: 'rgb(69, 31, 31)',
       hero: IMG + 'mabel-meow-hero.svg',
       gallery: gallery('mabel-meow', 4),
-      description: SHORT_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'skechers-meow',
@@ -139,8 +124,8 @@
       pill: 'rgb(26, 58, 82)',
       hero: IMG + 'skechers-meow-hero.svg',
       gallery: gallery('skechers-meow', 4),
-      description: LONG_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'kfc-alina',
@@ -151,8 +136,8 @@
       pill: 'rgb(42, 26, 61)',
       hero: IMG + 'kfc-alina-hero.svg',
       gallery: gallery('kfc-alina', 3),
-      description: SHORT_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'meowndalista',
@@ -163,8 +148,8 @@
       pill: 'rgb(35, 64, 58)',
       hero: IMG + 'meowndalista-hero.svg',
       gallery: gallery('meowndalista', 4),
-      description: LONG_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     },
     {
       slug: 'ben-frank',
@@ -175,8 +160,8 @@
       pill: 'rgb(17, 194, 35)',
       hero: IMG + 'ben-frank-hero.svg',
       gallery: gallery('ben-frank', 5),
-      description: SHORT_COPY,
-      credits: PLACEHOLDER_CREDITS
+      description: [],
+      credits: []
     }
   ];
 

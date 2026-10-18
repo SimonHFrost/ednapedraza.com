@@ -1,5 +1,5 @@
 /*
- * Shared behaviour + page renderers for the Edna Pedraza study clone.
+ * Shared behaviour + page renderers for the Edna Pedraza site.
  * Classic script (works over file:// and http). Depends on js/data.js.
  * Each page declares itself with <body data-page="home|project|about|contact|404">.
  */
@@ -242,6 +242,18 @@
       }));
   }
 
+  /** Description and credits are optional; with neither, the block is left out. */
+  function buildBody(project) {
+    var parts = [];
+    if (project.description.length) parts.push(buildLede(project.description));
+    if (project.credits.length) {
+      parts.push(el('ul', { class: 'project__credits', 'aria-label': 'Créditos' }, project.credits.map(function (line) {
+        return el('li', {}, [line]);
+      })));
+    }
+    return parts.length ? el('div', { class: 'project__body' }, parts) : null;
+  }
+
   function buildPagerItem(project, direction) {
     var isPrev = direction === 'prev';
     return el('li', { class: 'pager__item pager__item--' + direction }, [
@@ -287,19 +299,14 @@
     var project = PROJECTS[index];
     applyProjectTheme(project);
     document.title = project.title + ' — ' + SITE_NAME;
-    setMeta('description', project.title + ' (' + project.discipline + '): ficha de proyecto en el clon de estudio no oficial del portafolio de Edna Pedraza.');
+    setMeta('description', project.title + ' (' + project.discipline + '): proyecto de Edna Pedraza, Directora Creativa y Estilista de Moda.');
 
     var article = el('article', { class: 'project', 'aria-labelledby': 'project-title' }, [
       buildTags(project),
       el('h1', { class: 'project__title', id: 'project-title' }, [project.title]),
       el('hr', { class: 'project__rule' }),
       buildHero(project),
-      el('div', { class: 'project__body' }, [
-        buildLede(project.description),
-        el('ul', { class: 'project__credits', 'aria-label': 'Créditos' }, project.credits.map(function (line) {
-          return el('li', {}, [line]);
-        }))
-      ]),
+      buildBody(project),
       buildGallery(project)
     ]);
 
