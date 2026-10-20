@@ -216,7 +216,7 @@
     return el('figure', { class: 'project__hero' }, [
       el('img', {
         src: project.hero,
-        alt: 'Ilustración de ejemplo (marcador de posición) para el proyecto ' + project.title + '.',
+        alt: project.title + ': imagen principal.',
         width: 1600,
         height: 1000,
         decoding: 'async',
@@ -232,7 +232,7 @@
         return el('li', {}, [
           el('img', {
             src: src,
-            alt: 'Ilustración de ejemplo ' + (i + 1) + ' de ' + total + ' para ' + project.title + '.',
+            alt: project.title + ': foto ' + (i + 1) + ' de ' + total + '.',
             width: 800,
             height: 800,
             loading: 'lazy',
@@ -334,7 +334,7 @@
       list.appendChild(el('li', { class: 'masonry__item' }, [
         el('img', {
           src: image.src,
-          alt: 'Ilustración abstracta de ejemplo ' + (i + 1) + ' (marcador de posición).',
+          alt: 'Trabajo de Edna Pedraza, foto ' + (i + 1) + '.',
           width: image.width,
           height: image.height,
           loading: 'lazy',
