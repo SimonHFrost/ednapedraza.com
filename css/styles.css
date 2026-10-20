@@ -332,10 +332,10 @@ main:focus {
   outline-offset: 3px;
 }
 
-/* Two stacked labels in a clipped box: MENU slides up, CLOSE slides in. */
+/* Two stacked labels in a clipped box: MENÚ slides up, CERRAR slides in. */
 .menu-toggle__labels {
   display: grid;
-  width: 35px;
+  width: 6ch;
   height: 15px;
   overflow: hidden;
   overflow: clip;
