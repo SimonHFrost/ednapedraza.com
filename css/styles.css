@@ -247,6 +247,7 @@ main:focus {
 
 .brand {
   position: absolute;
+  z-index: 3; /* above the home list, which otherwise covers it and eats clicks */
   top: 20px;
   left: var(--gutter);
   display: block;

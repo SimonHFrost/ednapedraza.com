@@ -61,6 +61,35 @@
     if (link) link.setAttribute('aria-current', 'page');
   }
 
+  /* --------------------------------------------------------------- scroll */
+
+  /** Smooth-scrolls to the home contact section: on clicks of a Contact link
+      while already on the home page (which would otherwise reload or jump),
+      and on arrival from another page via index.html#contacto, which
+      browsers jump to instantly. */
+  function initContactScroll() {
+    var target = document.getElementById('contacto');
+    if (!target) return;
+
+    function scrollToContact() {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    if (window.location.hash === '#contacto') {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
+      window.setTimeout(scrollToContact, 300);
+    }
+
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest && event.target.closest('a[href$="#contacto"]');
+      if (!link || event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+      event.preventDefault();
+      if (window.location.hash !== '#contacto') history.pushState(null, '', '#contacto');
+      scrollToContact();
+    });
+  }
+
   /* ------------------------------------------------------------------ home */
 
   function buildBackgroundLayer(project, index, baseIndex) {
@@ -416,6 +445,7 @@
   };
 
   function boot() {
+    initContactScroll();
     initContactForm();
     var render = RENDERERS[document.body.getAttribute('data-page')];
     if (render) render();
