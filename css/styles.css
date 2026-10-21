@@ -112,6 +112,7 @@
   --fs-bio: 20px;
   --fs-small: 15px;        /* about footer, 404 copy, form button */
   --fs-label: 12px;        /* mono labels */
+  --fs-menu: 17px;         /* always-visible menu */
   --fs-count: 450px;       /* 404 countdown */
 
   /* spacing */
@@ -317,29 +318,29 @@ main:focus {
 
 .site-menu__list {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  gap: 8px 24px;
+  max-width: 52vw;
 }
 
 .site-menu__item {
   display: flex;
 }
 
-.site-menu__item::before {
-  content: ">";
-  margin-right: 0.6ch;
-  color: var(--c-pink);
-  font: 500 var(--fs-label) / 1.2 var(--f-mono);
-}
-
 .site-menu__link {
   display: inline-flex;
   color: var(--c-pink);
   text-decoration: none;
-  font: 500 var(--fs-label) / 1.2 var(--f-mono);
+  font: 500 var(--fs-menu) / 1.2 var(--f-mono);
   letter-spacing: -0.02em;
   text-transform: uppercase;
+}
+
+@media (max-width: 1399.98px) {
+  :root {
+    --fs-menu: 15px;
+  }
 }
 
 .site-menu__link:hover,
@@ -373,14 +374,14 @@ main:focus {
     mix-blend-mode: normal;
   }
 
-  .site-menu__list {
-    flex-flow: row wrap;
-    justify-content: center;
-    gap: 8px 16px;
+  :root {
+    --fs-menu: 14px;
   }
 
-  .site-menu__item::before {
-    content: none;
+  .site-menu__list {
+    justify-content: center;
+    gap: 8px 16px;
+    max-width: none;
   }
 
   .site-menu__link {
