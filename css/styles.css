@@ -112,6 +112,7 @@
   --fs-bio: 20px;
   --fs-small: 15px;        /* about footer, 404 copy, form button */
   --fs-label: 12px;        /* mono labels */
+  --fs-menu: 17px;         /* always-visible menu */
   --fs-count: 450px;       /* 404 countdown */
 
   /* spacing */
@@ -160,6 +161,7 @@
 }
 
 html {
+  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -272,7 +274,7 @@ main:focus {
   color: var(--c-red);
 }
 
-/* About / contact use the big name without the role line. */
+/* About uses the big name without the role line. */
 .brand--plain {
   top: 20px;
 }
@@ -303,81 +305,23 @@ main:focus {
   }
 }
 
-/* 5. Menu ------------------------------------------------------------------- */
-.menu-toggle {
-  position: absolute;
-  z-index: 5;
-  top: var(--pill-top);
-  right: var(--pill-right);
-  margin: 0;
-  padding: 18px 24px;
-  border: 0;
-  border-radius: 100px;
-  background: var(--c-purple-a50);
-  color: var(--c-cream);
-  font: 500 var(--fs-label) / 1.2 var(--f-mono);
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color var(--dur-fast) ease;
-}
-
-.menu-toggle:hover {
-  background: rgb(85 30 227 / 0.62);
-}
-
-.menu-toggle:focus-visible {
-  outline-color: var(--c-cream);
-  outline-offset: 3px;
-}
-
-/* Two stacked labels in a clipped box: MENÚ slides up, CERRAR slides in. */
-.menu-toggle__labels {
-  display: grid;
-  width: 6ch;
-  height: 15px;
-  overflow: hidden;
-  overflow: clip;
-}
-
-.menu-toggle__label {
-  grid-area: 1 / 1;
-  display: block;
-  text-align: center;
-  line-height: 14.4px;
-  transition: transform 0.35s var(--ease-in-out) 0.08s;
-}
-
-.menu-toggle__label--close {
-  transform: translateY(24.4px);
-}
-
-.menu-toggle[aria-expanded="true"] .menu-toggle__label--menu {
-  transform: translateY(-24.4px);
-}
-
-.menu-toggle[aria-expanded="true"] .menu-toggle__label--close {
-  transform: none;
-}
-
-/* Full-viewport overlay that holds the links; difference-blended like the
-   live site (pink turns green/teal over yellow images). */
+/* 5. Menu -------------------------------------------------------------------
+   Always visible, fixed top right; difference-blended like the live site's
+   menu overlay (pink turns green/teal over yellow images). */
 .site-menu {
   position: fixed;
   z-index: 4;
-  inset: 0;
-  padding: 120px 24px 24px;
-  overflow: hidden;
-  pointer-events: none;
+  top: var(--pill-top);
+  right: var(--pill-right);
   mix-blend-mode: difference;
 }
 
 .site-menu__list {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 16px;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  gap: 8px 24px;
+  max-width: 52vw;
 }
 
 .site-menu__item {
@@ -386,17 +330,22 @@ main:focus {
 
 .site-menu__link {
   display: inline-flex;
-  gap: 4px;
-  pointer-events: auto;
   color: var(--c-pink);
   text-decoration: none;
-  font: 500 var(--fs-label) / 1.2 var(--f-mono);
+  font: 500 var(--fs-menu) / 1.2 var(--f-mono);
   letter-spacing: -0.02em;
   text-transform: uppercase;
 }
 
+@media (max-width: 1399.98px) {
+  :root {
+    --fs-menu: 15px;
+  }
+}
+
 .site-menu__link:hover,
-.site-menu__link:focus-visible {
+.site-menu__link:focus-visible,
+.site-menu__link[aria-current="page"] {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -405,33 +354,43 @@ main:focus {
   outline-color: var(--c-pink);
 }
 
-/* Enhanced (JS) state: hidden until opened, links slide in from the right
-   with a stagger (measured live: 100px travel, ~0.35s each, staggered). */
-.js .site-menu {
-  visibility: hidden;
-  transition: visibility 0s linear 0.3s;
-}
+/* Phones: no room beside the brand, so the menu becomes a bar pinned to the
+   bottom of the screen, in the old menu pill's colours. */
+@media (max-width: 809.98px) {
+  body {
+    padding-bottom: 76px;
+  }
 
-.js .site-menu.is-open {
-  visibility: visible;
-  transition-delay: 0s;
-}
+  .site-menu {
+    top: auto;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    padding: 12px 16px;
+    border-radius: 24px;
+    background: var(--c-purple-a50);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    mix-blend-mode: normal;
+  }
 
-.js .site-menu__item {
-  opacity: 0;
-  transform: translateX(100px);
-  transition: opacity 0.2s ease, transform 0.3s var(--ease-out);
-}
+  :root {
+    --fs-menu: 14px;
+  }
 
-.js .site-menu.is-open .site-menu__item {
-  opacity: 1;
-  transform: none;
-  transition: opacity 0.35s ease, transform 0.45s var(--ease-out);
-  transition-delay: calc(0.12s + var(--i, 0) * 0.14s);
-}
+  .site-menu__list {
+    justify-content: center;
+    gap: 8px 16px;
+    max-width: none;
+  }
 
-.no-js .menu-toggle {
-  display: none;
+  .site-menu__link {
+    color: var(--c-cream);
+  }
+
+  .site-menu__link:focus-visible {
+    outline-color: var(--c-cream);
+  }
 }
 
 /* 6. Home ------------------------------------------------------------------- */
@@ -508,8 +467,7 @@ main:focus {
   line-height: 22px;
 }
 
-.work-row__title,
-.work-row__discipline {
+.work-row__title {
   position: relative;
   z-index: 1;
   white-space: nowrap;
@@ -537,9 +495,7 @@ main:focus {
 }
 
 .work-row:hover .work-row__title,
-.work-row:hover .work-row__discipline,
-.work-row:focus-visible .work-row__title,
-.work-row:focus-visible .work-row__discipline {
+.work-row:focus-visible .work-row__title {
   color: var(--c-white);
 }
 
@@ -940,15 +896,17 @@ html:has(.page-about) {
   }
 }
 
-/* 9. Contact --------------------------------------------------------------- */
-.page-contact {
-  --pill-top: 47px;
-  background: var(--c-contact-page);
-}
-
+/* 9. Contact ---------------------------------------------------------------
+   A full-height section below the project list on the home page; its solid
+   background covers the fixed project image as it scrolls up. */
 .contact {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-height: 100vh;
-  padding-top: 324px;
+  padding: 120px 0 24px;
+  background: var(--c-contact-page);
 }
 
 .contact__grid {
@@ -1074,10 +1032,6 @@ textarea.field__control {
 }
 
 @media (max-width: 1399.98px) {
-  .page-contact {
-    --pill-top: 20px;
-  }
-
   .contact__grid {
     grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
     column-gap: 100px;
@@ -1101,6 +1055,11 @@ textarea.field__control {
 }
 
 @media (max-width: 809.98px) {
+  .contact {
+    justify-content: flex-start;
+    padding-top: 60px;
+  }
+
   .contact__grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 50px;

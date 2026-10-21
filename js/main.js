@@ -1,7 +1,7 @@
 /*
  * Shared behaviour + page renderers for the Edna Pedraza site.
  * Classic script (works over file:// and http). Depends on js/data.js.
- * Each page declares itself with <body data-page="home|project|about|contact|404">.
+ * Each page declares itself with <body data-page="home|project|about|404">.
  */
 (function () {
   'use strict';
@@ -38,57 +38,33 @@
     if (meta) meta.setAttribute('content', content);
   }
 
-  /* ------------------------------------------------------------------ menu */
+  /* -------------------------------------------------------------- services */
 
-  function initMenu() {
-    var toggle = document.querySelector('[data-menu-toggle]');
-    var menu = toggle && document.getElementById(toggle.getAttribute('aria-controls'));
-    if (!toggle || !menu) return;
+  /** Menu filters for the home list: ?servicio=<key> keeps projects whose
+      discipline matches. "Dirección Creativa y Moda" counts as creative
+      direction only; Moda is not styling work. */
+  var SERVICES = {
+    'direccion-creativa': /Dirección Creativa/i,
+    'fashion-styling': /Fashion Styling/i,
+    'direccion-de-arte': /Arte\b/i
+  };
 
-    var links = Array.prototype.slice.call(menu.querySelectorAll('a'));
+  function currentService() {
+    var key = new URLSearchParams(window.location.search).get('servicio');
+    return SERVICES[key] ? key : null;
+  }
 
-    function isOpen() {
-      return toggle.getAttribute('aria-expanded') === 'true';
-    }
-
-    function setOpen(open, options) {
-      toggle.setAttribute('aria-expanded', String(open));
-      menu.classList.toggle('is-open', open);
-      document.documentElement.classList.toggle('menu-open', open);
-      if (open && options && options.focusFirst && links[0]) links[0].focus({ preventScroll: true });
-      if (!open && options && options.returnFocus) toggle.focus({ preventScroll: true });
-    }
-
-    toggle.addEventListener('click', function (event) {
-      // Keyboard activation (detail === 0) moves focus into the menu.
-      setOpen(!isOpen(), { focusFirst: event.detail === 0 });
-    });
-
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && isOpen()) {
-        setOpen(false, { returnFocus: true });
-      }
-    });
-
-    // Click anywhere else closes the menu.
-    document.addEventListener('click', function (event) {
-      if (!isOpen()) return;
-      if (toggle.contains(event.target) || links.some(function (a) { return a.contains(event.target); })) return;
-      setOpen(false);
-    });
-
-    // Tabbing out of the toggle + links closes it.
-    document.addEventListener('focusin', function (event) {
-      if (!isOpen()) return;
-      if (event.target === toggle || menu.contains(event.target)) return;
-      setOpen(false);
-    });
+  /** Marks the menu link for the active service filter. */
+  function markServiceLink(key) {
+    if (!key) return;
+    var link = document.querySelector('.site-menu__link[href="index.html?servicio=' + key + '"]');
+    if (link) link.setAttribute('aria-current', 'page');
   }
 
   /* ------------------------------------------------------------------ home */
 
-  function buildBackgroundLayer(project, index) {
-    var classes = 'home-bg__layer' + (index === 0 ? ' is-base' : '');
+  function buildBackgroundLayer(project, index, baseIndex) {
+    var classes = 'home-bg__layer' + (index === baseIndex ? ' is-base' : '');
     if (!project.hero) {
       return el('div', { class: classes + ' home-bg__layer--empty is-empty', 'data-index': index });
     }
@@ -99,8 +75,8 @@
         width: 1600,
         height: 1000,
         decoding: 'async',
-        loading: index === 0 ? 'eager' : 'lazy',
-        fetchpriority: index === 0 ? 'high' : null
+        loading: index === baseIndex ? 'eager' : 'lazy',
+        fetchpriority: index === baseIndex ? 'high' : null
       })
     ]);
   }
@@ -110,10 +86,7 @@
       el('a', { class: 'work-row', href: projectUrl(project), 'data-index': index }, [
         el('span', { class: 'work-row__band', 'aria-hidden': 'true' }),
         el('span', { class: 'work-row__title' }, [project.title]),
-        el('span', { class: 'work-row__discipline' }, [
-          el('span', { class: 'visually-hidden' }, [' — ']),
-          project.discipline
-        ])
+        el('span', { class: 'visually-hidden' }, [' — ' + project.discipline])
       ])
     ]);
   }
@@ -174,9 +147,20 @@
     var grid = document.querySelector('[data-work-grid]');
     if (!bg || !list || !grid) return;
 
-    var layers = PROJECTS.map(buildBackgroundLayer);
+    var service = currentService();
+    markServiceLink(service);
+    var projects = service
+      ? PROJECTS.filter(function (project) { return SERVICES[service].test(project.discipline); })
+      : PROJECTS;
+
+    // The resting background is the first project that has an image (a
+    // filtered list can start with one that doesn't).
+    var baseIndex = Math.max(0, projects.findIndex(function (project) { return project.hero; }));
+    var layers = projects.map(function (project, index) {
+      return buildBackgroundLayer(project, index, baseIndex);
+    });
     layers.forEach(function (layer) { bg.appendChild(layer); });
-    PROJECTS.forEach(function (project, index) {
+    projects.forEach(function (project, index) {
       list.appendChild(buildRow(project, index));
       grid.appendChild(buildCard(project));
     });
@@ -405,13 +389,13 @@
     return n < 10 ? '0' + n : String(n);
   }
 
-  /** Counts 08 → 01 and then goes home (pauses while the menu is open). */
+  /** Counts 08 → 01 and then goes home (pauses while the tab is hidden). */
   function startRedirectCountdown(node) {
     if (!node) return;
     var remaining = REDIRECT_SECONDS;
     node.textContent = pad(remaining);
     var timer = window.setInterval(function () {
-      if (document.documentElement.classList.contains('menu-open') || document.hidden) return;
+      if (document.hidden) return;
       remaining -= 1;
       if (remaining <= 0) {
         window.clearInterval(timer);
@@ -428,12 +412,11 @@
     home: renderHome,
     project: renderProject,
     about: renderAboutGallery,
-    contact: initContactForm,
     '404': function () { startRedirectCountdown(document.querySelector('[data-countdown]')); }
   };
 
   function boot() {
-    initMenu();
+    initContactForm();
     var render = RENDERERS[document.body.getAttribute('data-page')];
     if (render) render();
   }
