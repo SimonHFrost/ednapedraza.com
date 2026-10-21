@@ -7,7 +7,7 @@
  * Project fields
  *   slug        URL key: project.html?slug=<slug>
  *   title       Title as written in the home list (pages upper-case it in CSS)
- *   discipline  Service line shown on the right of the home row / in a pill
+ *   discipline  Service line: drives the menu filters and the project-page pill
  *   client      Client label shown in the first pill on the project page
  *   bg / pill   Page colour and pill colour of the project page
  *   hero        Hero / background image, or null when the project has none
