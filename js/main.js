@@ -1,7 +1,7 @@
 /*
  * Shared behaviour + page renderers for the Edna Pedraza site.
  * Classic script (works over file:// and http). Depends on js/data.js.
- * Each page declares itself with <body data-page="home|project|about|contact|404">.
+ * Each page declares itself with <body data-page="home|project|about|404">.
  */
 (function () {
   'use strict';
@@ -70,10 +70,11 @@
       }
     });
 
-    // Click anywhere else closes the menu.
+    // Click anywhere else closes the menu. So does a link, which matters for
+    // in-page links like index.html#contacto that don't load a new page.
     document.addEventListener('click', function (event) {
       if (!isOpen()) return;
-      if (toggle.contains(event.target) || links.some(function (a) { return a.contains(event.target); })) return;
+      if (toggle.contains(event.target)) return;
       setOpen(false);
     });
 
@@ -428,12 +429,12 @@
     home: renderHome,
     project: renderProject,
     about: renderAboutGallery,
-    contact: initContactForm,
     '404': function () { startRedirectCountdown(document.querySelector('[data-countdown]')); }
   };
 
   function boot() {
     initMenu();
+    initContactForm();
     var render = RENDERERS[document.body.getAttribute('data-page')];
     if (render) render();
   }

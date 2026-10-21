@@ -160,6 +160,7 @@
 }
 
 html {
+  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -272,7 +273,7 @@ main:focus {
   color: var(--c-red);
 }
 
-/* About / contact use the big name without the role line. */
+/* About uses the big name without the role line. */
 .brand--plain {
   top: 20px;
 }
@@ -940,15 +941,17 @@ html:has(.page-about) {
   }
 }
 
-/* 9. Contact --------------------------------------------------------------- */
-.page-contact {
-  --pill-top: 47px;
-  background: var(--c-contact-page);
-}
-
+/* 9. Contact ---------------------------------------------------------------
+   A full-height section below the project list on the home page; its solid
+   background covers the fixed project image as it scrolls up. */
 .contact {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-height: 100vh;
-  padding-top: 324px;
+  padding: 120px 0 24px;
+  background: var(--c-contact-page);
 }
 
 .contact__grid {
@@ -1074,10 +1077,6 @@ textarea.field__control {
 }
 
 @media (max-width: 1399.98px) {
-  .page-contact {
-    --pill-top: 20px;
-  }
-
   .contact__grid {
     grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
     column-gap: 100px;
@@ -1101,6 +1100,11 @@ textarea.field__control {
 }
 
 @media (max-width: 809.98px) {
+  .contact {
+    justify-content: flex-start;
+    padding-top: 60px;
+  }
+
   .contact__grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 50px;

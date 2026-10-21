@@ -35,7 +35,7 @@
       <ul class="site-menu__list">
         <li class="site-menu__item" style="--i: 0"><a class="site-menu__link" href="index.html" aria-current="page"><span>00.</span><span>Inicio</span></a></li>
         <li class="site-menu__item" style="--i: 1"><a class="site-menu__link" href="about.html"><span>01.</span><span>Sobre mí</span></a></li>
-        <li class="site-menu__item" style="--i: 2"><a class="site-menu__link" href="contact.html"><span>02.</span><span>Contacto</span></a></li>
+        <li class="site-menu__item" style="--i: 2"><a class="site-menu__link" href="index.html#contacto"><span>02.</span><span>Contacto</span></a></li>
         <li class="site-menu__item" style="--i: 3"><a class="site-menu__link" href="index.html"><span>03.</span><span>Trabajos</span></a></li>
       </ul>
     </nav>
@@ -46,8 +46,51 @@
     <ul class="work-list" data-work-list></ul>
     <ul class="work-grid" data-work-grid></ul>
     <noscript>
-      <p class="noscript-note">La lista de proyectos necesita JavaScript. Actívalo para verla, o visita <a href="about.html">About</a> y <a href="contact.html">Contact</a>.</p>
+      <p class="noscript-note">La lista de proyectos necesita JavaScript. Actívalo para verla, o visita <a href="about.html">Sobre mí</a> y <a href="#contacto">Contacto</a>.</p>
     </noscript>
+
+    <section class="contact" id="contacto" aria-labelledby="contacto-title">
+      <h2 class="visually-hidden" id="contacto-title">Contacto</h2>
+      <div class="contact__grid">
+        <!-- Demo form: no action, no backend. main.js validates it locally and
+             shows an inline message; nothing is ever sent. -->
+        <form class="contact-form" data-contact-form novalidate aria-label="Formulario de contacto">
+          <div class="field">
+            <label class="field__label mono-label" for="f-nombre">Nombre</label>
+            <input class="field__control" id="f-nombre" name="nombre" type="text" autocomplete="name"
+                   placeholder="Nombre Apellido" required aria-describedby="f-nombre-error"
+                   data-required-message="Escribe tu nombre.">
+            <p class="field__error mono-label" id="f-nombre-error"></p>
+          </div>
+          <div class="field">
+            <label class="field__label mono-label" for="f-correo">Correo</label>
+            <input class="field__control" id="f-correo" name="correo" type="email" autocomplete="email"
+                   placeholder="nombre@ejemplo.com" required aria-describedby="f-correo-error"
+                   data-required-message="Escribe tu correo.">
+            <p class="field__error mono-label" id="f-correo-error"></p>
+          </div>
+          <div class="field">
+            <label class="field__label mono-label" for="f-mensaje">Mensaje</label>
+            <textarea class="field__control" id="f-mensaje" name="mensaje" placeholder="Cuéntame tu idea…"
+                      required aria-describedby="f-mensaje-error" data-minlength="10"
+                      data-required-message="Escribe un mensaje."></textarea>
+            <p class="field__error mono-label" id="f-mensaje-error"></p>
+          </div>
+          <button class="contact-form__submit" type="submit">Enviar</button>
+          <p class="contact-form__status" data-form-status role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="contact__aside">
+          <p class="contact__hello">¡Conectemos!</p>
+          <p><a href="https://www.instagram.com/ednamiau/" rel="noopener">@ednamiau</a></p>
+        </div>
+      </div>
+
+      <div class="contact__taglines">
+        <p>De la idea al styling</p>
+        <p>¡Escríbeme y armamos algo!</p>
+      </div>
+    </section>
   </main>
 </body>
 </html>
