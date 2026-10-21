@@ -44,8 +44,18 @@
     </noscript>
 
     <section class="contact" id="contacto" aria-labelledby="contacto-title">
-      <h2 class="visually-hidden" id="contacto-title">Contacto</h2>
-      <div class="contact__grid">
+      <div class="contact__intro">
+        <h2 class="contact__title" id="contacto-title">¡Conectemos!</h2>
+        <div class="contact__taglines">
+          <p>De la idea al styling.</p>
+          <p>¡Escríbeme y armamos algo!</p>
+        </div>
+        <ul class="contact__links">
+          <li><a href="mailto:edna.sapi@gmail.com">edna.sapi@gmail.com</a></li>
+          <li><a href="https://www.instagram.com/ednamiau/" rel="noopener">@ednamiau</a></li>
+        </ul>
+      </div>
+
         <!-- Demo form: no action, no backend. main.js validates it locally and
              shows an inline message; nothing is ever sent. -->
         <form class="contact-form" data-contact-form novalidate aria-label="Formulario de contacto">
@@ -73,17 +83,6 @@
           <button class="contact-form__submit" type="submit">Enviar</button>
           <p class="contact-form__status" data-form-status role="status" aria-live="polite"></p>
         </form>
-
-        <div class="contact__aside">
-          <p class="contact__hello">¡Conectemos!</p>
-          <p><a href="https://www.instagram.com/ednamiau/" rel="noopener">@ednamiau</a></p>
-        </div>
-      </div>
-
-      <div class="contact__taglines">
-        <p>De la idea al styling</p>
-        <p>¡Escríbeme y armamos algo!</p>
-      </div>
     </section>
   </main>
 </body>
