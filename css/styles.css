@@ -409,6 +409,51 @@ main:focus {
   background: var(--c-black);
 }
 
+/* Scrim: a soft shade down the left (project list) and across the top (name,
+   menu) so the cream text reads over any photo, light or dark. */
+.home-bg::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0) 240px),
+    linear-gradient(to right, rgb(0 0 0 / 0.6), rgb(0 0 0 / 0.35) 35%, rgb(0 0 0 / 0) 65%);
+  pointer-events: none;
+}
+
+.page-home .brand__name {
+  color: var(--c-cream);
+}
+
+.page-home .brand__role {
+  color: var(--c-pink);
+}
+
+.page-home .brand,
+.work-row__title {
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
+}
+
+/* Cream over the photos; purple once the contact section scrolls under it
+   (main.js sets the class). */
+@media (min-width: 810px) {
+  .page-home .site-menu {
+    mix-blend-mode: normal;
+  }
+
+  .page-home .site-menu__link {
+    color: var(--c-cream);
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
+    transition: color var(--dur-fast) ease;
+  }
+
+  .is-menu-over-contact .site-menu__link {
+    color: var(--c-purple);
+    text-shadow: none;
+  }
+}
+
 .home-bg__layer {
   position: absolute;
   inset: 0;
@@ -460,7 +505,7 @@ main:focus {
   align-items: center;
   gap: 24px;
   padding: 2px 26px;
-  color: var(--c-ink);
+  color: var(--c-cream);
   text-decoration: none;
   font-weight: 400;
   font-size: var(--fs-row);
@@ -474,8 +519,7 @@ main:focus {
   transition: color var(--dur-fast) ease;
 }
 
-/* The hover band: a cream strip, difference-blended over the image so it
-   reads as an inverted slice of the photograph. Grows from the centre. */
+/* The hover band: a solid cream strip with ink text. Grows from the centre. */
 .work-row__band {
   position: absolute;
   top: 50%;
@@ -483,7 +527,6 @@ main:focus {
   width: 100%;
   height: 0;
   background: var(--c-cream);
-  mix-blend-mode: difference;
   pointer-events: none;
   transition: top 0.22s var(--ease-out), height 0.22s var(--ease-out);
 }
@@ -496,7 +539,8 @@ main:focus {
 
 .work-row:hover .work-row__title,
 .work-row:focus-visible .work-row__title {
-  color: var(--c-white);
+  color: var(--c-ink);
+  text-shadow: none;
 }
 
 .work-row:focus-visible {
