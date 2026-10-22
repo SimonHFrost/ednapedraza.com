@@ -409,49 +409,51 @@ main:focus {
   background: var(--c-black);
 }
 
-/* Scrim: a soft shade down the left (project list) and across the top (name,
-   menu) so the cream text reads over any photo, light or dark. */
-.home-bg::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  background:
-    linear-gradient(to bottom, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0) 240px),
-    linear-gradient(to right, rgb(0 0 0 / 0.6), rgb(0 0 0 / 0.35) 35%, rgb(0 0 0 / 0) 65%);
-  pointer-events: none;
+/* Text over the home photos sits on small cream labels, like printed
+   captions, so it reads on any image without shading the image itself. */
+.page-home .brand__name,
+.page-home .brand__role,
+.work-row__title {
+  background: var(--c-cream);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 .page-home .brand__name {
-  color: var(--c-cream);
+  display: inline-block;
+  margin-left: -8px;
+  padding: 0 8px;
 }
 
 .page-home .brand__role {
-  color: var(--c-pink);
+  display: table;
+  margin: 6px 0 0 -6px;
+  padding: 3px 6px;
+  line-height: 1;
 }
 
-.page-home .brand,
-.work-row__title {
-  text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
-}
-
-/* Cream over the photos; purple once the contact section scrolls under it
-   (main.js sets the class). */
 @media (min-width: 810px) {
   .page-home .site-menu {
     mix-blend-mode: normal;
   }
 
   .page-home .site-menu__link {
-    color: var(--c-cream);
-    text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
-    transition: color var(--dur-fast) ease;
+    padding: 3px 6px;
+    background: var(--c-cream);
+    color: var(--c-ink);
   }
+}
 
-  .is-menu-over-contact .site-menu__link {
-    color: var(--c-purple);
-    text-shadow: none;
+/* Keep the menu labels clear of the role line on narrow tablets. */
+@media (min-width: 810px) and (max-width: 1099.98px) {
+  .page-home .site-menu__list {
+    max-width: 40vw;
   }
+}
+
+.work-row__title {
+  margin-left: -6px;
+  padding: 3px 6px;
 }
 
 .home-bg__layer {
@@ -505,7 +507,7 @@ main:focus {
   align-items: center;
   gap: 24px;
   padding: 2px 26px;
-  color: var(--c-cream);
+  color: var(--c-ink);
   text-decoration: none;
   font-weight: 400;
   font-size: var(--fs-row);
@@ -540,7 +542,6 @@ main:focus {
 .work-row:hover .work-row__title,
 .work-row:focus-visible .work-row__title {
   color: var(--c-ink);
-  text-shadow: none;
 }
 
 .work-row:focus-visible {
@@ -591,10 +592,13 @@ main:focus {
   }
 
   .work-card__title {
-    display: block;
+    display: inline-block;
+    max-width: 100%;
     margin-bottom: 4px;
+    padding: 2px 4px;
     overflow: hidden;
-    color: var(--c-cream);
+    background: var(--c-cream);
+    color: var(--c-ink);
     font-weight: 480;
     font-size: 13px;
     line-height: 1.2;
