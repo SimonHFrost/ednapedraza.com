@@ -107,7 +107,7 @@
   }
 
   /** Hover / focus on a row cross-fades that project's image into the background. */
-  function bindRowHighlight(list, layers) {
+  function bindRowHighlight(list, layers, onChange) {
     var active = null;
 
     function activate(index) {
@@ -116,11 +116,13 @@
       if (active) active.classList.remove('is-active');
       active = layer || null;
       if (active) active.classList.add('is-active');
+      onChange(active);
     }
 
     function clear() {
       if (active) active.classList.remove('is-active');
       active = null;
+      onChange(null);
     }
 
     function rowFrom(target) {
@@ -164,7 +166,162 @@
       list.appendChild(buildRow(project, index));
       grid.appendChild(buildCard(project));
     });
-    bindRowHighlight(list, layers);
+    var tone = watchTextTone(bg, layers, baseIndex);
+    bindRowHighlight(list, layers, tone);
+  }
+
+  /* ------------------------------------------------------------ auto tone */
+
+  // Relative luminance (WCAG) of the text colours each region can switch
+  // between: [on a light photo, on a dark photo].
+  var TONE_COLOURS = {
+    brand: [luminance(85, 30, 227), luminance(252, 250, 245)], // purple / cream
+    role: [luminance(217, 68, 63), luminance(245, 78, 220)],   // red / pink
+    list: [luminance(24, 24, 24), luminance(252, 250, 245)],   // ink / cream
+    menu: [luminance(24, 24, 24), luminance(252, 250, 245)]    // ink / cream
+  };
+  var SAMPLE_WIDTH = 160;
+  var MIN_CONTRAST = 3; // WCAG minimum for large text
+
+  function channel(value) {
+    var c = value / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  }
+
+  function luminance(r, g, b) {
+    return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+  }
+
+  function contrast(a, b) {
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  }
+
+  /** A small luminance map of a loaded image, or null if it can't be read. */
+  function sampleImage(img) {
+    if (!img.complete || !img.naturalWidth) return null;
+    var width = SAMPLE_WIDTH;
+    var height = Math.max(1, Math.round(img.naturalHeight * width / img.naturalWidth));
+    var canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    var ctx = canvas.getContext('2d');
+    try {
+      ctx.drawImage(img, 0, 0, width, height);
+      var data = ctx.getImageData(0, 0, width, height).data;
+      var map = new Float32Array(width * height);
+      for (var i = 0; i < map.length; i++) {
+        map[i] = luminance(data[i * 4], data[i * 4 + 1], data[i * 4 + 2]);
+      }
+      return { width: width, height: height, natural: img.naturalWidth, map: map };
+    } catch (e) {
+      return null; // tainted canvas (cross-origin image)
+    }
+  }
+
+  /**
+   * For each text colour, the share of the cover-fitted image under a screen
+   * rect that it stands out against. Better than an average on mixed photos.
+   */
+  function regionScores(sample, box, rect, colours) {
+    var natW = sample.natural;
+    var natH = natW * sample.height / sample.width;
+    var scale = Math.max(box.width / natW, box.height / natH);
+    var offX = (box.width - natW * scale) / 2;
+    var offY = (box.height - natH * scale) / 2;
+    var k = sample.width / natW;
+    function toX(x) { return Math.min(sample.width - 1, Math.max(0, Math.floor((x - box.left - offX) / scale * k))); }
+    function toY(y) { return Math.min(sample.height - 1, Math.max(0, Math.floor((y - box.top - offY) / scale * k))); }
+    var x0 = toX(rect.left), x1 = toX(rect.right), y0 = toY(rect.top), y1 = toY(rect.bottom);
+    var scores = colours.map(function () { return 0; });
+    var count = 0;
+    for (var y = y0; y <= y1; y++) {
+      for (var x = x0; x <= x1; x++) {
+        var lum = sample.map[y * sample.width + x];
+        for (var i = 0; i < colours.length; i++) {
+          if (contrast(colours[i], lum) >= MIN_CONTRAST) scores[i]++;
+        }
+        count++;
+      }
+    }
+    return count ? scores : null;
+  }
+
+  /** The visible area covered by an element's text, or null when hidden. */
+  function textRect(selector) {
+    var nodes = document.querySelectorAll(selector);
+    var rect = null;
+    Array.prototype.forEach.call(nodes, function (node) {
+      var r = node.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      rect = rect
+        ? { left: Math.min(rect.left, r.left), top: Math.min(rect.top, r.top), right: Math.max(rect.right, r.right), bottom: Math.max(rect.bottom, r.bottom) }
+        : { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+    });
+    if (!rect) return null;
+    rect.top = Math.max(rect.top, 0);
+    rect.bottom = Math.min(rect.bottom, window.innerHeight);
+    return rect.bottom > rect.top ? rect : null;
+  }
+
+  /**
+   * Picks light or dark text for the name, menu and project list from the
+   * photo currently behind them, and keeps it right on hover, scroll and
+   * resize. Returns a function to call when the shown layer changes.
+   */
+  function watchTextTone(bg, layers, baseIndex) {
+    var body = document.body;
+    var contact = document.getElementById('contacto');
+    var samples = [];
+    var current = layers[baseIndex];
+    var pending = false;
+
+    function sampleFor(layer) {
+      // A project with no image shows the base photo through its hatching.
+      if (layer.classList.contains('is-empty')) layer = layers[baseIndex];
+      var index = layers.indexOf(layer);
+      if (samples[index]) return samples[index];
+      var img = layer.querySelector('img');
+      var sample = img && sampleImage(img);
+      if (sample) samples[index] = sample;
+      else if (img) img.addEventListener('load', schedule, { once: true });
+      return sample;
+    }
+
+    function setTone(name, selector, sample, box) {
+      var rect = textRect(selector);
+      var attr = 'data-' + name + '-tone';
+      if (name === 'menu' && rect && contact && contact.getBoundingClientRect().top < rect.bottom) {
+        body.setAttribute(attr, 'light'); // the pale green contact section
+        return;
+      }
+      var scores = rect && sample && regionScores(sample, box, rect, TONE_COLOURS[name]);
+      if (scores) body.setAttribute(attr, scores[0] >= scores[1] ? 'light' : 'dark');
+    }
+
+    function update() {
+      pending = false;
+      var sample = current && sampleFor(current);
+      var box = bg.getBoundingClientRect();
+      setTone('brand', '.page-home .brand__name', sample, box);
+      setTone('role', '.page-home .brand__role', sample, box);
+      setTone('list', '.work-row__title, .work-card__title', sample, box);
+      setTone('menu', '.site-menu__link', sample, box);
+    }
+
+    function schedule() {
+      if (pending) return;
+      pending = true;
+      window.requestAnimationFrame(update);
+    }
+
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    schedule();
+
+    return function (layer) {
+      current = layer || layers[baseIndex];
+      schedule();
+    };
   }
 
   /* --------------------------------------------------------------- project */

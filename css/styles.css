@@ -92,6 +92,9 @@
   --c-contact-page: rgb(186 255 190);
   --c-empty-fill: rgb(136 136 136 / 0.2);
   --c-empty-line: rgb(255 255 255 / 0.12);
+  /* Soft glows that lift text off a photo without covering it (section 6). */
+  --halo-light: 0 0 1px rgb(252 250 245 / 0.7), 0 1px 3px rgb(252 250 245 / 0.6), 0 0 14px rgb(252 250 245 / 0.4);
+  --halo-dark: 0 0 1px rgb(0 0 0 / 0.55), 0 1px 3px rgb(0 0 0 / 0.45), 0 0 14px rgb(0 0 0 / 0.3);
 
   /* families */
   --f-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -409,53 +412,6 @@ main:focus {
   background: var(--c-black);
 }
 
-/* Text over the home photos sits on small cream labels, like printed
-   captions, so it reads on any image without shading the image itself. */
-.page-home .brand__name,
-.page-home .brand__role,
-.work-row__title {
-  background: var(--c-cream);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-}
-
-.page-home .brand__name {
-  display: inline-block;
-  margin-left: -8px;
-  padding: 0 8px;
-}
-
-.page-home .brand__role {
-  display: table;
-  margin: 6px 0 0 -6px;
-  padding: 3px 6px;
-  line-height: 1;
-}
-
-@media (min-width: 810px) {
-  .page-home .site-menu {
-    mix-blend-mode: normal;
-  }
-
-  .page-home .site-menu__link {
-    padding: 3px 6px;
-    background: var(--c-cream);
-    color: var(--c-ink);
-  }
-}
-
-/* Keep the menu labels clear of the role line on narrow tablets. */
-@media (min-width: 810px) and (max-width: 1099.98px) {
-  .page-home .site-menu__list {
-    max-width: 40vw;
-  }
-}
-
-.work-row__title {
-  margin-left: -6px;
-  padding: 3px 6px;
-}
-
 .home-bg__layer {
   position: absolute;
   inset: 0;
@@ -521,7 +477,8 @@ main:focus {
   transition: color var(--dur-fast) ease;
 }
 
-/* The hover band: a solid cream strip with ink text. Grows from the centre. */
+/* The hover band: a cream strip, difference-blended over the image so it
+   reads as an inverted slice of the photograph. Grows from the centre. */
 .work-row__band {
   position: absolute;
   top: 50%;
@@ -529,6 +486,7 @@ main:focus {
   width: 100%;
   height: 0;
   background: var(--c-cream);
+  mix-blend-mode: difference;
   pointer-events: none;
   transition: top 0.22s var(--ease-out), height 0.22s var(--ease-out);
 }
@@ -541,7 +499,7 @@ main:focus {
 
 .work-row:hover .work-row__title,
 .work-row:focus-visible .work-row__title {
-  color: var(--c-ink);
+  color: var(--c-white);
 }
 
 .work-row:focus-visible {
@@ -552,6 +510,76 @@ main:focus {
 /* Hatched overlay used when a project has no image (see section 10). */
 .home-bg__layer--empty {
   background-color: var(--c-empty-fill);
+}
+
+/* Auto contrast: main.js measures how light the photo is behind the name,
+   the menu and the project list, and sets data-*-tone="light|dark" on the
+   body. Text then takes whichever of its two colours reads better there,
+   with a faint halo, so the photo itself is never covered or shaded. */
+[data-brand-tone] .brand__name,
+[data-role-tone] .brand__role,
+[data-list-tone] .work-row__title,
+[data-list-tone] .work-card__title,
+[data-menu-tone] .site-menu__link {
+  transition: color 0.35s ease, text-shadow 0.35s ease;
+}
+
+[data-brand-tone="light"] .brand__name,
+[data-role-tone="light"] .brand__role,
+[data-list-tone="light"] .work-row__title,
+[data-list-tone="light"] .work-card__title {
+  text-shadow: var(--halo-light);
+}
+
+[data-brand-tone="dark"] .brand__name,
+[data-role-tone="dark"] .brand__role,
+[data-list-tone="dark"] .work-row__title,
+[data-list-tone="dark"] .work-card__title {
+  text-shadow: var(--halo-dark);
+}
+
+[data-brand-tone="dark"] .brand__name {
+  color: var(--c-cream);
+}
+
+[data-role-tone="dark"] .brand__role {
+  color: var(--c-pink);
+}
+
+[data-list-tone="dark"] .work-row {
+  color: var(--c-cream);
+}
+
+/* The hover band inverts the photo, so text on it takes the opposite tone. */
+[data-list-tone="dark"] .work-row:hover .work-row__title,
+[data-list-tone="dark"] .work-row:focus-visible .work-row__title {
+  color: var(--c-ink);
+  text-shadow: none;
+}
+
+[data-list-tone="light"] .work-row:hover .work-row__title,
+[data-list-tone="light"] .work-row:focus-visible .work-row__title {
+  text-shadow: none;
+}
+
+[data-list-tone="light"] .work-card__title {
+  color: var(--c-ink);
+}
+
+@media (min-width: 810px) {
+  [data-menu-tone] .site-menu {
+    mix-blend-mode: normal;
+  }
+
+  [data-menu-tone="light"] .site-menu__link {
+    color: var(--c-ink);
+    text-shadow: var(--halo-light);
+  }
+
+  [data-menu-tone="dark"] .site-menu__link {
+    color: var(--c-cream);
+    text-shadow: var(--halo-dark);
+  }
 }
 
 /* Phone grid (hidden on desktop / tablet). */
@@ -592,13 +620,10 @@ main:focus {
   }
 
   .work-card__title {
-    display: inline-block;
-    max-width: 100%;
+    display: block;
     margin-bottom: 4px;
-    padding: 2px 4px;
     overflow: hidden;
-    background: var(--c-cream);
-    color: var(--c-ink);
+    color: var(--c-cream);
     font-weight: 480;
     font-size: 13px;
     line-height: 1.2;
