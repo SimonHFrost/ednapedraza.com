@@ -92,9 +92,6 @@
   --c-contact-page: rgb(186 255 190);
   --c-empty-fill: rgb(136 136 136 / 0.2);
   --c-empty-line: rgb(255 255 255 / 0.12);
-  /* Soft glows that lift text off a photo without covering it (section 6). */
-  --halo-light: 0 0 1px rgb(252 250 245 / 0.7), 0 1px 3px rgb(252 250 245 / 0.6), 0 0 14px rgb(252 250 245 / 0.4);
-  --halo-dark: 0 0 1px rgb(0 0 0 / 0.55), 0 1px 3px rgb(0 0 0 / 0.45), 0 0 14px rgb(0 0 0 / 0.3);
 
   /* families */
   --f-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -512,73 +509,79 @@ main:focus {
   background-color: var(--c-empty-fill);
 }
 
-/* Auto contrast: main.js measures how light the photo is behind the name,
-   the menu and the project list, and sets data-*-tone="light|dark" on the
-   body. Text then takes whichever of its two colours reads better there,
-   with a faint halo, so the photo itself is never covered or shaded. */
-[data-brand-tone] .brand__name,
-[data-role-tone] .brand__role,
-[data-list-tone] .work-row__title,
-[data-list-tone] .work-card__title,
-[data-menu-tone] .site-menu__link {
-  transition: color 0.35s ease, text-shadow 0.35s ease;
-}
-
-[data-brand-tone="light"] .brand__name,
-[data-role-tone="light"] .brand__role,
-[data-list-tone="light"] .work-row__title,
-[data-list-tone="light"] .work-card__title {
-  text-shadow: var(--halo-light);
-}
-
-[data-brand-tone="dark"] .brand__name,
-[data-role-tone="dark"] .brand__role,
-[data-list-tone="dark"] .work-row__title,
-[data-list-tone="dark"] .work-card__title {
-  text-shadow: var(--halo-dark);
-}
-
-[data-brand-tone="dark"] .brand__name {
-  color: var(--c-cream);
-}
-
-[data-role-tone="dark"] .brand__role {
-  color: var(--c-pink);
-}
-
-[data-list-tone="dark"] .work-row {
-  color: var(--c-cream);
-}
-
-/* The hover band inverts the photo, so text on it takes the opposite tone. */
-[data-list-tone="dark"] .work-row:hover .work-row__title,
-[data-list-tone="dark"] .work-row:focus-visible .work-row__title {
-  color: var(--c-ink);
-  text-shadow: none;
-}
-
-[data-list-tone="light"] .work-row:hover .work-row__title,
-[data-list-tone="light"] .work-row:focus-visible .work-row__title {
-  text-shadow: none;
-}
-
-[data-list-tone="light"] .work-card__title {
-  color: var(--c-ink);
-}
-
+/* Split screen (desktop / tablet): the photo fills the right half, fully
+   uncovered, and the name, list and menu sit on plain cream on the left. */
 @media (min-width: 810px) {
-  [data-menu-tone] .site-menu {
+  .page-home {
+    --split: 50vw;
+    background: var(--c-cream);
+  }
+
+  .home-bg {
+    left: var(--split);
+  }
+
+  .work-list {
+    width: var(--split);
+    padding-bottom: 72px; /* clear of the menu at the foot */
+  }
+
+  .page-home .brand {
+    max-width: calc(var(--split) - 2 * var(--gutter));
+  }
+
+  /* The menu moves to a cream bar at the foot of the text column, so on
+     short screens the list scrolls under it cleanly. */
+  .page-home .site-menu {
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 0;
+    width: var(--split);
+    padding: 16px var(--gutter) 24px;
+    background: var(--c-cream);
     mix-blend-mode: normal;
   }
 
-  [data-menu-tone="light"] .site-menu__link {
-    color: var(--c-ink);
-    text-shadow: var(--halo-light);
+  .is-menu-over-contact .site-menu {
+    background: transparent;
   }
 
-  [data-menu-tone="dark"] .site-menu__link {
+  .page-home .site-menu__list {
+    justify-content: flex-start;
+    max-width: calc(var(--split) - 2 * var(--gutter));
+  }
+
+  .page-home .site-menu__link {
+    color: var(--c-ink);
+  }
+
+  .page-home .site-menu__link:focus-visible {
+    outline-color: var(--c-ink);
+  }
+
+  /* On cream the inverted band would be near black, so use brand purple. */
+  .work-row__band {
+    background: var(--c-purple);
+    mix-blend-mode: normal;
+  }
+
+  .work-row:hover .work-row__title,
+  .work-row:focus-visible .work-row__title {
     color: var(--c-cream);
-    text-shadow: var(--halo-dark);
+  }
+
+  .work-row:focus-visible {
+    outline-color: var(--c-purple);
+  }
+}
+
+/* Narrow tablets: let the role line wrap inside the text column. */
+@media (min-width: 810px) and (max-width: 1099.98px) {
+  .page-home .brand__role {
+    margin-top: 4px;
+    line-height: 1;
+    white-space: normal;
   }
 }
 
@@ -590,16 +593,17 @@ main:focus {
 @media (min-width: 1400px) and (max-height: 700px) {
   .work-list {
     justify-content: flex-start;
-    padding: 190px 0 48px;
+    padding: 190px 0 72px;
   }
 }
 
 @media (max-width: 809.98px) {
-  .home-bg {
-    position: absolute;
+  /* Phones: each card already shows its photo, so the page is plain cream. */
+  .page-home {
+    background: var(--c-cream);
   }
 
-  .home-bg__layer:not(.is-base) {
+  .home-bg {
     display: none;
   }
 
@@ -623,7 +627,7 @@ main:focus {
     display: block;
     margin-bottom: 4px;
     overflow: hidden;
-    color: var(--c-cream);
+    color: var(--c-ink);
     font-weight: 480;
     font-size: 13px;
     line-height: 1.2;
@@ -651,7 +655,7 @@ main:focus {
   }
 
   .work-card__link:focus-visible {
-    outline-color: var(--c-cream);
+    outline-color: var(--c-ink);
   }
 }
 
