@@ -510,11 +510,11 @@ main:focus {
 }
 
 /* Tags: text over the home photos sits on tight cream tags with a thin ink
-   border and a hard pink offset, so it reads on any photo while covering as
-   little of it as possible. */
+   border and a hard offset in the text's own colour, so it reads on any
+   photo while covering as little of it as possible. */
 .page-home {
   --tag-border: 1px solid var(--c-ink);
-  --tag-shadow: 2px 2px 0 var(--c-pink);
+  --tag-shadow: 2px 2px 0 currentColor;
 }
 
 .page-home .brand__name,
