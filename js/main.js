@@ -165,29 +165,6 @@
       grid.appendChild(buildCard(project));
     });
     bindRowHighlight(list, layers);
-    watchMenuOverContact();
-  }
-
-  /** Flags when the contact section scrolls under the fixed menu, so CSS can
-   *  drop the menu's cream bar there. */
-  function watchMenuOverContact() {
-    var menu = document.querySelector('.site-menu');
-    var contact = document.getElementById('contacto');
-    if (!menu || !contact) return;
-    var pending = false;
-    function update() {
-      pending = false;
-      var over = contact.getBoundingClientRect().top < menu.getBoundingClientRect().bottom;
-      document.body.classList.toggle('is-menu-over-contact', over);
-    }
-    function schedule() {
-      if (pending) return;
-      pending = true;
-      window.requestAnimationFrame(update);
-    }
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
-    update();
   }
 
   /* --------------------------------------------------------------- project */

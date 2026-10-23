@@ -509,50 +509,61 @@ main:focus {
   background-color: var(--c-empty-fill);
 }
 
-/* Split screen (desktop / tablet): the photo fills the right half, fully
-   uncovered, and the name, list and menu sit on plain cream on the left. */
+/* Tags: text over the home photos sits on tight cream tags with a thin ink
+   border and a hard pink offset, so it reads on any photo while covering as
+   little of it as possible. */
+.page-home {
+  --tag-border: 1px solid var(--c-ink);
+  --tag-shadow: 2px 2px 0 var(--c-pink);
+}
+
+.page-home .brand__name,
+.page-home .brand__role,
+.work-row__title,
+.work-card__title {
+  background: var(--c-cream);
+  border: var(--tag-border);
+  box-shadow: var(--tag-shadow);
+}
+
+.page-home .brand__name {
+  display: inline-block;
+  margin-left: -7px;
+  padding: 8px 6px 0;
+  line-height: 0.82;
+}
+
+.page-home .brand__role {
+  display: table;
+  margin: 6px 0 0 -5px;
+  padding: 2px 4px 1px;
+  line-height: 1;
+}
+
+.work-row__title {
+  display: inline-block;
+  margin-left: -5px;
+  padding: 2px 4px 1px;
+  line-height: 1;
+}
+
+/* On hover the tag inverts. */
+.work-row:hover .work-row__title,
+.work-row:focus-visible .work-row__title {
+  background: var(--c-ink);
+  color: var(--c-cream);
+}
+
 @media (min-width: 810px) {
-  .page-home {
-    --split: 50vw;
-    background: var(--c-cream);
-  }
-
-  .home-bg {
-    left: var(--split);
-  }
-
-  .work-list {
-    width: var(--split);
-    padding-bottom: 72px; /* clear of the menu at the foot */
-  }
-
-  .page-home .brand {
-    max-width: calc(var(--split) - 2 * var(--gutter));
-  }
-
-  /* The menu moves to a cream bar at the foot of the text column, so on
-     short screens the list scrolls under it cleanly. */
   .page-home .site-menu {
-    top: auto;
-    right: auto;
-    bottom: 0;
-    left: 0;
-    width: var(--split);
-    padding: 16px var(--gutter) 24px;
-    background: var(--c-cream);
     mix-blend-mode: normal;
   }
 
-  .is-menu-over-contact .site-menu {
-    background: transparent;
-  }
-
-  .page-home .site-menu__list {
-    justify-content: flex-start;
-    max-width: calc(var(--split) - 2 * var(--gutter));
-  }
-
   .page-home .site-menu__link {
+    padding: 2px 5px 1px;
+    background: var(--c-cream);
+    border: var(--tag-border);
+    box-shadow: var(--tag-shadow);
     color: var(--c-ink);
   }
 
@@ -560,28 +571,15 @@ main:focus {
     outline-color: var(--c-ink);
   }
 
-  /* On cream the inverted band would be near black, so use brand purple. */
-  .work-row__band {
-    background: var(--c-purple);
-    mix-blend-mode: normal;
-  }
-
-  .work-row:hover .work-row__title,
-  .work-row:focus-visible .work-row__title {
-    color: var(--c-cream);
-  }
-
-  .work-row:focus-visible {
-    outline-color: var(--c-purple);
+  .page-home .site-menu__list {
+    gap: 10px 16px;
   }
 }
 
-/* Narrow tablets: let the role line wrap inside the text column. */
+/* Narrow tablets: wrap the menu sooner so its tags clear the role line. */
 @media (min-width: 810px) and (max-width: 1099.98px) {
-  .page-home .brand__role {
-    margin-top: 4px;
-    line-height: 1;
-    white-space: normal;
+  .page-home .site-menu__list {
+    max-width: 40vw;
   }
 }
 
@@ -593,17 +591,16 @@ main:focus {
 @media (min-width: 1400px) and (max-height: 700px) {
   .work-list {
     justify-content: flex-start;
-    padding: 190px 0 72px;
+    padding: 190px 0 48px;
   }
 }
 
 @media (max-width: 809.98px) {
-  /* Phones: each card already shows its photo, so the page is plain cream. */
-  .page-home {
-    background: var(--c-cream);
+  .home-bg {
+    position: absolute;
   }
 
-  .home-bg {
+  .home-bg__layer:not(.is-base) {
     display: none;
   }
 
@@ -624,8 +621,10 @@ main:focus {
   }
 
   .work-card__title {
-    display: block;
-    margin-bottom: 4px;
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 6px;
+    padding: 2px 4px 1px;
     overflow: hidden;
     color: var(--c-ink);
     font-weight: 480;
@@ -655,7 +654,7 @@ main:focus {
   }
 
   .work-card__link:focus-visible {
-    outline-color: var(--c-ink);
+    outline-color: var(--c-cream);
   }
 }
 
