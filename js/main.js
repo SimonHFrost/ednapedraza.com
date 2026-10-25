@@ -445,11 +445,11 @@
 
   /* --------------------------------------------------------------- header */
 
-  /** Off the home page: hides the header bar while scrolling down and shows
-      it again on any scroll up (CSS slides it by --header-h). */
+  /** Hides the header bar while scrolling down and shows it again on any
+      scroll up (CSS slides it by --header-h). */
   function initHeaderScroll() {
     var header = document.querySelector('.site-header');
-    if (!header || document.body.classList.contains('page-home')) return;
+    if (!header) return;
     var lastY = window.scrollY;
     var ticking = false;
 

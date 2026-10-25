@@ -317,11 +317,11 @@ main:focus {
   }
 }
 
-/* Every page but home: the name and menu sit in one fixed bar that slides
-   away while scrolling down and comes back on scrolling up (main.js toggles
-   .is-hidden and sets --header-h). It animates `top`, not transform, so the
-   phone menu bar inside it stays fixed to the viewport. */
-body:not(.page-home) .site-header {
+/* The name and menu sit in one fixed bar that slides away while scrolling
+   down and comes back on scrolling up (main.js toggles .is-hidden and sets
+   --header-h). It animates `top`, not transform, so the phone menu bar
+   inside it stays fixed to the viewport. */
+.site-header {
   position: fixed;
   z-index: 5;
   top: 0;
@@ -334,11 +334,12 @@ body:not(.page-home) .site-header {
   transition: top var(--dur-med) var(--ease-out);
 }
 
-body:not(.page-home) .site-header.is-hidden:not(:focus-within) {
+.site-header.is-hidden:not(:focus-within) {
   top: calc(-1 * var(--header-h, 120px));
 }
 
-body:not(.page-home) .brand {
+.site-header .brand,
+.site-header .site-menu {
   position: static;
 }
 
@@ -346,33 +347,33 @@ body:not(.page-home) .brand__name {
   font-size: var(--fs-brand-sm);
 }
 
-body:not(.page-home) .site-menu {
-  position: static;
-}
-
-body:not(.page-home) .site-menu__link::before {
-  display: none;
-}
-
-body:not(.page-home) .site-menu__list {
+.site-menu__list {
   max-width: none;
   gap: 8px 16px;
 }
 
+/* Home: no bar behind the tags, so the photo stays uncovered; clicks pass
+   through the empty parts of the header to the list below. */
+.page-home .site-header {
+  align-items: flex-start;
+  background: none;
+  pointer-events: none;
+}
+
+.page-home .brand,
+.page-home .site-menu {
+  pointer-events: auto;
+}
+
 @media (max-width: 809.98px) {
-  body:not(.page-home) .site-menu {
+  .site-header .site-menu {
     position: fixed;
   }
 }
 
 /* 5. Menu -------------------------------------------------------------------
-   Always visible, fixed top right. Each link is a desktop folder icon with
-   its label in a white tag underneath, like files on a Mac desktop. */
+   Always visible in the header; each label sits in a white tag. */
 .site-menu {
-  position: fixed;
-  z-index: 4;
-  top: var(--pill-top);
-  right: var(--pill-right);
   --tag-bg: var(--c-white);
   --tag-border: 2px solid currentColor;
   --tag-shadow: 3px 3px 0 currentColor;
@@ -382,8 +383,6 @@ body:not(.page-home) .site-menu__list {
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-end;
-  gap: 8px 24px;
-  max-width: 52vw;
 }
 
 .site-menu__item {
@@ -392,28 +391,11 @@ body:not(.page-home) .site-menu__list {
 
 .site-menu__link {
   display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
   color: var(--c-ink);
   text-decoration: none;
   font: 600 var(--fs-menu) / 1.2 var(--f-sans);
   letter-spacing: var(--track-menu);
   text-transform: uppercase;
-}
-
-.site-menu__link::before {
-  content: "";
-  width: var(--folder-size, 56px);
-  aspect-ratio: 64 / 52;
-  background: url("../assets/img/folder.svg") center / contain no-repeat;
-  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.25));
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-
-.site-menu__link:hover::before,
-.site-menu__link:focus-visible::before {
-  transform: translateY(-2px);
 }
 
 .site-menu__label {
@@ -423,7 +405,7 @@ body:not(.page-home) .site-menu__list {
   box-shadow: var(--tag-shadow);
 }
 
-/* Hovered or current: the tag inverts, like a selected file name. */
+/* Hovered or current: the tag inverts. */
 .site-menu__link:hover .site-menu__label,
 .site-menu__link:focus-visible .site-menu__label,
 .site-menu__link[aria-current="page"] .site-menu__label {
@@ -454,17 +436,12 @@ body:not(.page-home) .site-menu__list {
     background: var(--c-purple-a50);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    --folder-size: 28px;
   }
 
   .site-menu__list {
     justify-content: center;
     gap: 8px 12px;
     max-width: none;
-  }
-
-  .site-menu__link {
-    gap: 4px;
   }
 
   .site-menu__label {
