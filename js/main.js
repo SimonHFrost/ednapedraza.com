@@ -181,6 +181,33 @@
     }, 1000);
   }
 
+  /* --------------------------------------------------------------- header */
+
+  /** Hides the header bar while scrolling down and shows it again on any
+      scroll up (CSS slides it by --header-h). */
+  function initHeaderScroll() {
+    var header = document.querySelector('.site-header');
+    if (!header) return;
+    var lastY = window.scrollY;
+    var ticking = false;
+
+    function update() {
+      var y = window.scrollY;
+      header.style.setProperty('--header-h', header.offsetHeight + 'px');
+      if (y > lastY && y > header.offsetHeight) header.classList.add('is-hidden');
+      else if (y < lastY) header.classList.remove('is-hidden');
+      lastY = y;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(update);
+      }
+    }, { passive: true });
+  }
+
   /* ------------------------------------------------------------------ boot */
 
   var PAGE_SETUP = {
@@ -196,6 +223,7 @@
     initContactForm();
     var setup = PAGE_SETUP[document.body.getAttribute('data-page')];
     if (setup) setup();
+    initHeaderScroll();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
