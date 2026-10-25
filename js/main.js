@@ -153,11 +153,22 @@
     return n < 10 ? '0' + n : String(n);
   }
 
+  /** Writes the count one digit per fixed-width cell (see .not-found__digit). */
+  function showCount(node, n) {
+    node.textContent = '';
+    pad(n).split('').forEach(function (digit) {
+      var cell = document.createElement('span');
+      cell.className = 'not-found__digit';
+      cell.textContent = digit;
+      node.appendChild(cell);
+    });
+  }
+
   /** Counts 08 → 01 and then goes home (pauses while the tab is hidden). */
   function startRedirectCountdown(node) {
     if (!node) return;
     var remaining = REDIRECT_SECONDS;
-    node.textContent = pad(remaining);
+    showCount(node, remaining);
     var timer = window.setInterval(function () {
       if (document.hidden) return;
       remaining -= 1;
@@ -166,7 +177,7 @@
         window.location.href = '/';
         return;
       }
-      node.textContent = pad(remaining);
+      showCount(node, remaining);
     }, 1000);
   }
 

@@ -251,7 +251,7 @@ function fillHomeLists(html, projects, file) {
 /* -------------------------------------------------------------- project */
 
 function projectArticle(project, index) {
-  const tags = '<div class="project__tags mono-label">' +
+  const tags = '<div class="project__tags ui-label">' +
     `<span class="tag tag--pill"><span class="visually-hidden">Cliente: </span>${esc(project.client)}</span>` +
     '<span class="tag tag--plain" aria-hidden="true">Cliente &amp; Servicio</span>' +
     `<span class="tag tag--pill"><span class="visually-hidden">Servicio: </span>${esc(project.discipline)}</span></div>`;
@@ -304,7 +304,7 @@ function projectArticle(project, index) {
 
 function pagerItem(project, direction) {
   return `<li class="pager__item pager__item--${direction}"><a class="pager__link" href="${projectPath(project)}" rel="${direction}">` +
-    `<span class="pager__label mono-label"><span class="pager__dot" aria-hidden="true"></span>${direction === 'prev' ? 'Previous' : 'Next'}</span>` +
+    `<span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>${direction === 'prev' ? 'Previous' : 'Next'}</span>` +
     `<span class="pager__title">${esc(project.title)}</span></a></li>`;
 }
 
