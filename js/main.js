@@ -213,7 +213,7 @@
   }
 
   function buildTags(project) {
-    return el('div', { class: 'project__tags mono-label' }, [
+    return el('div', { class: 'project__tags ui-label' }, [
       el('span', { class: 'tag tag--pill' }, [el('span', { class: 'visually-hidden' }, ['Cliente: ']), project.client]),
       el('span', { class: 'tag tag--plain', 'aria-hidden': 'true' }, ['Cliente & Servicio']),
       el('span', { class: 'tag tag--pill' }, [el('span', { class: 'visually-hidden' }, ['Servicio: ']), project.discipline])
@@ -271,7 +271,7 @@
     var isPrev = direction === 'prev';
     return el('li', { class: 'pager__item pager__item--' + direction }, [
       el('a', { class: 'pager__link', href: projectUrl(project), rel: direction }, [
-        el('span', { class: 'pager__label mono-label' }, [
+        el('span', { class: 'pager__label ui-label' }, [
           el('span', { class: 'pager__dot', 'aria-hidden': 'true' }),
           isPrev ? 'Previous' : 'Next'
         ]),
@@ -418,11 +418,19 @@
     return n < 10 ? '0' + n : String(n);
   }
 
+  /** Writes the count one digit per fixed-width cell (see .not-found__digit). */
+  function showCount(node, n) {
+    node.textContent = '';
+    pad(n).split('').forEach(function (digit) {
+      node.appendChild(el('span', { class: 'not-found__digit' }, [digit]));
+    });
+  }
+
   /** Counts 08 → 01 and then goes home (pauses while the tab is hidden). */
   function startRedirectCountdown(node) {
     if (!node) return;
     var remaining = REDIRECT_SECONDS;
-    node.textContent = pad(remaining);
+    showCount(node, remaining);
     var timer = window.setInterval(function () {
       if (document.hidden) return;
       remaining -= 1;
@@ -431,7 +439,7 @@
         window.location.href = 'index.html';
         return;
       }
-      node.textContent = pad(remaining);
+      showCount(node, remaining);
     }, 1000);
   }
 
