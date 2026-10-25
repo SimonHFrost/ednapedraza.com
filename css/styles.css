@@ -629,6 +629,38 @@ body:not(.page-home) .brand__name {
   color: var(--tag-bg);
 }
 
+/* Home menu: each link is a blue desktop folder with its label tag
+   underneath, like files on a Mac desktop. */
+.page-home .site-menu__link {
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-home .site-menu__link::before {
+  content: "";
+  width: 56px;
+  aspect-ratio: 64 / 52;
+  background: url("../assets/img/folder.svg") center / contain no-repeat;
+  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.25));
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.page-home .site-menu__link:hover::before,
+.page-home .site-menu__link:focus-visible::before {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 809.98px) {
+  .page-home .site-menu__link {
+    gap: 4px;
+  }
+
+  .page-home .site-menu__link::before {
+    width: 28px;
+  }
+}
+
 @media (min-width: 810px) {
   .page-home .site-menu__list {
     gap: 10px 16px;
