@@ -510,6 +510,80 @@ main:focus {
   background-color: var(--c-empty-fill);
 }
 
+/* Tags: text over the home photos sits on tight cream tags with a thin ink
+   border and a hard offset in the text's own colour, so it reads on any
+   photo while covering as little of it as possible. */
+.page-home {
+  --tag-border: 1px solid var(--c-ink);
+  --tag-shadow: 2px 2px 0 currentColor;
+}
+
+.page-home .brand__name,
+.page-home .brand__role,
+.work-row__title,
+.work-card__title {
+  background: var(--c-cream);
+  border: var(--tag-border);
+  box-shadow: var(--tag-shadow);
+}
+
+.page-home .brand__name {
+  display: inline-block;
+  margin-left: -7px;
+  padding: 8px 6px 0;
+  line-height: 0.82;
+}
+
+.page-home .brand__role {
+  display: table;
+  margin: 6px 0 0 -5px;
+  padding: 2px 4px 1px;
+  line-height: 1;
+}
+
+.work-row__title {
+  display: inline-block;
+  margin-left: -5px;
+  padding: 2px 4px 1px;
+  line-height: 1;
+}
+
+/* On hover the tag inverts. */
+.work-row:hover .work-row__title,
+.work-row:focus-visible .work-row__title {
+  background: var(--c-ink);
+  color: var(--c-cream);
+}
+
+@media (min-width: 810px) {
+  .page-home .site-menu {
+    mix-blend-mode: normal;
+  }
+
+  .page-home .site-menu__link {
+    padding: 2px 5px 1px;
+    background: var(--c-cream);
+    border: var(--tag-border);
+    box-shadow: var(--tag-shadow);
+    color: var(--c-ink);
+  }
+
+  .page-home .site-menu__link:focus-visible {
+    outline-color: var(--c-ink);
+  }
+
+  .page-home .site-menu__list {
+    gap: 10px 16px;
+  }
+}
+
+/* Narrow tablets: wrap the menu sooner so its tags clear the role line. */
+@media (min-width: 810px) and (max-width: 1099.98px) {
+  .page-home .site-menu__list {
+    max-width: 40vw;
+  }
+}
+
 /* Phone grid (hidden on desktop / tablet). */
 .work-grid {
   display: none;
@@ -548,10 +622,12 @@ main:focus {
   }
 
   .work-card__title {
-    display: block;
-    margin-bottom: 4px;
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 6px;
+    padding: 2px 4px 1px;
     overflow: hidden;
-    color: var(--c-cream);
+    color: var(--c-ink);
     font-weight: 480;
     font-size: 13px;
     line-height: 1.2;
