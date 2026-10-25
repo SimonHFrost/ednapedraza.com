@@ -317,6 +317,54 @@ main:focus {
   }
 }
 
+/* Every page but home: the name and menu sit in one fixed bar that slides
+   away while scrolling down and comes back on scrolling up (main.js toggles
+   .is-hidden and sets --header-h). It animates `top`, not transform, so the
+   phone menu bar inside it stays fixed to the viewport. */
+body:not(.page-home) .site-header {
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px var(--gutter);
+  background: inherit;
+  transition: top var(--dur-med) var(--ease-out);
+}
+
+body:not(.page-home) .site-header.is-hidden:not(:focus-within) {
+  top: calc(-1 * var(--header-h, 120px));
+}
+
+body:not(.page-home) .brand {
+  position: static;
+}
+
+body:not(.page-home) .brand__name {
+  font-size: var(--fs-brand-sm);
+}
+
+body:not(.page-home) .site-menu {
+  position: static;
+}
+
+body:not(.page-home) .site-menu__link::before {
+  display: none;
+}
+
+body:not(.page-home) .site-menu__list {
+  max-width: none;
+  gap: 8px 16px;
+}
+
+@media (max-width: 809.98px) {
+  body:not(.page-home) .site-menu {
+    position: fixed;
+  }
+}
+
 /* 5. Menu -------------------------------------------------------------------
    Always visible, fixed top right. Each link is a desktop folder icon with
    its label in a white tag underneath, like files on a Mac desktop. */
