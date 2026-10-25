@@ -318,14 +318,16 @@ main:focus {
 }
 
 /* 5. Menu -------------------------------------------------------------------
-   Always visible, fixed top right; difference-blended like the live site's
-   menu overlay (pink turns green/teal over yellow images). */
+   Always visible, fixed top right. Each link is a desktop folder icon with
+   its label in a white tag underneath, like files on a Mac desktop. */
 .site-menu {
   position: fixed;
   z-index: 4;
   top: var(--pill-top);
   right: var(--pill-right);
-  mix-blend-mode: difference;
+  --tag-bg: var(--c-white);
+  --tag-border: 2px solid currentColor;
+  --tag-shadow: 3px 3px 0 currentColor;
 }
 
 .site-menu__list {
@@ -342,29 +344,56 @@ main:focus {
 
 .site-menu__link {
   display: inline-flex;
-  color: var(--c-pink);
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--c-ink);
   text-decoration: none;
   font: 600 var(--fs-menu) / 1.2 var(--f-sans);
   letter-spacing: var(--track-menu);
   text-transform: uppercase;
 }
 
-.site-menu__link:hover,
-.site-menu__link:focus-visible,
-.site-menu__link[aria-current="page"] {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.site-menu__link::before {
+  content: "";
+  width: var(--folder-size, 56px);
+  aspect-ratio: 64 / 52;
+  background: url("../assets/img/folder.svg") center / contain no-repeat;
+  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.25));
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.site-menu__link:hover::before,
+.site-menu__link:focus-visible::before {
+  transform: translateY(-2px);
+}
+
+.site-menu__label {
+  padding: 2px calc(5px - var(--track-menu)) 1px 5px; /* tracking pads the right */
+  background: var(--tag-bg);
+  border: var(--tag-border);
+  box-shadow: var(--tag-shadow);
+}
+
+/* Hovered or current: the tag inverts, like a selected file name. */
+.site-menu__link:hover .site-menu__label,
+.site-menu__link:focus-visible .site-menu__label,
+.site-menu__link[aria-current="page"] .site-menu__label {
+  border-color: var(--c-ink);
+  background: var(--c-ink);
+  box-shadow: 3px 3px 0 var(--c-ink);
+  color: var(--tag-bg);
 }
 
 .site-menu__link:focus-visible {
-  outline-color: var(--c-pink);
+  outline-color: var(--c-ink);
 }
 
 /* Phones: no room beside the brand, so the menu becomes a bar pinned to the
    bottom of the screen, in the old menu pill's colours. */
 @media (max-width: 809.98px) {
   body {
-    padding-bottom: 76px;
+    padding-bottom: 120px;
   }
 
   .site-menu {
@@ -372,26 +401,28 @@ main:focus {
     right: 8px;
     bottom: 8px;
     left: 8px;
-    padding: 12px 16px;
+    padding: 10px 12px;
     border-radius: 24px;
     background: var(--c-purple-a50);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    mix-blend-mode: normal;
+    --folder-size: 28px;
   }
 
   .site-menu__list {
     justify-content: center;
-    gap: 8px 16px;
+    gap: 8px 12px;
     max-width: none;
   }
 
   .site-menu__link {
-    color: var(--c-cream);
+    gap: 4px;
   }
 
-  .site-menu__link:focus-visible {
-    outline-color: var(--c-cream);
+  .site-menu__label {
+    padding: 1px calc(4px - var(--track-menu)) 0 4px;
+    border-width: 1.5px;
+    box-shadow: 2px 2px 0 currentColor;
   }
 }
 
@@ -574,22 +605,6 @@ main:focus {
 }
 
 @media (min-width: 810px) {
-  .page-home .site-menu {
-    mix-blend-mode: normal;
-  }
-
-  .page-home .site-menu__link {
-    padding: 2px calc(5px - var(--track-menu)) 1px 5px; /* tracking pads the right */
-    background: var(--tag-bg);
-    border: var(--tag-border);
-    box-shadow: var(--tag-shadow);
-    color: var(--c-ink);
-  }
-
-  .page-home .site-menu__link:focus-visible {
-    outline-color: var(--c-ink);
-  }
-
   .page-home .site-menu__list {
     gap: 10px 16px;
   }
