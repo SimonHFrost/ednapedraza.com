@@ -1,60 +1,20 @@
 <!doctype html>
-<html lang="es" class="no-js">
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Proyecto — Edna Pedraza</title>
-  <meta name="description" content="Proyecto de Edna Pedraza, Directora Creativa y Estilista de Moda.">
-  <meta name="theme-color" content="#181818">
-  <meta name="robots" content="index">
-  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
-  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
-  <link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/styles.css">
-  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
-  <script src="js/data.js" defer></script>
-  <script src="js/main.js" defer></script>
+  <title>Edna Pedraza</title>
+  <meta name="robots" content="noindex">
+  <!-- Projects used to live at project.html?slug=<slug>; they are now static
+       pages at /proyectos/<slug>. This keeps old links working. -->
+  <script>
+    (function () {
+      var slug = new URLSearchParams(window.location.search).get('slug');
+      window.location.replace(slug ? '/proyectos/' + encodeURIComponent(slug) : '/');
+    })();
+  </script>
 </head>
-<body class="page-project" data-page="project">
-  <a class="skip-link" href="#main">Saltar al contenido</a>
-
-  <header class="site-header">
-    <a class="brand brand--small" href="index.html">
-      <p class="brand__name">Edna Pedraza</p>
-    </a>
-
-    <nav class="site-menu" id="site-menu" aria-label="Principal">
-      <ul class="site-menu__list">
-        <li class="site-menu__item"><a class="site-menu__link" href="about.html">About</a></li>
-        <li class="site-menu__item"><a class="site-menu__link" href="index.html#contacto">Contact</a></li>
-        <li class="site-menu__item"><a class="site-menu__link" href="index.html?servicio=direccion-creativa">Creative direction</a></li>
-        <li class="site-menu__item"><a class="site-menu__link" href="index.html?servicio=fashion-styling">Fashion styling</a></li>
-        <li class="site-menu__item"><a class="site-menu__link" href="index.html?servicio=direccion-de-arte">Art direction</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main id="main" tabindex="-1" data-project-root>
-    <noscript>
-      <p class="noscript-note">Las fichas de proyecto necesitan JavaScript. Actívalo o vuelve al <a href="index.html">inicio</a>.</p>
-    </noscript>
-  </main>
-
-  <!-- Unknown or missing ?slug= renders this (same markup as 404.html). -->
-  <template id="tpl-not-found">
-    <div class="not-found">
-      <div class="not-found__intro">
-        <h1 class="not-found__code mono-label"><span lang="en">Error 404 / Not found</span></h1>
-        <p class="not-found__copy">Esta página no existe.</p>
-        <p class="not-found__copy">Vuelve al <a href="index.html">inicio</a> o explora otra sección.</p>
-      </div>
-      <div class="not-found__countdown">
-        <p class="not-found__redirect mono-label"><span lang="en">Redirecting home in..</span></p>
-        <p class="not-found__count" data-countdown aria-hidden="true">08</p>
-        <p class="visually-hidden">Serás redirigido al inicio en unos segundos.</p>
-      </div>
-    </div>
-  </template>
+<body>
+  <p><a href="/">Edna Pedraza</a></p>
 </body>
 </html>

@@ -1,13 +1,15 @@
 /*
  * Site data — the single source of truth for projects and image lists.
  *
- * Classic script (not an ES module, no fetch) so every page also works when
- * opened straight from disk (file://).
+ * Input to scripts/build.mjs, which writes it into static HTML (the home and
+ * service lists, the project pages and the About gallery) so crawlers that
+ * don't run JavaScript can read it. The pages no longer load this file.
+ * After editing, run: node scripts/build.mjs
  *
  * Project fields
- *   slug        URL key: project.html?slug=<slug>
+ *   slug        URL key: /proyectos/<slug>
  *   title       Title as written in the home list (pages upper-case it in CSS)
- *   discipline  Service line: drives the menu filters and the project-page pill
+ *   discipline  Service line: decides which service pages list it; also the project-page pill
  *   client      Client label shown in the first pill on the project page
  *   bg / pill   Page colour and pill colour of the project page
  *   hero        Hero / background image, or null when the project has none
@@ -21,7 +23,7 @@
 (function () {
   'use strict';
 
-  var IMG = 'assets/img/';
+  var IMG = '/assets/img/';
 
   function gallery(slug, count) {
     var list = [];

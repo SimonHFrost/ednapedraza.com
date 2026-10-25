@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es" class="no-js" style="--project-bg: {{bg}}; --project-pill: {{pill}};">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{seo}}
+  <meta name="theme-color" content="{{bg}}">
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/img/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <link rel="preload" href="/assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+  <script src="/js/main.js" defer></script>
+</head>
+<body class="page-project" data-page="project">
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="site-header">
+    <a class="brand brand--small" href="/">
+      <p class="brand__name">Edna Pedraza</p>
+    </a>
+
+    <nav class="site-menu" id="site-menu" aria-label="Principal">
+      <ul class="site-menu__list">
+        <li class="site-menu__item"><a class="site-menu__link" href="/about">About</a></li>
+        <li class="site-menu__item"><a class="site-menu__link" href="/#contacto">Contact</a></li>
+        <li class="site-menu__item"><a class="site-menu__link" href="/direccion-creativa">Creative direction</a></li>
+        <li class="site-menu__item"><a class="site-menu__link" href="/fashion-styling">Fashion styling</a></li>
+        <li class="site-menu__item"><a class="site-menu__link" href="/direccion-de-arte">Art direction</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    {{project}}
+  </main>
+</body>
+</html>
