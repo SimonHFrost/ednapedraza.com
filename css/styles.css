@@ -510,10 +510,11 @@ main:focus {
   background-color: var(--c-empty-fill);
 }
 
-/* Tags: text over the home photos sits on tight cream tags with a thin ink
-   border and a hard offset in the text's own colour, so it reads on any
+/* Tags: text over the home photos sits on tight off-white tags with a thin
+   ink border and a hard offset in the text's own colour, so it reads on any
    photo while covering as little of it as possible. */
 .page-home {
+  --tag-bg: #f4f4f4; /* neutral, a touch grey (not the warm cream) */
   --tag-border: 1px solid var(--c-ink);
   --tag-shadow: 2px 2px 0 currentColor;
 }
@@ -522,16 +523,25 @@ main:focus {
 .page-home .brand__role,
 .work-row__title,
 .work-card__title {
-  background: var(--c-cream);
+  background: var(--tag-bg);
   border: var(--tag-border);
   box-shadow: var(--tag-shadow);
 }
 
+/* Padding offsets the glyphs' own side bearings and cap height so the name
+   has the same gap on all four sides (measured: ~10px at 88px, 5px at 30px). */
 .page-home .brand__name {
   display: inline-block;
-  margin-left: -7px;
-  padding: 8px 6px 0;
+  margin-left: -5px;
+  padding: 5.5px 12.5px 5.5px 4px;
   line-height: 0.82;
+}
+
+@media (max-width: 1399.98px) {
+  .page-home .brand__name {
+    margin-left: -4px;
+    padding: 4px 6px 3px 3px;
+  }
 }
 
 .page-home .brand__role {
@@ -552,7 +562,7 @@ main:focus {
 .work-row:hover .work-row__title,
 .work-row:focus-visible .work-row__title {
   background: var(--c-ink);
-  color: var(--c-cream);
+  color: var(--tag-bg);
 }
 
 @media (min-width: 810px) {
@@ -562,7 +572,7 @@ main:focus {
 
   .page-home .site-menu__link {
     padding: 2px 5px 1px;
-    background: var(--c-cream);
+    background: var(--tag-bg);
     border: var(--tag-border);
     box-shadow: var(--tag-shadow);
     color: var(--c-ink);
