@@ -510,13 +510,13 @@ main:focus {
   background-color: var(--c-empty-fill);
 }
 
-/* Tags: text over the home photos sits on tight off-white tags with a thin
-   ink border and a hard offset in the text's own colour, so it reads on any
-   photo while covering as little of it as possible. */
+/* Tags: text over the home photos sits on tight white tags with a border
+   and hard offset in the text's own colour, so it reads on any photo while
+   covering as little of it as possible. */
 .page-home {
-  --tag-bg: #f4f4f4; /* neutral, a touch grey (not the warm cream) */
-  --tag-border: 1px solid var(--c-ink);
-  --tag-shadow: 2px 2px 0 currentColor;
+  --tag-bg: var(--c-white);
+  --tag-border: 2px solid currentColor;
+  --tag-shadow: 3px 3px 0 currentColor;
 }
 
 .page-home .brand__name,
@@ -532,28 +532,28 @@ main:focus {
    has the same gap on all four sides (measured: ~10px at 88px, 5px at 30px). */
 .page-home .brand__name {
   display: inline-block;
-  margin-left: -5px;
+  margin-left: -6px;
   padding: 5.5px 12.5px 5.5px 4px;
   line-height: 0.82;
 }
 
 @media (max-width: 1399.98px) {
   .page-home .brand__name {
-    margin-left: -4px;
+    margin-left: -5px;
     padding: 4px 6px 3px 3px;
   }
 }
 
 .page-home .brand__role {
   display: table;
-  margin: 6px 0 0 -5px;
+  margin: 6px 0 0 -6px;
   padding: 2px 4px 1px;
   line-height: 1;
 }
 
 .work-row__title {
   display: inline-block;
-  margin-left: -5px;
+  margin-left: -6px;
   padding: 2px 4px 1px;
   line-height: 1;
 }
@@ -561,6 +561,7 @@ main:focus {
 /* On hover the tag inverts. */
 .work-row:hover .work-row__title,
 .work-row:focus-visible .work-row__title {
+  border-color: var(--c-ink);
   background: var(--c-ink);
   color: var(--tag-bg);
 }
