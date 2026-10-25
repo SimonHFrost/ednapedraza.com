@@ -90,9 +90,9 @@
     },
     {
       slug: 'harpers-mx',
-      title: "Harper's Bazaar MX",
+      title: 'Harper’s Bazaar MX',
       discipline: 'Fashion Styling',
-      client: "HARPER'S BAZAAR MX",
+      client: 'HARPER’S BAZAAR MX',
       bg: 'rgb(201, 222, 240)',
       pill: 'rgb(21, 31, 56)',
       hero: IMG + 'harpers-mx-hero.jpg',
