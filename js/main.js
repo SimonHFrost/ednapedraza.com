@@ -215,7 +215,6 @@
   function buildTags(project) {
     return el('div', { class: 'project__tags ui-label' }, [
       el('span', { class: 'tag tag--pill' }, [el('span', { class: 'visually-hidden' }, ['Cliente: ']), project.client]),
-      el('span', { class: 'tag tag--plain', 'aria-hidden': 'true' }, ['Cliente & Servicio']),
       el('span', { class: 'tag tag--pill' }, [el('span', { class: 'visually-hidden' }, ['Servicio: ']), project.discipline])
     ]);
   }

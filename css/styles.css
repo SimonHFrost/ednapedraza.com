@@ -98,7 +98,6 @@
   --fs-subtitle: 20px;     /* role line under the name */
   --fs-brand-sm: 30px;     /* small header name, prev/next titles */
   --fs-title: 120px;       /* project h1 */
-  --fs-row: 22px;          /* home rows */
   --fs-lede: 30px;         /* project description */
   --fs-credit: 17px;
   --fs-bio: 24px;
@@ -520,10 +519,10 @@ body:not(.page-home) .brand__name {
   padding: 2px 26px;
   color: var(--c-ink);
   text-decoration: none;
-  font-weight: 500;
-  font-size: var(--fs-row);
-  line-height: 22px;
-  letter-spacing: -0.01em;
+  /* Same type as the menu labels. */
+  font: 600 var(--fs-menu) / 22px var(--f-sans);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
 }
 
 .work-row__title {
@@ -617,8 +616,8 @@ body:not(.page-home) .brand__name {
 .work-row__title {
   display: inline-block;
   margin-left: -6px;
-  padding: 2.5px 5px 1.5px 4px;
-  line-height: 1;
+  padding: 2px calc(5px - var(--track-menu)) 1px 5px; /* as .site-menu__label */
+  line-height: 1.2;
 }
 
 /* On hover the tag inverts. */
@@ -727,11 +726,9 @@ body:not(.page-home) .brand__name {
     padding: 2px 4px 1px;
     overflow: hidden;
     color: var(--c-ink);
-    font-weight: 500;
-    font-size: 13px;
-    font-variation-settings: "opsz" 32; /* tighter display spacing fits narrow cards */
-    line-height: 1.2;
-    letter-spacing: -0.02em;
+    font: 600 var(--fs-menu) / 1.2 var(--f-sans);
+    letter-spacing: var(--track-menu);
+    text-transform: uppercase;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -786,10 +783,6 @@ body:not(.page-home) .brand__name {
   background: var(--project-pill, var(--c-ink));
   color: var(--c-white);
   white-space: nowrap;
-}
-
-.tag--plain {
-  color: var(--c-ink);
 }
 
 .project__title {
@@ -958,10 +951,6 @@ body:not(.page-home) .brand__name {
 }
 
 @media (max-width: 809.98px) {
-  .tag--plain {
-    display: none;
-  }
-
   .project__hero {
     aspect-ratio: 358 / 523;
   }
