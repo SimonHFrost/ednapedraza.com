@@ -253,7 +253,6 @@ function fillHomeLists(html, projects, file) {
 function projectArticle(project, index) {
   const tags = '<div class="project__tags ui-label">' +
     `<span class="tag tag--pill"><span class="visually-hidden">Cliente: </span>${esc(project.client)}</span>` +
-    '<span class="tag tag--plain" aria-hidden="true">Cliente &amp; Servicio</span>' +
     `<span class="tag tag--pill"><span class="visually-hidden">Servicio: </span>${esc(project.discipline)}</span></div>`;
 
   const hero = project.hero
