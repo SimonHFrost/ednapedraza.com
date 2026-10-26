@@ -135,8 +135,56 @@
     ]);
   }
 
+  /** Relative luminance (WCAG) of an sRGB channel triple, 0–255 each. */
+  function luminance(r, g, b) {
+    return [r, g, b].reduce(function (sum, c, i) {
+      c /= 255;
+      c = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      return sum + c * [0.2126, 0.7152, 0.0722][i];
+    }, 0);
+  }
+
+  /**
+   * 'white' or 'ink': the outline that stands out against the part of the
+   * layer's photo that sits behind `target` (object-fit: cover, centred).
+   * Null when the layer has no loaded, visible image.
+   */
+  function outlineFor(layer, target) {
+    var img = layer.querySelector('img');
+    if (!img || !img.complete || !img.naturalWidth) return null;
+    var box = img.getBoundingClientRect();
+    if (!box.width || !box.height) return null;
+    var rect = target.getBoundingClientRect();
+    var scale = Math.max(box.width / img.naturalWidth, box.height / img.naturalHeight);
+    var left = box.left + (box.width - img.naturalWidth * scale) / 2;
+    var top = box.top + (box.height - img.naturalHeight * scale) / 2;
+    var sx = Math.max(0, (rect.left - left) / scale);
+    var sy = Math.max(0, (rect.top - top) / scale);
+    var sw = Math.min(img.naturalWidth - sx, rect.width / scale);
+    var sh = Math.min(img.naturalHeight - sy, rect.height / scale);
+    if (sw <= 0 || sh <= 0) return null;
+
+    var canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 8;
+    var ctx = canvas.getContext('2d');
+    var data;
+    try {
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+      data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    } catch (error) {
+      return null; // a cross-origin image can't be read
+    }
+    var sum = 0;
+    for (var i = 0; i < data.length; i += 4) sum += luminance(data[i], data[i + 1], data[i + 2]);
+    // The purple name is itself dark, so the outline's main job is lifting it
+    // off darker photos: white unless the photo there is light (where white
+    // drops under about 2.2:1 contrast and ink reads better).
+    return sum / (data.length / 4) > 0.43 ? 'ink' : 'white';
+  }
+
   /** Hover / focus on a row cross-fades that project's image into the background. */
-  function bindRowHighlight(list, layers) {
+  function bindRowHighlight(list, layers, onChange) {
     var active = null;
 
     function activate(index) {
@@ -145,11 +193,13 @@
       if (active) active.classList.remove('is-active');
       active = layer || null;
       if (active) active.classList.add('is-active');
+      onChange(active);
     }
 
     function clear() {
       if (active) active.classList.remove('is-active');
       active = null;
+      onChange(null);
     }
 
     function rowFrom(target) {
@@ -193,7 +243,35 @@
       list.appendChild(buildRow(project, index));
       grid.appendChild(buildCard(project));
     });
-    bindRowHighlight(list, layers);
+
+    // The name's outline follows whichever photo is showing behind it.
+    var name = document.querySelector('.page-home .brand__name');
+    var shown = null;
+    function updateOutline(layer) {
+      shown = layer;
+      if (!name) return;
+      var outline = (layer && layer.getAttribute('data-outline')) ||
+        layers[baseIndex].getAttribute('data-outline') || 'white';
+      name.setAttribute('data-outline', outline);
+    }
+    function measure(layer) {
+      var outline = name && outlineFor(layer, name);
+      if (outline) layer.setAttribute('data-outline', outline);
+      if (layer === layers[baseIndex] || layer === shown) updateOutline(shown);
+    }
+    layers.forEach(function (layer) {
+      var img = layer.querySelector('img');
+      if (!img) return;
+      img.addEventListener('load', function () { measure(layer); });
+      if (img.complete) measure(layer);
+    });
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () { layers.forEach(measure); }, 150);
+    });
+
+    bindRowHighlight(list, layers, updateOutline);
   }
 
   /* --------------------------------------------------------------- project */
