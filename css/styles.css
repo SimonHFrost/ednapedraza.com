@@ -577,7 +577,6 @@ body:not(.page-home) .brand__name {
   --tag-shadow: 3px 3px 0 currentColor;
 }
 
-.page-home .brand__name,
 .page-home .brand__role,
 .work-row__title,
 .work-card__title {
@@ -586,19 +585,10 @@ body:not(.page-home) .brand__name {
   box-shadow: var(--tag-shadow);
 }
 
-/* Padding offsets the glyphs' own side bearings and cap height so the name
-   has the same gap on all four sides (measured: ~10px at 88px, 5px at 30px). */
+/* The name sits straight on the photo, with no tag. */
 .page-home .brand__name {
   display: inline-block;
-  margin-left: -6px;
-  padding: 2px 11.5px 6px 9px;
   line-height: 0.82;
-}
-
-@media (max-width: 1399.98px) {
-  .page-home .brand__name {
-    padding: 3px 6px 3.5px 5px;
-  }
 }
 
 .page-home .brand__role {
