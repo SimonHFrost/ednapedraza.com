@@ -1217,6 +1217,16 @@ textarea.field__control {
   display: none;
 }
 
+.contact-form__status--error {
+  color: var(--c-error);
+}
+
+.contact-form__submit[aria-disabled="true"] {
+  background: var(--c-purple);
+  opacity: 0.6;
+  cursor: progress;
+}
+
 @media (max-width: 1399.98px) {
   .contact {
     grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
