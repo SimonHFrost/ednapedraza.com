@@ -1,71 +1,30 @@
 /*
- * Shared behaviour + page renderers for the Edna Pedraza site.
- * Classic script (works over file:// and http). Depends on js/data.js.
- * Each page declares itself with <body data-page="home|project|about|404">.
+ * Shared behaviour for the Edna Pedraza site. The pages are static HTML
+ * written by scripts/build.mjs from js/data.js; this file only adds
+ * behaviour. Each page declares itself with
+ * <body data-page="home|project|about|404">.
  */
 (function () {
   'use strict';
 
-  var PROJECTS = window.PROJECTS || [];
-  var SITE_NAME = 'Edna Pedraza';
   var REDIRECT_SECONDS = 8; // measured on the live 404 page (08 → 01, then home)
 
-  /* ---------------------------------------------------------------- helpers */
+  /* ------------------------------------------------------------ old links */
 
-  /** Create an element: el('a', { href: '#', class: 'x' }, ['text', node]). */
-  function el(tag, attrs, children) {
-    var node = document.createElement(tag);
-    Object.keys(attrs || {}).forEach(function (key) {
-      var value = attrs[key];
-      if (value === null || value === undefined || value === false) return;
-      if (key === 'class') node.className = value;
-      else if (key === 'style') node.setAttribute('style', value);
-      else node.setAttribute(key, value === true ? '' : value);
-    });
-    (children || []).forEach(function (child) {
-      if (child === null || child === undefined) return;
-      node.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
-    });
-    return node;
-  }
+  /** The menu filters used to be home-page URLs (?servicio=<key>); each
+      service now has its own page at /<key>. */
+  var SERVICE_KEYS = ['direccion-creativa', 'fashion-styling', 'direccion-de-arte'];
 
-  function projectUrl(project) {
-    return 'project.html?slug=' + encodeURIComponent(project.slug);
-  }
-
-  function setMeta(name, content) {
-    var meta = document.querySelector('meta[name="' + name + '"]');
-    if (meta) meta.setAttribute('content', content);
-  }
-
-  /* -------------------------------------------------------------- services */
-
-  /** Menu filters for the home list: ?servicio=<key> keeps projects whose
-      discipline matches. "Dirección Creativa y Moda" counts as creative
-      direction only; Moda is not styling work. */
-  var SERVICES = {
-    'direccion-creativa': /Dirección Creativa/i,
-    'fashion-styling': /Fashion Styling/i,
-    'direccion-de-arte': /Arte\b/i
-  };
-
-  function currentService() {
+  function redirectOldServiceLink() {
     var key = new URLSearchParams(window.location.search).get('servicio');
-    return SERVICES[key] ? key : null;
-  }
-
-  /** Marks the menu link for the active service filter. */
-  function markServiceLink(key) {
-    if (!key) return;
-    var link = document.querySelector('.site-menu__link[href="index.html?servicio=' + key + '"]');
-    if (link) link.setAttribute('aria-current', 'page');
+    if (SERVICE_KEYS.indexOf(key) !== -1) window.location.replace('/' + key);
   }
 
   /* --------------------------------------------------------------- scroll */
 
   /** Smooth-scrolls to the home contact section: on clicks of a Contact link
       while already on the home page (which would otherwise reload or jump),
-      and on arrival from another page via index.html#contacto, which
+      and on arrival from another page via /#contacto, which
       browsers jump to instantly. */
   function initContactScroll() {
     var target = document.getElementById('contacto');
@@ -91,49 +50,6 @@
   }
 
   /* ------------------------------------------------------------------ home */
-
-  function buildBackgroundLayer(project, index, baseIndex) {
-    var classes = 'home-bg__layer' + (index === baseIndex ? ' is-base' : '');
-    if (!project.hero) {
-      return el('div', { class: classes + ' home-bg__layer--empty is-empty', 'data-index': index });
-    }
-    return el('div', { class: classes, 'data-index': index }, [
-      el('img', {
-        src: project.hero,
-        alt: '',
-        width: 1600,
-        height: 1000,
-        decoding: 'async',
-        loading: index === baseIndex ? 'eager' : 'lazy',
-        fetchpriority: index === baseIndex ? 'high' : null
-      })
-    ]);
-  }
-
-  function buildRow(project, index) {
-    return el('li', {}, [
-      el('a', { class: 'work-row', href: projectUrl(project), 'data-index': index }, [
-        el('span', { class: 'work-row__band', 'aria-hidden': 'true' }),
-        el('span', { class: 'work-row__title' }, [project.title]),
-        el('span', { class: 'visually-hidden' }, [' — ' + project.discipline])
-      ])
-    ]);
-  }
-
-  function buildCard(project) {
-    var media = project.hero
-      ? el('span', { class: 'work-card__media' }, [
-        el('img', { src: project.hero, alt: '', width: 1600, height: 1000, loading: 'lazy', decoding: 'async' })
-      ])
-      : el('span', { class: 'work-card__media is-empty' });
-    return el('li', { class: 'work-card' }, [
-      el('a', { class: 'work-card__link', href: projectUrl(project) }, [
-        el('span', { class: 'work-card__title' }, [project.title]),
-        media,
-        el('span', { class: 'visually-hidden' }, [' — ' + project.discipline])
-      ])
-    ]);
-  }
 
   /** Relative luminance (WCAG) of an sRGB channel triple, 0–255 each. */
   function luminance(r, g, b) {
@@ -220,29 +136,11 @@
     });
   }
 
-  function renderHome() {
-    var bg = document.querySelector('[data-home-bg]');
+  function initHome() {
     var list = document.querySelector('[data-work-list]');
-    var grid = document.querySelector('[data-work-grid]');
-    if (!bg || !list || !grid) return;
-
-    var service = currentService();
-    markServiceLink(service);
-    var projects = service
-      ? PROJECTS.filter(function (project) { return SERVICES[service].test(project.discipline); })
-      : PROJECTS;
-
-    // The resting background is the first project that has an image (a
-    // filtered list can start with one that doesn't).
-    var baseIndex = Math.max(0, projects.findIndex(function (project) { return project.hero; }));
-    var layers = projects.map(function (project, index) {
-      return buildBackgroundLayer(project, index, baseIndex);
-    });
-    layers.forEach(function (layer) { bg.appendChild(layer); });
-    projects.forEach(function (project, index) {
-      list.appendChild(buildRow(project, index));
-      grid.appendChild(buildCard(project));
-    });
+    if (!list) return;
+    var layers = Array.prototype.slice.call(document.querySelectorAll('.home-bg__layer'));
+    var base = document.querySelector('.home-bg__layer.is-base');
 
     // The name's outline follows whichever photo is showing behind it.
     var name = document.querySelector('.page-home .brand__name');
@@ -251,13 +149,13 @@
       shown = layer;
       if (!name) return;
       var outline = (layer && layer.getAttribute('data-outline')) ||
-        layers[baseIndex].getAttribute('data-outline') || 'white';
+        (base && base.getAttribute('data-outline')) || 'white';
       name.setAttribute('data-outline', outline);
     }
     function measure(layer) {
       var outline = name && outlineFor(layer, name);
       if (outline) layer.setAttribute('data-outline', outline);
-      if (layer === layers[baseIndex] || layer === shown) updateOutline(shown);
+      if (layer === base || layer === shown) updateOutline(shown);
     }
     layers.forEach(function (layer) {
       var img = layer.querySelector('img');
@@ -272,166 +170,6 @@
     });
 
     bindRowHighlight(list, layers, updateOutline);
-  }
-
-  /* --------------------------------------------------------------- project */
-
-  function findProjectIndex(slug) {
-    for (var i = 0; i < PROJECTS.length; i += 1) {
-      if (PROJECTS[i].slug === slug) return i;
-    }
-    return -1;
-  }
-
-  /** description: array of runs; odd positions are bold. */
-  function buildLede(runs) {
-    return el('p', { class: 'project__lede' }, runs.map(function (run, i) {
-      return i % 2 ? el('strong', {}, [run]) : run;
-    }));
-  }
-
-  function buildTags(project) {
-    return el('div', { class: 'project__tags ui-label' }, [
-      el('span', { class: 'tag tag--pill' }, [el('span', { class: 'visually-hidden' }, ['Cliente: ']), project.client]),
-      el('span', { class: 'tag tag--pill' }, [el('span', { class: 'visually-hidden' }, ['Servicio: ']), project.discipline])
-    ]);
-  }
-
-  function buildHero(project) {
-    if (!project.hero) {
-      return el('figure', { class: 'project__hero is-empty' }, [
-        el('figcaption', { class: 'visually-hidden' }, ['Este proyecto no tiene imagen principal.'])
-      ]);
-    }
-    return el('figure', { class: 'project__hero' }, [
-      el('img', {
-        src: project.hero,
-        alt: project.title + ': imagen principal.',
-        width: 1600,
-        height: 1000,
-        decoding: 'async',
-        fetchpriority: 'high'
-      })
-    ]);
-  }
-
-  function buildGallery(project) {
-    var total = project.gallery.length;
-    return el('ul', { class: 'project__gallery', style: '--cols: ' + total, 'aria-label': 'Galería' },
-      project.gallery.map(function (src, i) {
-        return el('li', {}, [
-          el('img', {
-            src: src,
-            alt: project.title + ': foto ' + (i + 1) + ' de ' + total + '.',
-            width: 800,
-            height: 800,
-            loading: 'lazy',
-            decoding: 'async'
-          })
-        ]);
-      }));
-  }
-
-  /** Description and credits are optional; with neither, the block is left out. */
-  function buildBody(project) {
-    var parts = [];
-    if (project.description.length) parts.push(buildLede(project.description));
-    if (project.credits.length) {
-      parts.push(el('ul', { class: 'project__credits', 'aria-label': 'Créditos' }, project.credits.map(function (line) {
-        return el('li', {}, [line]);
-      })));
-    }
-    return parts.length ? el('div', { class: 'project__body' }, parts) : null;
-  }
-
-  function buildPagerItem(project, direction) {
-    var isPrev = direction === 'prev';
-    return el('li', { class: 'pager__item pager__item--' + direction }, [
-      el('a', { class: 'pager__link', href: projectUrl(project), rel: direction }, [
-        el('span', { class: 'pager__label ui-label' }, [
-          el('span', { class: 'pager__dot', 'aria-hidden': 'true' }),
-          isPrev ? 'Previous' : 'Next'
-        ]),
-        el('span', { class: 'pager__title' }, [project.title])
-      ])
-    ]);
-  }
-
-  function buildPager(index) {
-    var items = [];
-    if (index > 0) items.push(buildPagerItem(PROJECTS[index - 1], 'prev'));
-    if (index < PROJECTS.length - 1) items.push(buildPagerItem(PROJECTS[index + 1], 'next'));
-    return el('footer', { class: 'project-footer' }, [
-      el('nav', { class: 'pager', 'aria-label': 'Proyecto anterior y siguiente' }, [
-        el('ul', { class: 'pager__list' }, items)
-      ])
-    ]);
-  }
-
-  function applyProjectTheme(project) {
-    var root = document.documentElement;
-    root.style.setProperty('--project-bg', project.bg);
-    root.style.setProperty('--project-pill', project.pill);
-    setMeta('theme-color', project.bg);
-  }
-
-  function renderProject() {
-    var root = document.querySelector('[data-project-root]');
-    if (!root) return;
-    var slug = new URLSearchParams(window.location.search).get('slug');
-    var index = findProjectIndex(slug);
-
-    if (index === -1) {
-      showNotFound(root);
-      return;
-    }
-
-    var project = PROJECTS[index];
-    applyProjectTheme(project);
-    document.title = project.title + ' — ' + SITE_NAME;
-    setMeta('description', project.title + ' (' + project.discipline + '): proyecto de Edna Pedraza, Directora Creativa y Estilista de Moda.');
-
-    var article = el('article', { class: 'project', 'aria-labelledby': 'project-title' }, [
-      buildTags(project),
-      el('h1', { class: 'project__title', id: 'project-title' }, [project.title]),
-      el('hr', { class: 'project__rule' }),
-      buildHero(project),
-      buildBody(project),
-      buildGallery(project)
-    ]);
-
-    root.replaceChildren(article, buildPager(index));
-  }
-
-  /** Unknown slug: swap the page into the 404 view (same markup as 404.html). */
-  function showNotFound(root) {
-    var template = document.getElementById('tpl-not-found');
-    document.body.classList.remove('page-project');
-    document.body.classList.add('page-404');
-    document.title = 'Página no encontrada — ' + SITE_NAME;
-    setMeta('theme-color', '#000000');
-    setMeta('robots', 'noindex');
-    root.replaceChildren(template.content.cloneNode(true));
-    startRedirectCountdown(root.querySelector('[data-countdown]'));
-  }
-
-  /* ----------------------------------------------------------------- about */
-
-  function renderAboutGallery() {
-    var list = document.querySelector('[data-about-gallery]');
-    if (!list) return;
-    (window.ABOUT_GALLERY || []).forEach(function (image, i) {
-      list.appendChild(el('li', { class: 'masonry__item' }, [
-        el('img', {
-          src: image.src,
-          alt: 'Trabajo de Edna Pedraza, foto ' + (i + 1) + '.',
-          width: image.width,
-          height: image.height,
-          loading: 'lazy',
-          decoding: 'async'
-        })
-      ]));
-    });
   }
 
   /* --------------------------------------------------------------- contact */
@@ -499,7 +237,10 @@
   function showCount(node, n) {
     node.textContent = '';
     pad(n).split('').forEach(function (digit) {
-      node.appendChild(el('span', { class: 'not-found__digit' }, [digit]));
+      var cell = document.createElement('span');
+      cell.className = 'not-found__digit';
+      cell.textContent = digit;
+      node.appendChild(cell);
     });
   }
 
@@ -513,7 +254,7 @@
       remaining -= 1;
       if (remaining <= 0) {
         window.clearInterval(timer);
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return;
       }
       showCount(node, remaining);
@@ -549,18 +290,19 @@
 
   /* ------------------------------------------------------------------ boot */
 
-  var RENDERERS = {
-    home: renderHome,
-    project: renderProject,
-    about: renderAboutGallery,
+  var PAGE_SETUP = {
+    home: function () {
+      redirectOldServiceLink();
+      initHome();
+    },
     '404': function () { startRedirectCountdown(document.querySelector('[data-countdown]')); }
   };
 
   function boot() {
     initContactScroll();
     initContactForm();
-    var render = RENDERERS[document.body.getAttribute('data-page')];
-    if (render) render();
+    var setup = PAGE_SETUP[document.body.getAttribute('data-page')];
+    if (setup) setup();
     initHeaderScroll();
   }
 
