@@ -1221,7 +1221,7 @@ textarea.field__control {
   color: var(--c-error);
 }
 
-.contact-form__submit:disabled {
+.contact-form__submit[aria-disabled="true"] {
   background: var(--c-purple);
   opacity: 0.6;
   cursor: progress;

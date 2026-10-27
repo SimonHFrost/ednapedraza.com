@@ -11,13 +11,14 @@
 
 const FORM_PATH = '/api/contacto';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/; // same check as js/main.js
-const MAX_BODY_BYTES = 32 * 1024;
+const MAX_BODY_BYTES = 64 * 1024; // 5000 characters of any script, URL-encoded
 const MAX_LENGTH = { nombre: 100, correo: 254, mensaje: 5000 };
 const MIN_MESSAGE = 10;
 
 const TEXT = {
   sent: 'Tu mensaje se envió. Te respondo pronto.',
   invalid: 'Revisa el formulario: falta tu nombre, un correo válido o un mensaje de al menos 10 caracteres.',
+  tooLong: 'El mensaje es demasiado largo. Acórtalo un poco y vuelve a intentarlo.',
   tooMany: 'Has enviado varios mensajes seguidos. Espera un minuto y vuelve a intentarlo.',
   failed: 'No se pudo enviar el mensaje. Escríbeme directamente a edna.sapi@gmail.com.'
 };
@@ -40,22 +41,18 @@ async function handleContact(request, env, url) {
   const origin = request.headers.get('Origin');
   if (origin && origin !== url.origin) return reply(403, false, TEXT.failed);
 
-  if (Number(request.headers.get('Content-Length') || 0) > MAX_BODY_BYTES) {
-    return reply(413, false, TEXT.invalid);
-  }
-
   if (env.CONTACT_RATE_LIMIT) {
-    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-    const { success } = await env.CONTACT_RATE_LIMIT.limit({ key: ip });
+    const { success } = await env.CONTACT_RATE_LIMIT.limit({ key: clientKey(request) });
     if (!success) return reply(429, false, TEXT.tooMany);
   }
 
   let form;
   try {
-    form = await request.formData();
+    form = await readForm(request);
   } catch {
     return reply(400, false, TEXT.invalid);
   }
+  if (!form) return reply(413, false, TEXT.tooLong);
 
   // Hidden field that people never see (index.html); bots fill it in. Answer
   // as if it worked so they don't retry.
@@ -63,11 +60,16 @@ async function handleContact(request, env, url) {
 
   const nombre = oneLine(field(form, 'nombre'));
   const correo = field(form, 'correo');
-  const mensaje = field(form, 'mensaje');
-  const valid = nombre && nombre.length <= MAX_LENGTH.nombre &&
-    correo.length <= MAX_LENGTH.correo && EMAIL_PATTERN.test(correo) &&
-    mensaje.length >= MIN_MESSAGE && mensaje.length <= MAX_LENGTH.mensaje;
-  if (!valid) return reply(400, false, TEXT.invalid);
+  // Forms posted without JavaScript send line breaks as \r\n; count them
+  // as one character, like the textarea's maxlength does.
+  const mensaje = field(form, 'mensaje').replace(/\r\n?/g, '\n');
+  if (nombre.length > MAX_LENGTH.nombre || correo.length > MAX_LENGTH.correo ||
+      mensaje.length > MAX_LENGTH.mensaje) {
+    return reply(400, false, TEXT.tooLong);
+  }
+  if (!nombre || !EMAIL_PATTERN.test(correo) || mensaje.length < MIN_MESSAGE) {
+    return reply(400, false, TEXT.invalid);
+  }
 
   try {
     await env.CONTACT_EMAIL.send({
@@ -93,6 +95,41 @@ async function handleContact(request, env, url) {
     return reply(502, false, TEXT.failed);
   }
   return reply(200, true, TEXT.sent);
+}
+
+/** Rate-limit key: the visitor's IP, or for IPv6 its /64, which one
+    connection usually holds whole. */
+function clientKey(request) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (!ip.includes(':')) return ip;
+  const [head, tail] = ip.split('::');
+  const left = head ? head.split(':') : [];
+  const right = tail ? tail.split(':') : [];
+  const zeros = tail === undefined ? [] : Array(8 - left.length - right.length).fill('0');
+  return [...left, ...zeros, ...right].slice(0, 4).join(':');
+}
+
+/** Parses the posted form, reading at most MAX_BODY_BYTES (null if larger).
+    Content-Length isn't enough: a chunked request doesn't send one. */
+async function readForm(request) {
+  const chunks = [];
+  let size = 0;
+  if (request.body) {
+    const reader = request.body.getReader();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > MAX_BODY_BYTES) {
+        await reader.cancel();
+        return null;
+      }
+      chunks.push(value);
+    }
+  }
+  const body = new Blob(chunks);
+  const type = request.headers.get('Content-Type') || '';
+  return new Response(body, { headers: { 'Content-Type': type } }).formData();
 }
 
 function field(form, name) {
@@ -121,7 +158,7 @@ function replyPage(status, ok, message) {
   <title>${ok ? 'Mensaje enviado' : 'Mensaje no enviado'} — Edna Pedraza</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body>
+<body style="padding-bottom: 0; background: var(--c-contact-page);">
   <main class="contact" style="min-height: 100vh; display: block;">
     <h1 class="contact__title">${ok ? '¡Gracias!' : 'Ups'}</h1>
     <p class="contact-form__status">${message}</p>

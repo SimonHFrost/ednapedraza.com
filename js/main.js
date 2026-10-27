@@ -461,7 +461,7 @@
   /** Posts the form to the Worker (worker/index.js), which emails it to Edna.
       Resolves to { ok, message }; message is the Worker's, if it sent one. */
   function sendContactForm(form) {
-    return fetch(form.action, {
+    return fetch(form.getAttribute('action') || '/api/contacto', {
       method: 'POST',
       headers: { Accept: 'application/json' },
       body: new URLSearchParams(new FormData(form))
@@ -508,12 +508,13 @@
         return;
       }
       var name = form.elements.nombre.value.trim().split(/\s+/)[0];
+      // aria-disabled rather than disabled, so the button keeps keyboard focus.
       sending = true;
-      submit.disabled = true;
+      submit.setAttribute('aria-disabled', 'true');
       showStatus(status, 'Enviando…');
       sendContactForm(form).then(function (result) {
         sending = false;
-        submit.disabled = false;
+        submit.removeAttribute('aria-disabled');
         if (!result.ok) {
           showStatus(status, result.message || 'No se pudo enviar el mensaje. Escríbeme directamente a edna.sapi@gmail.com.', true);
           return;

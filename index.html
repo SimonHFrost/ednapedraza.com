@@ -73,7 +73,8 @@
           <div class="field">
             <label class="field__label ui-label" for="f-correo">Correo</label>
             <input class="field__control" id="f-correo" name="correo" type="email" autocomplete="email"
-                   placeholder="nombre@ejemplo.com" required maxlength="254" aria-describedby="f-correo-error"
+                   placeholder="nombre@ejemplo.com" required maxlength="254" pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+                   aria-describedby="f-correo-error"
                    data-required-message="Escribe tu correo.">
             <p class="field__error ui-label" id="f-correo-error"></p>
           </div>
