@@ -59,29 +59,36 @@
         </ul>
       </div>
 
-        <!-- Demo form: no action, no backend. main.js validates it locally and
-             shows an inline message; nothing is ever sent. -->
-        <form class="contact-form" data-contact-form novalidate aria-label="Formulario de contacto">
+        <!-- Posts to the site's Worker (worker/index.js), which emails Edna.
+             main.js validates it and sends it with fetch; without JavaScript
+             it posts as a normal page. -->
+        <form class="contact-form" data-contact-form action="/api/contacto" method="post" aria-label="Formulario de contacto">
           <div class="field">
             <label class="field__label ui-label" for="f-nombre">Nombre</label>
             <input class="field__control" id="f-nombre" name="nombre" type="text" autocomplete="name"
-                   placeholder="Nombre Apellido" required aria-describedby="f-nombre-error"
+                   placeholder="Nombre Apellido" required maxlength="100" aria-describedby="f-nombre-error"
                    data-required-message="Escribe tu nombre.">
             <p class="field__error ui-label" id="f-nombre-error"></p>
           </div>
           <div class="field">
             <label class="field__label ui-label" for="f-correo">Correo</label>
             <input class="field__control" id="f-correo" name="correo" type="email" autocomplete="email"
-                   placeholder="nombre@ejemplo.com" required aria-describedby="f-correo-error"
+                   placeholder="nombre@ejemplo.com" required maxlength="254" aria-describedby="f-correo-error"
                    data-required-message="Escribe tu correo.">
             <p class="field__error ui-label" id="f-correo-error"></p>
           </div>
           <div class="field">
             <label class="field__label ui-label" for="f-mensaje">Mensaje</label>
             <textarea class="field__control" id="f-mensaje" name="mensaje" placeholder="Cuéntame tu idea…"
-                      required aria-describedby="f-mensaje-error" data-minlength="10"
+                      required minlength="10" maxlength="5000" aria-describedby="f-mensaje-error" data-minlength="10"
                       data-required-message="Escribe un mensaje."></textarea>
             <p class="field__error ui-label" id="f-mensaje-error"></p>
+          </div>
+          <!-- Spam trap: hidden from people, but bots fill it in and the
+               Worker then drops the message. -->
+          <div class="visually-hidden" aria-hidden="true">
+            <label for="f-sitio-web">Deja este campo vacío</label>
+            <input id="f-sitio-web" name="sitio_web" type="text" tabindex="-1" autocomplete="off">
           </div>
           <button class="contact-form__submit" type="submit">Enviar</button>
           <p class="contact-form__status" data-form-status role="status" aria-live="polite"></p>

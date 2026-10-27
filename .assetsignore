@@ -1,2 +1,6 @@
+# Not published with the site (same format as .gitignore). The repo root is
+# the assets directory, so anything not listed here is public.
+.git
+worker
 wrangler.jsonc
 .assetsignore
