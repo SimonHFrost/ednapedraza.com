@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" role="img" aria-label="Ilustración provisional de la tote">
+  <!-- Placeholder: swap for real product photos once the tote is made. -->
+  <path d="M205 230 C205 110 395 110 395 230" fill="none" stroke="#551ee3" stroke-width="26" stroke-linecap="round"/>
+  <path d="M120 220 H480 L505 660 H95 Z" fill="#f54edc" stroke="#181818" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M205 220 V300 M395 220 V300" stroke="#551ee3" stroke-width="26" stroke-linecap="round"/>
+  <g transform="translate(300 440)">
+    <g fill="#fff" stroke="#181818" stroke-width="5">
+      <ellipse rx="34" ry="62" transform="rotate(0)   translate(0 -58)"/>
+      <ellipse rx="34" ry="62" transform="rotate(72)  translate(0 -58)"/>
+      <ellipse rx="34" ry="62" transform="rotate(144) translate(0 -58)"/>
+      <ellipse rx="34" ry="62" transform="rotate(216) translate(0 -58)"/>
+      <ellipse rx="34" ry="62" transform="rotate(288) translate(0 -58)"/>
+    </g>
+    <circle r="30" fill="#ffd23f" stroke="#181818" stroke-width="5"/>
+  </g>
+  <text x="300" y="625" text-anchor="middle" font-family="DM Serif Display, Georgia, serif" font-size="38" fill="#181818" letter-spacing="2">EDNA PEDRAZA</text>
+</svg>
