@@ -1,43 +1,69 @@
 /* ==========================================================================
    Tienda — the drop page (tienda.html). Loaded after styles.css.
    --------------------------------------------------------------------------
-   1. Tokens          4. Buy panel        7. Details & FAQ
-   2. Page            5. Marquee band     8. Closing call to action
-   3. Hero stage      6. Steps            9. Footer
-                                         10. Reduced motion
+   1. Tokens          5. Marquee band     9. Closing call to action
+   2. Page            6. Frames          10. Footer
+   3. Hero stage      7. Steps           11. Tablet and phone
+   4. Buy panel       8. Details & FAQ
    A colour-blocked poster: pink stage, cream panel, purple band, three
-   flat colour steps, cream details, red finale. Small text stays on cream,
-   white, mint, yellow or blush (all AA with ink or purple); pink and red
-   fields only carry large type.
+   photo-ready frames, three flat colour steps, cream details, red finale.
+   Small text stays on cream, white, mint, yellow or blush (all AA with ink
+   or purple); pink and red fields only carry large type or white tags.
+   Motion (the band and the status dot) only runs with JavaScript on and
+   without reduced motion; see sections 4 and 5.
    ========================================================================== */
 
-/* 1. Tokens ----------------------------------------------------------------- */
-.page-store {
-  --c-yellow: #ffd23f;               /* the flower centre on the tote */
-  --c-mint: var(--c-contact-page);
-  --c-blush: var(--c-about-page);
-  --store-header-h: 68px;            /* .site-header at this breakpoint */
+/* 1. Tokens -----------------------------------------------------------------
+   Store-only additions to the site palette in styles.css. They live on :root
+   (this file only loads on tienda.html) so store.js can override the header
+   height on <html>. */
+:root {
+  --store-yellow: #ffd23f;           /* the flower centre in the tote art: sticker, step 02, frame 03, stamp */
+  --store-mint: var(--c-contact-page);
+  --store-blush: var(--c-about-page);
+  --store-green: #128a22;            /* status dot: 3.9:1 on mint, a non-text marker */
+
+  /* Fallback height of the fixed .site-header; store.js replaces it with
+     the measured value (inline on <html>). */
+  --store-header-h: 68px;
   --band-h: 64px;
   --panel-pad: clamp(32px, 4.4vw, 72px);
 }
 
 @media (max-width: 1399.98px) {
-  .page-store {
-    --store-header-h: 61px;
+  :root {
+    --store-header-h: 60.8px;
     --band-h: 56px;
   }
 }
 
+/* The five menu tags wrap to a second line here. */
+@media (min-width: 810px) and (max-width: 847.98px) {
+  :root {
+    --store-header-h: 85.2px;
+  }
+}
+
 @media (max-width: 809.98px) {
-  .page-store {
-    --store-header-h: 57px;
+  :root {
+    --store-header-h: 57.2px;
     --band-h: 48px;
   }
 }
 
-/* 2. Page ------------------------------------------------------------------- */
+/* 2. Page -------------------------------------------------------------------
+   scroll-padding keeps keyboard focus clear of the fixed header (which comes
+   back on scrolling up) and, on phones, of the fixed menu bar (WCAG 2.4.11);
+   120px matches the body's bottom padding in styles.css. */
 html:has(.page-store) {
+  scroll-padding-top: calc(var(--store-header-h) + 12px);
   background: var(--c-cream);
+}
+
+@media (max-width: 809.98px) {
+  html:has(.page-store) {
+    scroll-padding-bottom: 120px;
+  }
 }
 
 .page-store {
@@ -66,6 +92,19 @@ html:has(.page-store) {
   line-height: 1;
   letter-spacing: -0.01em;
   text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* House tag: white, bordered and shadowed in the text's own colour, as the
+   site menu's labels. */
+.drop-kicker,
+.drop-stage__tag,
+.frame__tag {
+  padding: 4px 6px 3px 7px;
+  border: 2px solid currentColor;
+  background: var(--c-white);
+  box-shadow: 3px 3px 0 currentColor;
+  color: var(--c-ink);
 }
 
 /* 3. Hero stage ------------------------------------------------------------- */
@@ -107,22 +146,30 @@ html:has(.page-store) {
 }
 
 /* For a real photograph (see the note at the top of tienda.html): the photo
-   fills the field as it is, with no flower, stickers, tint or overlay. */
+   fills the field as it is, with no flower, stickers, tint or overlay. A JPEG
+   cannot be a cut-out, so a src containing .jpg / .jpeg (any case, query
+   string allowed) switches to this mode even without the class. --focus on
+   the img sets the focal point of the crop. */
 .drop-stage--photo .drop-stage__flower,
 .drop-stage--photo .drop-badge,
-.drop-stage--photo .drop-stage__tag {
+.drop-stage--photo .drop-stage__tag,
+.drop-stage:has(> img[src*=".jpg" i], > img[src*=".jpeg" i]) > :not(img) {
   display: none;
 }
 
-.drop-stage--photo .drop-stage__img {
+.drop-stage--photo .drop-stage__img,
+.drop-stage__img[src*=".jpg" i],
+.drop-stage__img[src*=".jpeg" i] {
   inset: 0;
   width: 100%;
   height: 100%;
+  max-width: none;
   object-fit: cover;
+  object-position: var(--focus, 50% 50%);
   transform: none;
 }
 
-/* Yellow "50" sticker, slapped on at an angle. */
+/* Yellow edition sticker, slapped on at an angle. */
 .drop-badge {
   position: absolute;
   top: clamp(24px, 9%, 72px);
@@ -134,7 +181,7 @@ html:has(.page-store) {
   aspect-ratio: 1;
   border: 2px solid var(--c-ink);
   border-radius: 50%;
-  background: var(--c-yellow);
+  background: var(--store-yellow);
   box-shadow: 4px 4px 0 var(--c-ink);
   color: var(--c-ink);
   text-align: center;
@@ -155,20 +202,16 @@ html:has(.page-store) {
   text-transform: uppercase;
 }
 
-/* House tag in ink, like an edition stamp in the poster's corner. */
+/* An edition stamp in the poster's corner. */
 .drop-stage__tag {
   position: absolute;
   bottom: 24px;
   left: var(--gutter);
-  padding: 4px 6px 3px 7px;
-  border: 2px solid var(--c-ink);
-  background: var(--c-white);
-  box-shadow: 3px 3px 0 var(--c-ink);
-  color: var(--c-ink);
 }
 
 /* 4. Buy panel -------------------------------------------------------------- */
 .drop-panel {
+  container-type: inline-size; /* the title is sized from the panel's width */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -176,33 +219,29 @@ html:has(.page-store) {
   padding: 48px var(--gutter) 48px var(--panel-pad);
 }
 
-/* House tag: white, bordered and shadowed in the text's own colour. */
 .drop-kicker {
-  padding: 4px 6px 3px 7px;
-  border: 2px solid currentColor;
-  background: var(--c-white);
-  box-shadow: 3px 3px 0 currentColor;
   color: var(--c-purple);
 }
 
+/* Sized from the panel (cqi), so a longer real name still fits; on tablet
+   and desktop each word takes its own line, like a poster. */
 .drop-title {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 0.22em;
+  max-width: 100%;
   margin-top: 20px;
   color: var(--c-red); /* 4.1:1 on cream: large type only */
   font-family: var(--f-display);
   font-weight: 400;
   font-size: clamp(64px, 11vw, 160px);
+  font-size: min(160px, 25cqi);
   line-height: 0.84;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  overflow-wrap: break-word;
 }
 
-/* Desktop and tablet stack the two words like a poster. */
 @media (min-width: 810px) {
   .drop-title {
-    flex-direction: column;
+    width: min-content;
   }
 }
 
@@ -218,23 +257,17 @@ html:has(.page-store) {
 }
 
 .drop-price {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 16px;
   margin-top: 22px;
-}
-
-.drop-price__amount {
   color: var(--c-ink);
   font-family: var(--f-display);
   font-size: clamp(40px, 3.6vw, 56px);
   line-height: 1;
 }
 
+/* Shipping cost beside the price (the space before it is the gap). */
 .drop-price__note {
-  color: var(--c-purple);
-  font: 600 15px / 1.3 var(--f-sans);
+  font: 600 14px / 1.2 var(--f-sans);
+  white-space: nowrap;
 }
 
 .drop-status {
@@ -244,9 +277,15 @@ html:has(.page-store) {
   margin-top: 20px;
   padding: 8px 14px 8px 12px;
   border-radius: 100px;
-  background: var(--c-mint);
+  background: var(--store-mint);
   color: var(--c-ink);
   font: 600 14px / 1.25 var(--f-sans);
+}
+
+/* Dates stay on one line, whatever they are changed to. */
+.drop-status [data-placeholder="preorder-end"],
+.store [data-placeholder="ship-date"] {
+  white-space: nowrap;
 }
 
 .drop-status__dot {
@@ -254,8 +293,26 @@ html:has(.page-store) {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #128a22; /* 3.9:1 on mint: a non-text marker */
+  background: var(--store-green);
   box-shadow: 0 0 0 3px rgb(18 138 34 / 0.2);
+}
+
+/* A few soft pulses on arrival, done within five seconds (WCAG 2.2.2). */
+@media (prefers-reduced-motion: no-preference) {
+  .drop-status__dot {
+    animation: drop-pulse 1.6s var(--ease-out) 0.6s 3;
+  }
+}
+
+@keyframes drop-pulse {
+  0% {
+    box-shadow: 0 0 0 3px rgb(18 138 34 / 0.35);
+  }
+
+  70%,
+  100% {
+    box-shadow: 0 0 0 11px rgb(18 138 34 / 0);
+  }
 }
 
 /* The contact form's purple pill, with the house offset shadow added. */
@@ -295,6 +352,7 @@ html:has(.page-store) {
   outline-offset: 4px;
 }
 
+.buy-button__label,
 .buy-button__price {
   white-space: nowrap;
 }
@@ -313,53 +371,112 @@ html:has(.page-store) {
 }
 
 /* 5. Marquee band ------------------------------------------------------------
-   Two identical groups, each at least as wide as the screen, slide left by
-   their own width and loop seamlessly. Paused on hover, with the button, or
-   for reduced motion (section 10). */
+   Still by default (no JavaScript, or reduced motion): the four facts wrap,
+   centred. With JavaScript and motion allowed, the band is one line; store.js
+   adds a hidden copy of the list, shows the button and then sets .is-looping,
+   so both lists (each at least as wide as the screen) start sliding in the
+   same frame, by their own width, and loop seamlessly. Paused on hover or
+   with the button, which sits in a solid end-cap so words leave the band
+   cleanly. */
 .drop-band {
   position: relative;
-  display: flex;
-  overflow: hidden;
-  height: var(--band-h);
   background: var(--c-purple);
   color: var(--c-cream);
 }
 
-.drop-band__track {
-  display: flex;
-  flex: none;
-}
-
-/* min-width in vw, not %: a percentage of the track would be cyclic. */
 .drop-band__group {
   display: flex;
-  flex: none;
-  justify-content: space-around;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  min-width: 100vw;
-  animation: drop-band 48s linear infinite;
+  gap: 10px 26px;
+  min-height: var(--band-h);
+  padding: 12px var(--gutter);
 }
 
 .drop-band__group li {
-  display: flex;
-  align-items: center;
-  flex: none;
   font-family: var(--f-display);
   font-size: clamp(20px, 2vw, 28px);
   line-height: 1;
   letter-spacing: 0.01em;
+  text-align: center;
   text-transform: uppercase;
-  white-space: nowrap;
+  text-wrap: balance;
 }
 
-/* The favicon flower between phrases. */
+/* The favicon flower: before each phrase while the band stands still,
+   between phrases while it moves. */
+.drop-band__group li::before,
 .drop-band__group li::after {
   content: "";
-  flex: none;
+  display: inline-block;
+  vertical-align: -0.12em;
   width: 0.9em;
   height: 0.9em;
-  margin: 0 0.9em;
+  margin-right: 0.4em;
   background: url("../assets/img/favicon.svg") center / contain no-repeat;
+}
+
+.drop-band__group li::after {
+  display: none;
+}
+
+.drop-band [data-band-copy],
+.drop-band__toggle {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .drop-band {
+    display: flex;
+    overflow: hidden;
+    height: var(--band-h);
+  }
+
+  .js .drop-band__track {
+    display: flex;
+    flex: none;
+  }
+
+  /* min-width in vw, not %: a percentage of the track would be cyclic. */
+  .js .drop-band__group,
+  .js .drop-band [data-band-copy] {
+    display: flex;
+    flex: none;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    gap: 0;
+    min-width: 100vw;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .js .drop-band.is-looping .drop-band__group {
+    animation: drop-band 48s linear infinite;
+  }
+
+  .js .drop-band__group li {
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .js .drop-band__group li::before {
+    display: none;
+  }
+
+  .js .drop-band__group li::after {
+    display: inline-block;
+    margin: 0 0.9em;
+  }
+
+  .js .drop-band:hover .drop-band__group,
+  .js .drop-band.is-paused .drop-band__group {
+    animation-play-state: paused;
+  }
+
+  .js .drop-band__toggle:not([hidden]) {
+    display: grid;
+  }
 }
 
 @keyframes drop-band {
@@ -368,41 +485,40 @@ html:has(.page-store) {
   }
 }
 
-.drop-band:hover .drop-band__group,
-.drop-band.is-paused .drop-band__group {
-  animation-play-state: paused;
-}
-
+/* The end-cap: a full-height purple block with a cream rule, holding the
+   round pause / play button. */
 .drop-band__toggle {
   position: absolute;
-  top: 50%;
-  right: 12px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  place-items: center;
+  width: calc(var(--band-h) + 8px);
+  padding: 0;
+  border: 0;
+  border-left: 2px solid var(--c-cream);
+  background: var(--c-purple);
+  color: var(--c-cream);
+  cursor: pointer;
+}
+
+.drop-band__knob {
   display: grid;
   place-items: center;
   width: 36px;
   height: 36px;
-  padding: 0;
-  border: 2px solid var(--c-cream);
+  border: 2px solid currentColor;
   border-radius: 50%;
-  background: var(--c-purple);
-  box-shadow: 0 0 0 8px var(--c-purple); /* a clear margin over the moving text */
-  color: var(--c-cream);
-  cursor: pointer;
-  transform: translateY(-50%);
 }
 
-.drop-band__toggle[hidden] {
-  display: none;
-}
-
-.drop-band__toggle:hover {
+.drop-band__toggle:hover .drop-band__knob {
   background: var(--c-cream);
   color: var(--c-purple);
 }
 
 .drop-band__toggle:focus-visible {
   outline: 2px solid var(--c-cream);
-  outline-offset: 2px;
+  outline-offset: -6px;
 }
 
 .drop-band__icon {
@@ -415,7 +531,75 @@ html:has(.page-store) {
   display: none;
 }
 
-/* 6. Steps ------------------------------------------------------------------ */
+/* 6. Frames ------------------------------------------------------------------
+   Three photo-ready frames: a flat colour field and a caption tag below it
+   (never on the photo). A real photo fills its frame edge to edge; the
+   crops further down only apply to the placeholder illustration. */
+.drop-frames {
+  padding: 56px var(--gutter) 0;
+}
+
+.drop-frames__list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.frame {
+  margin: 0;
+}
+
+.frame__field {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: var(--frame-bg, var(--store-mint));
+}
+
+.frame--mint { --frame-bg: var(--store-mint); }
+.frame--pink { --frame-bg: var(--c-pink); }
+.frame--yellow { --frame-bg: var(--store-yellow); }
+
+.frame__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--focus, 50% 50%);
+}
+
+/* Placeholder crops (tote-placeholder.svg only). */
+.frame__img[src$="tote-placeholder.svg"] {
+  inset: 12%;
+  width: 76%;
+  height: 76%;
+  object-fit: contain;
+}
+
+/* Close-up on the flower: the artwork's flower centre (300, 440 of 600 x
+   720) sits mid-frame, scaled so the window stays below the handles. */
+.frame__img--flower[src$="tote-placeholder.svg"] {
+  inset: 50% auto auto 50%;
+  width: 312.5%;
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -61.11%);
+}
+
+.frame__img--tilt[src$="tote-placeholder.svg"] {
+  inset: 17%;
+  width: 66%;
+  height: 66%;
+  transform: rotate(-8deg);
+}
+
+.frame__tag {
+  display: inline-block;
+  margin-top: 14px;
+}
+
+/* 7. Steps ------------------------------------------------------------------ */
 .drop-steps__title {
   padding: 96px var(--gutter) 40px;
 }
@@ -423,29 +607,34 @@ html:has(.page-store) {
 .drop-steps__list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto 1fr auto auto; /* number, space, title, copy */
+  min-height: 380px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Subgrid rows keep the three titles on one line whatever the copy's
+   length. */
 .step {
-  display: flex;
-  flex-direction: column;
-  min-height: 380px;
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: 0;
   padding: 40px var(--panel-pad) 48px var(--gutter);
   color: var(--c-ink);
 }
 
 .step--mint {
-  background: var(--c-mint);
+  background: var(--store-mint);
 }
 
 .step--yellow {
-  background: var(--c-yellow);
+  background: var(--store-yellow);
 }
 
 .step--blush {
-  background: var(--c-blush);
+  background: var(--store-blush);
 }
 
 .step__num {
@@ -456,13 +645,15 @@ html:has(.page-store) {
 }
 
 .step__title {
-  margin: auto 0 0;
+  align-self: end;
+  margin: 0;
   padding-top: 48px;
   font-family: var(--f-display);
   font-weight: 400;
   font-size: clamp(28px, 2.6vw, 38px);
   line-height: 1;
   text-transform: uppercase;
+  text-wrap: balance;
 }
 
 .step__copy {
@@ -473,7 +664,7 @@ html:has(.page-store) {
   text-wrap: pretty;
 }
 
-/* 7. Details & FAQ ---------------------------------------------------------- */
+/* 8. Details & FAQ ---------------------------------------------------------- */
 .drop-info {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -508,6 +699,7 @@ html:has(.page-store) {
   color: var(--c-ink);
   font-size: 19px;
   line-height: 1.35;
+  text-wrap: balance;
 }
 
 .faq {
@@ -518,10 +710,12 @@ html:has(.page-store) {
   border-bottom: 2px solid var(--c-ink);
 }
 
+/* Plus that turns into a minus: two bars in a purple disc. */
 .faq__q {
   position: relative;
   display: block;
   padding: 18px 56px 17px 0;
+  background: radial-gradient(circle at calc(100% - 20px) 50%, var(--c-purple) 0 16px, transparent 16.5px);
   color: var(--c-ink);
   font-weight: 600;
   font-size: 19px;
@@ -534,7 +728,6 @@ html:has(.page-store) {
   display: none;
 }
 
-/* Plus that turns into a minus: two bars in a purple disc. */
 .faq__q::before,
 .faq__q::after {
   content: "";
@@ -556,12 +749,18 @@ html:has(.page-store) {
   transform: rotate(0deg);
 }
 
-.faq__q {
-  background: radial-gradient(circle at calc(100% - 20px) 50%, var(--c-purple) 0 16px, transparent 16.5px);
-}
-
 .faq__q:hover {
   color: var(--c-purple);
+}
+
+/* Forced colours drop the disc and the bars' background: draw the bars in
+   the text colour so the plus / minus stays. */
+@media (forced-colors: active) {
+  .faq__q::before,
+  .faq__q::after {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
 }
 
 .faq__a {
@@ -579,7 +778,7 @@ html:has(.page-store) {
   line-height: 1.45;
 }
 
-/* 8. Closing call to action ------------------------------------------------- */
+/* 9. Closing call to action -------------------------------------------------- */
 .drop-cta {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
@@ -588,6 +787,13 @@ html:has(.page-store) {
   overflow: hidden;
   padding: 96px var(--gutter);
   background: var(--c-red);
+}
+
+.drop-cta__copy {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .drop-cta__title {
@@ -600,20 +806,33 @@ html:has(.page-store) {
   text-transform: uppercase;
 }
 
-.drop-cta__note {
+.drop-cta__sub {
+  max-width: 24ch;
   margin-top: 24px;
   color: var(--c-cream);
   font-family: var(--f-display);
   font-style: italic;
   font-size: clamp(24px, 2.2vw, 30px); /* 24px+: large text on red */
   line-height: 1.2;
+  text-wrap: pretty;
+}
+
+/* The hero's mint status pill again, with a hard shadow for the red. */
+.drop-cta .drop-cta__note {
+  margin-top: 28px;
+  border: 2px solid var(--c-ink);
+  box-shadow: 3px 3px 0 var(--c-ink);
 }
 
 .drop-cta .buy-button {
-  margin-top: 32px;
+  margin-top: 28px;
 }
 
+/* The edition stamp: a yellow seal with a dashed inner ring, sized from its
+   own width (cqi). */
 .drop-cta__art {
+  container-type: inline-size;
+  position: relative;
   display: grid;
   place-items: center;
   justify-self: center;
@@ -621,52 +840,134 @@ html:has(.page-store) {
   aspect-ratio: 1;
   border: 2px solid var(--c-ink);
   border-radius: 50%;
-  background: var(--c-yellow);
+  background: var(--store-yellow);
   box-shadow: 6px 6px 0 var(--c-ink);
 }
 
-.drop-cta__img {
-  width: 58%;
-  height: auto;
-  transform: rotate(-6deg);
+.drop-cta__art::before {
+  content: "";
+  position: absolute;
+  inset: 4.5%;
+  border: 2px dashed var(--c-ink);
+  border-radius: 50%;
 }
 
-/* 9. Footer ----------------------------------------------------------------- */
+.stamp {
+  display: grid;
+  justify-items: center;
+  color: var(--c-ink);
+  text-align: center;
+  transform: rotate(-8deg);
+}
+
+.stamp__label {
+  font: 700 max(11px, 3.4cqi) / 1.2 var(--f-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.stamp__num {
+  display: flex;
+  align-items: baseline;
+  margin: 4cqi 0 3cqi;
+  padding: 3cqi 0 1cqi;
+  border-block: 2px solid currentColor;
+  font-family: var(--f-display);
+  font-size: 34cqi;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+}
+
+.stamp__no {
+  align-self: flex-start;
+  margin-right: 0.05em;
+  font-size: 0.3em;
+  line-height: 1;
+}
+
+.stamp__of {
+  margin-left: 0.04em;
+  font-size: 0.36em;
+  letter-spacing: 0;
+}
+
+/* 10. Footer ----------------------------------------------------------------- */
 .store-footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 16px 24px;
+  gap: 16px 32px;
   padding: 32px var(--gutter) 40px;
   color: var(--c-ink);
 }
 
-.store-footer a {
+.store-footer__back {
   text-decoration: none;
 }
 
-.store-footer a:hover {
+.store-footer__back:hover {
   color: var(--c-purple);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.store-footer__list {
+.store-footer__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 24px;
+  gap: 12px 16px;
 }
 
-/* Tablet -------------------------------------------------------------------- */
+/* Contact links as white tags that invert, like the site menu. */
+.store-footer__tag {
+  display: inline-flex;
+  color: var(--c-ink);
+  font: 600 var(--fs-menu) / 1.2 var(--f-sans);
+  letter-spacing: var(--track-menu);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.store-footer__label {
+  padding: 2px calc(5px - var(--track-menu)) 1px 5px;
+  border: 2px solid currentColor;
+  background: var(--c-white);
+  box-shadow: 3px 3px 0 currentColor;
+}
+
+.store-footer__tag:hover .store-footer__label,
+.store-footer__tag:focus-visible .store-footer__label {
+  border-color: var(--c-ink);
+  background: var(--c-ink);
+  color: var(--c-white);
+}
+
+.store-footer__tag:focus-visible {
+  outline-color: var(--c-ink);
+}
+
+.store-footer__note {
+  color: var(--c-ink);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* 11. Tablet and phone ------------------------------------------------------- */
 @media (max-width: 1399.98px) {
   .drop-panel {
     padding-top: 32px;
     padding-bottom: 32px;
   }
 
-  .step {
+  .drop-frames {
+    padding-top: 40px;
+  }
+
+  .drop-steps__list {
     min-height: 340px;
+  }
+
+  .step {
     padding-right: 32px;
   }
 
@@ -675,34 +976,41 @@ html:has(.page-store) {
   }
 }
 
-/* Phone --------------------------------------------------------------------- */
 @media (max-width: 809.98px) {
   .drop-hero {
     grid-template-columns: minmax(0, 1fr);
     min-height: 0;
   }
 
+  /* A short stage, so the buy button clears the menu bar on the first
+     screen; it follows the screen height between 176 and 240px. */
   .drop-stage {
-    height: min(66vw, 300px);
+    height: clamp(176px, 30vh, 240px);
+    height: clamp(176px, 30svh, 240px);
   }
 
   .drop-stage__flower {
-    width: min(76vw, 340px);
+    width: auto;
+    height: 116%;
   }
 
   .drop-stage__img {
-    width: min(40vw, 180px);
+    width: auto;
+    max-width: none;
+    height: calc(100% - 32px);
   }
 
+  /* Sticker and tag swap to the free diagonal corners, clear of the tote. */
   .drop-badge {
-    top: 14px;
+    top: auto;
     right: 14px;
-    width: 88px;
+    bottom: 12px;
+    width: 84px;
     box-shadow: 3px 3px 0 var(--c-ink);
   }
 
   .drop-badge__num {
-    font-size: 36px;
+    font-size: 34px;
   }
 
   .drop-badge__text {
@@ -710,35 +1018,39 @@ html:has(.page-store) {
   }
 
   .drop-stage__tag {
-    bottom: 14px;
+    top: 12px;
+    bottom: auto;
     left: 14px;
   }
 
+  /* Order on phones: name, price, status, button, then the standfirst
+     and contact line below the button. */
   .drop-panel {
-    padding: 24px var(--gutter) 40px;
+    padding: 20px var(--gutter) 40px;
   }
 
   .drop-title {
     margin-top: 14px;
     font-size: min(76px, 17.4vw);
+    font-size: min(80px, 19.5cqi);
     line-height: 0.9;
+    text-wrap: balance;
   }
 
   .drop-standfirst {
+    order: 1;
+    margin-top: 22px;
+    font-size: 19px;
+  }
+
+  .drop-contact {
+    order: 2;
     margin-top: 12px;
-    font-size: 18px;
   }
 
   .drop-price {
-    margin-top: 14px;
-  }
-
-  .drop-price__amount {
+    margin-top: 12px;
     font-size: 40px;
-  }
-
-  .drop-price__note {
-    font-size: 14px;
   }
 
   .drop-status {
@@ -753,10 +1065,44 @@ html:has(.page-store) {
     font-size: 14px;
   }
 
-  .drop-band__toggle {
-    right: 8px;
+  .drop-band__knob {
     width: 32px;
     height: 32px;
+  }
+
+  .drop-frames {
+    padding: 32px 0 0;
+  }
+
+  /* A swipe row: each frame snaps, the next one peeks in. */
+  .drop-frames__list {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding: 0 var(--gutter) 6px;
+    scroll-padding-inline: var(--gutter);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .drop-frames__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* store.js makes the row a Tab stop while it scrolls; ring drawn inside. */
+  .drop-frames__list:focus-visible {
+    outline-offset: -3px;
+  }
+
+  /* Capped, so wide phones and small tablets show more than one frame. */
+  .drop-frames__list > li {
+    flex: 0 0 min(78%, 340px);
+    scroll-snap-align: start;
+  }
+
+  .frame__tag {
+    margin-top: 12px;
   }
 
   .drop-steps__title {
@@ -765,10 +1111,14 @@ html:has(.page-store) {
 
   .drop-steps__list {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    min-height: 0;
   }
 
   .step {
-    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    grid-row: auto;
     padding: 28px var(--gutter) 32px;
   }
 
@@ -777,6 +1127,7 @@ html:has(.page-store) {
   }
 
   .step__title {
+    align-self: auto;
     padding-top: 20px;
     font-size: 28px;
   }
@@ -821,8 +1172,12 @@ html:has(.page-store) {
     padding: 72px var(--gutter) 64px;
   }
 
+  .drop-cta__title {
+    font-size: min(76px, 14.6vw);
+  }
+
   .drop-cta__art {
-    width: min(72%, 300px);
+    width: min(76%, 300px);
   }
 
   .store-footer {
@@ -831,18 +1186,52 @@ html:has(.page-store) {
   }
 }
 
-/* 10. Reduced motion ----------------------------------------------------------
-   The band stands still (only the first group shows) and needs no button. */
+/* Small or short phones: the button comes straight after the name and
+   price; the status pill moves below it. */
+@media (max-width: 379.98px), (max-width: 809.98px) and (max-height: 699.98px) {
+  .drop-panel > .drop-status {
+    order: 1;
+    margin-top: 18px;
+  }
+
+  .drop-panel > .drop-standfirst {
+    order: 2;
+    margin-top: 16px;
+  }
+
+  .drop-panel > .drop-contact {
+    order: 3;
+  }
+
+  .drop-panel > .buy-button {
+    margin-top: 14px;
+  }
+}
+
+/* Narrow columns (phones under ~430px, the tablet panel up to ~940px): a
+   tighter button keeps the label and the price on one line. Measured on
+   the button's column (both columns are containers). */
+@container (max-width: 399.98px) {
+  .buy-button {
+    gap: 12px;
+    padding-inline: 20px;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+}
+
+@container (max-width: 319.98px) {
+  .buy-button {
+    gap: 8px;
+    padding-inline: 14px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .drop-band__track {
-    padding-left: var(--gutter);
-  }
-
-  .drop-band__group {
-    animation: none;
-  }
-
-  .drop-band__toggle {
-    display: none;
+  .buy-button:hover,
+  .buy-button:active {
+    transform: none;
   }
 }
