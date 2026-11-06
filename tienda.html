@@ -1,0 +1,226 @@
+<!doctype html>
+<!--
+  ==========================================================================
+  TIENDA · PLACEHOLDERS
+  --------------------------------------------------------------------------
+  Every product value on this page is provisional. To change one, search
+  this file for the text in quotes and replace each hit.
+
+    Product name ...... "Tote Flor"            h1, meta description
+    Drop name ......... "Drop 01"              kicker tag
+    Price ............. "MX$650"               hero, both buy buttons, details
+    Edition size ...... "50" (not in MX$650)   sticker, hero, band, steps,
+                                               details, FAQ, closing title, meta
+    Pre-order closes .. "30 de noviembre"      status pill, band, step 1, FAQ,
+                                               closing note, meta
+    Made in ........... "CDMX", "Ciudad de México"
+    Shipping .......... "todo México"          step 3, details, FAQ
+    Material .......... "Lona 100% algodón, 12 oz"        details (+ meta)
+    Size .............. "38 × 42 × 10 cm · asas de 60 cm" details
+    Buy link .......... "https://ejemplo.com/pago-tote"   both buy buttons,
+                        each under a PLACEHOLDER comment
+    Contact ........... "https://www.instagram.com/ednamiau/", "edna.sapi@gmail.com"
+    Image ............. "assets/img/tote-placeholder.svg" both <img data-product-image>
+    Copy .............. the standfirst, the three steps and the FAQ answers
+                        are draft text.
+
+  Real photos: point both data-product-image <img> at the photo. A cut-out
+  (transparent PNG/WebP) keeps the flower stage as it is; for a full
+  photograph, add the class "drop-stage--photo" to <figure class="drop-stage">
+  and the photo fills the pink field instead (no flower or stickers on it,
+  no tint, no overlay).
+  ==========================================================================
+-->
+<html lang="es" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tienda — Edna Pedraza</title>
+  <meta name="description" content="Tote Flor, el primer drop de Edna Pedraza: edición limitada de 50 piezas numeradas, lona 100% algodón, hecha en CDMX. Pre-venta abierta hasta el 30 de noviembre.">
+  <meta name="theme-color" content="#fcfaf5">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/store.css">
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/store.js" defer></script>
+</head>
+<body class="page-store" data-page="store">
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="site-header">
+    <a class="brand brand--plain" href="index.html">
+      <p class="brand__name">Edna Pedraza</p>
+    </a>
+
+    <nav class="site-menu" id="site-menu" aria-label="Principal">
+      <ul class="site-menu__list">
+        <li class="site-menu__item"><a class="site-menu__link" href="about.html"><span class="site-menu__label">About</span></a></li>
+        <li class="site-menu__item"><a class="site-menu__link" href="index.html#contacto"><span class="site-menu__label">Contact</span></a></li>
+        <li class="site-menu__item"><a class="site-menu__link" href="index.html?servicio=direccion-creativa"><span class="site-menu__label">Creative direction</span></a></li>
+        <li class="site-menu__item"><a class="site-menu__link" href="index.html?servicio=fashion-styling"><span class="site-menu__label">Fashion styling</span></a></li>
+        <li class="site-menu__item"><a class="site-menu__link" href="index.html?servicio=direccion-de-arte"><span class="site-menu__label">Art direction</span></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="store" tabindex="-1">
+    <!-- Hero: the tote on a pink field, the buy panel beside it. -->
+    <section class="drop-hero" aria-labelledby="drop-title">
+      <figure class="drop-stage">
+        <svg class="drop-stage__flower" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <g fill="currentColor"><circle cx="32" cy="16" r="13"/><circle cx="47.22" cy="27.06" r="13"/><circle cx="41.4" cy="44.94" r="13"/><circle cx="22.6" cy="44.94" r="13"/><circle cx="16.78" cy="27.06" r="13"/></g>
+        </svg>
+        <img class="drop-stage__img" data-product-image src="assets/img/tote-placeholder.svg" width="600" height="720"
+             fetchpriority="high" decoding="async"
+             alt="Tote Flor: bolsa de lona rosa con asas moradas y una flor blanca al frente (ilustración provisional).">
+        <p class="drop-badge" aria-hidden="true"><span class="drop-badge__num">50</span><span class="drop-badge__text">piezas numeradas</span></p>
+        <p class="drop-stage__tag ui-label" aria-hidden="true">Hecho en CDMX</p>
+      </figure>
+
+      <div class="drop-panel">
+        <p class="drop-kicker ui-label">Drop 01 · Edición limitada</p>
+        <h1 class="drop-title" id="drop-title"><span>Tote</span> <span>Flor</span></h1>
+        <p class="drop-standfirst">Lona gruesa, flor al frente y número propio: una tote para cargar con todo, hecha en la Ciudad de México.</p>
+
+        <div class="drop-price">
+          <p class="drop-price__amount"><span class="visually-hidden">Precio: </span>MX$650</p>
+          <p class="drop-price__note">Edición de 50 piezas numeradas</p>
+        </div>
+
+        <p class="drop-status"><span class="drop-status__dot" aria-hidden="true"></span>Pre-venta abierta hasta el 30 de noviembre</p>
+
+        <!-- PLACEHOLDER: replace with the Stripe Payment Link or Tiendanube product URL. -->
+        <a class="buy-button" href="https://ejemplo.com/pago-tote">
+          <span>Aparta la tuya</span>
+          <span class="buy-button__price">MX$650 <span aria-hidden="true">→</span></span>
+        </a>
+
+        <p class="drop-contact">¿Dudas? Escríbeme por <a href="https://www.instagram.com/ednamiau/" rel="noopener">Instagram</a> o a <a href="mailto:edna.sapi@gmail.com">edna.sapi@gmail.com</a>.</p>
+      </div>
+    </section>
+
+    <!-- Marquee: decorative repeat of the key facts; the sentence is read once
+         from the hidden copy. store.js shows the pause button. -->
+    <div class="drop-band" data-band>
+      <p class="visually-hidden">Edición limitada · 50 piezas · Hecho en CDMX · Pre-venta hasta el 30 de noviembre</p>
+      <div class="drop-band__track" aria-hidden="true">
+        <ul class="drop-band__group">
+          <li>Edición limitada</li>
+          <li>50 piezas</li>
+          <li>Hecho en CDMX</li>
+          <li>Pre-venta hasta el 30 de noviembre</li>
+          <li>Edición limitada</li>
+          <li>50 piezas</li>
+          <li>Hecho en CDMX</li>
+          <li>Pre-venta hasta el 30 de noviembre</li>
+        </ul>
+        <ul class="drop-band__group">
+          <li>Edición limitada</li>
+          <li>50 piezas</li>
+          <li>Hecho en CDMX</li>
+          <li>Pre-venta hasta el 30 de noviembre</li>
+          <li>Edición limitada</li>
+          <li>50 piezas</li>
+          <li>Hecho en CDMX</li>
+          <li>Pre-venta hasta el 30 de noviembre</li>
+        </ul>
+      </div>
+      <button class="drop-band__toggle" type="button" aria-pressed="false" aria-label="Pausar la animación" data-band-toggle hidden>
+        <svg class="drop-band__icon drop-band__icon--pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg>
+        <svg class="drop-band__icon drop-band__icon--play" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3l8 5-8 5z" fill="currentColor"/></svg>
+      </button>
+    </div>
+
+    <!-- How the drop works -->
+    <section class="drop-steps" aria-labelledby="steps-title">
+      <h2 class="store-heading drop-steps__title" id="steps-title">Así funciona el drop</h2>
+      <ol class="drop-steps__list">
+        <li class="step step--mint">
+          <span class="step__num" aria-hidden="true">01</span>
+          <h3 class="step__title">Aparta la tuya</h3>
+          <p class="step__copy">Paga en pre-venta hasta el 30 de noviembre. Solo hay 50 y cada una lleva su número.</p>
+        </li>
+        <li class="step step--yellow">
+          <span class="step__num" aria-hidden="true">02</span>
+          <h3 class="step__title">Se hace en CDMX</h3>
+          <p class="step__copy">Al cerrar la pre-venta, las 50 piezas se cortan y se cosen en la Ciudad de México.</p>
+        </li>
+        <li class="step step--blush">
+          <span class="step__num" aria-hidden="true">03</span>
+          <h3 class="step__title">Llega a tu casa</h3>
+          <p class="step__copy">Envíos a todo México. Te escribo con tu número de pieza y la guía de rastreo.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Details and FAQ -->
+    <section class="drop-info" aria-label="Detalles y preguntas">
+      <div class="drop-info__col">
+        <h2 class="store-heading drop-info__title">Detalles</h2>
+        <dl class="specs">
+          <div class="specs__row"><dt class="ui-label">Precio</dt><dd>MX$650</dd></div>
+          <div class="specs__row"><dt class="ui-label">Edición</dt><dd>50 piezas numeradas</dd></div>
+          <div class="specs__row"><dt class="ui-label">Material</dt><dd>Lona 100% algodón, 12 oz</dd></div>
+          <div class="specs__row"><dt class="ui-label">Medidas</dt><dd>38 × 42 × 10 cm · asas de 60 cm</dd></div>
+          <div class="specs__row"><dt class="ui-label">Producción</dt><dd>Hecho en CDMX al cerrar la pre-venta</dd></div>
+          <div class="specs__row"><dt class="ui-label">Envío</dt><dd>Envíos a todo México</dd></div>
+        </dl>
+      </div>
+
+      <div class="drop-info__col">
+        <h2 class="store-heading drop-info__title">Preguntas</h2>
+        <div class="faq">
+          <details class="faq__item">
+            <summary class="faq__q">¿Cuándo llega mi tote?</summary>
+            <p class="faq__a">La pre-venta cierra el 30 de noviembre; entonces se producen las 50 piezas. Te escribo con la fecha de envío en cuanto esté lista la tuya.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__q">¿Qué número me toca?</summary>
+            <p class="faq__a">Los números van del 1 al 50 y se asignan en orden de compra.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__q">¿Envían fuera de México?</summary>
+            <p class="faq__a">Por ahora solo hay envíos a todo México. Si estás en otro país, escríbeme y lo vemos.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__q">¿Cómo la cuido?</summary>
+            <p class="faq__a">Lávala a mano con agua fría y déjala secar a la sombra. La lona de algodón se suaviza con el uso.</p>
+          </details>
+        </div>
+        <p class="drop-info__more">¿Otra pregunta? Mándame un DM a <a href="https://www.instagram.com/ednamiau/" rel="noopener">@ednamiau</a> o escríbeme a <a href="mailto:edna.sapi@gmail.com">edna.sapi@gmail.com</a>.</p>
+      </div>
+    </section>
+
+    <!-- Closing call to action -->
+    <section class="drop-cta" aria-labelledby="cta-title">
+      <div class="drop-cta__copy">
+        <h2 class="drop-cta__title" id="cta-title">50 piezas.<br> Ni una más.</h2>
+        <p class="drop-cta__note">Pre-venta abierta hasta el 30 de noviembre.</p>
+        <!-- PLACEHOLDER: replace with the Stripe Payment Link or Tiendanube product URL. -->
+        <a class="buy-button buy-button--light" href="https://ejemplo.com/pago-tote">
+          <span>Aparta la tuya</span>
+          <span class="buy-button__price">MX$650 <span aria-hidden="true">→</span></span>
+        </a>
+      </div>
+      <div class="drop-cta__art">
+        <img class="drop-cta__img" data-product-image src="assets/img/tote-placeholder.svg" width="600" height="720"
+             loading="lazy" decoding="async" alt="">
+      </div>
+    </section>
+  </main>
+
+  <footer class="store-footer">
+    <a class="store-footer__link ui-label" href="index.html">← Volver al portafolio</a>
+    <ul class="store-footer__list ui-label">
+      <li><a href="mailto:edna.sapi@gmail.com">edna.sapi@gmail.com</a></li>
+      <li><a href="https://www.instagram.com/ednamiau/" rel="noopener">@ednamiau</a></li>
+    </ul>
+  </footer>
+</body>
+</html>

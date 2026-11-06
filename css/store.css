@@ -1,0 +1,848 @@
+/* ==========================================================================
+   Tienda — the drop page (tienda.html). Loaded after styles.css.
+   --------------------------------------------------------------------------
+   1. Tokens          4. Buy panel        7. Details & FAQ
+   2. Page            5. Marquee band     8. Closing call to action
+   3. Hero stage      6. Steps            9. Footer
+                                         10. Reduced motion
+   A colour-blocked poster: pink stage, cream panel, purple band, three
+   flat colour steps, cream details, red finale. Small text stays on cream,
+   white, mint, yellow or blush (all AA with ink or purple); pink and red
+   fields only carry large type.
+   ========================================================================== */
+
+/* 1. Tokens ----------------------------------------------------------------- */
+.page-store {
+  --c-yellow: #ffd23f;               /* the flower centre on the tote */
+  --c-mint: var(--c-contact-page);
+  --c-blush: var(--c-about-page);
+  --store-header-h: 68px;            /* .site-header at this breakpoint */
+  --band-h: 64px;
+  --panel-pad: clamp(32px, 4.4vw, 72px);
+}
+
+@media (max-width: 1399.98px) {
+  .page-store {
+    --store-header-h: 61px;
+    --band-h: 56px;
+  }
+}
+
+@media (max-width: 809.98px) {
+  .page-store {
+    --store-header-h: 57px;
+    --band-h: 48px;
+  }
+}
+
+/* 2. Page ------------------------------------------------------------------- */
+html:has(.page-store) {
+  background: var(--c-cream);
+}
+
+.page-store {
+  background: var(--c-cream); /* the header bar inherits it */
+}
+
+.store {
+  padding-top: var(--store-header-h);
+}
+
+.store a:not([class]) {
+  color: var(--c-purple);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.store a:not([class]):hover {
+  text-decoration-thickness: 3px;
+}
+
+.store-heading {
+  color: var(--c-purple);
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* 3. Hero stage ------------------------------------------------------------- */
+.drop-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  min-height: max(600px, calc(100vh - var(--store-header-h) - var(--band-h)));
+  min-height: max(600px, calc(100svh - var(--store-header-h) - var(--band-h)));
+}
+
+.drop-stage {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  margin: 0;
+  background: var(--c-pink);
+}
+
+/* The brand's five-petal flower, poster-sized, behind the tote. */
+.drop-stage__flower {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: min(88%, 92vh, 700px);
+  height: auto;
+  aspect-ratio: 1;
+  color: var(--c-cream);
+  transform: translate(-50%, -50%) rotate(-8deg);
+}
+
+.drop-stage__img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(54%, 56vh, 430px);
+  height: auto;
+  transform: translate(-50%, -50%);
+}
+
+/* For a real photograph (see the note at the top of tienda.html): the photo
+   fills the field as it is, with no flower, stickers, tint or overlay. */
+.drop-stage--photo .drop-stage__flower,
+.drop-stage--photo .drop-badge,
+.drop-stage--photo .drop-stage__tag {
+  display: none;
+}
+
+.drop-stage--photo .drop-stage__img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: none;
+}
+
+/* Yellow "50" sticker, slapped on at an angle. */
+.drop-badge {
+  position: absolute;
+  top: clamp(24px, 9%, 72px);
+  right: clamp(16px, 8%, 88px);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  width: clamp(112px, 11vw, 160px);
+  aspect-ratio: 1;
+  border: 2px solid var(--c-ink);
+  border-radius: 50%;
+  background: var(--c-yellow);
+  box-shadow: 4px 4px 0 var(--c-ink);
+  color: var(--c-ink);
+  text-align: center;
+  transform: rotate(12deg);
+}
+
+.drop-badge__num {
+  font-family: var(--f-display);
+  font-size: clamp(44px, 4.6vw, 68px);
+  line-height: 0.9;
+}
+
+.drop-badge__text {
+  max-width: 9ch;
+  margin-top: 2px;
+  font: 700 clamp(10px, 0.85vw, 12px) / 1.15 var(--f-sans);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+/* House tag in ink, like an edition stamp in the poster's corner. */
+.drop-stage__tag {
+  position: absolute;
+  bottom: 24px;
+  left: var(--gutter);
+  padding: 4px 6px 3px 7px;
+  border: 2px solid var(--c-ink);
+  background: var(--c-white);
+  box-shadow: 3px 3px 0 var(--c-ink);
+  color: var(--c-ink);
+}
+
+/* 4. Buy panel -------------------------------------------------------------- */
+.drop-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px var(--gutter) 48px var(--panel-pad);
+}
+
+/* House tag: white, bordered and shadowed in the text's own colour. */
+.drop-kicker {
+  padding: 4px 6px 3px 7px;
+  border: 2px solid currentColor;
+  background: var(--c-white);
+  box-shadow: 3px 3px 0 currentColor;
+  color: var(--c-purple);
+}
+
+.drop-title {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.22em;
+  margin-top: 20px;
+  color: var(--c-red); /* 4.1:1 on cream: large type only */
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(64px, 11vw, 160px);
+  line-height: 0.84;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+/* Desktop and tablet stack the two words like a poster. */
+@media (min-width: 810px) {
+  .drop-title {
+    flex-direction: column;
+  }
+}
+
+.drop-standfirst {
+  max-width: 30ch;
+  margin-top: 22px;
+  color: var(--c-ink);
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: clamp(20px, 1.8vw, 26px);
+  line-height: 1.2;
+  text-wrap: pretty;
+}
+
+.drop-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  margin-top: 22px;
+}
+
+.drop-price__amount {
+  color: var(--c-ink);
+  font-family: var(--f-display);
+  font-size: clamp(40px, 3.6vw, 56px);
+  line-height: 1;
+}
+
+.drop-price__note {
+  color: var(--c-purple);
+  font: 600 15px / 1.3 var(--f-sans);
+}
+
+.drop-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 8px 14px 8px 12px;
+  border-radius: 100px;
+  background: var(--c-mint);
+  color: var(--c-ink);
+  font: 600 14px / 1.25 var(--f-sans);
+}
+
+.drop-status__dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #128a22; /* 3.9:1 on mint: a non-text marker */
+  box-shadow: 0 0 0 3px rgb(18 138 34 / 0.2);
+}
+
+/* The contact form's purple pill, with the house offset shadow added. */
+.buy-button {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  width: min(100%, 440px);
+  min-height: 60px;
+  margin-top: 16px;
+  padding: 16px 28px;
+  border: 2px solid var(--c-ink);
+  border-radius: 100px;
+  background: var(--c-purple);
+  box-shadow: 4px 4px 0 var(--c-ink);
+  color: var(--c-cream);
+  font: 600 15px / 1.2 var(--f-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.buy-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--c-ink);
+}
+
+.buy-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--c-ink);
+}
+
+.buy-button:focus-visible {
+  outline: 3px solid var(--c-ink);
+  outline-offset: 4px;
+}
+
+.buy-button__price {
+  white-space: nowrap;
+}
+
+.buy-button--light {
+  background: var(--c-white);
+  color: var(--c-ink);
+}
+
+.drop-contact {
+  max-width: 52ch;
+  margin-top: 18px;
+  color: var(--c-ink);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+/* 5. Marquee band ------------------------------------------------------------
+   Two identical groups, each at least as wide as the screen, slide left by
+   their own width and loop seamlessly. Paused on hover, with the button, or
+   for reduced motion (section 10). */
+.drop-band {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  height: var(--band-h);
+  background: var(--c-purple);
+  color: var(--c-cream);
+}
+
+.drop-band__track {
+  display: flex;
+  flex: none;
+}
+
+/* min-width in vw, not %: a percentage of the track would be cyclic. */
+.drop-band__group {
+  display: flex;
+  flex: none;
+  justify-content: space-around;
+  align-items: center;
+  min-width: 100vw;
+  animation: drop-band 48s linear infinite;
+}
+
+.drop-band__group li {
+  display: flex;
+  align-items: center;
+  flex: none;
+  font-family: var(--f-display);
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The favicon flower between phrases. */
+.drop-band__group li::after {
+  content: "";
+  flex: none;
+  width: 0.9em;
+  height: 0.9em;
+  margin: 0 0.9em;
+  background: url("../assets/img/favicon.svg") center / contain no-repeat;
+}
+
+@keyframes drop-band {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.drop-band:hover .drop-band__group,
+.drop-band.is-paused .drop-band__group {
+  animation-play-state: paused;
+}
+
+.drop-band__toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 2px solid var(--c-cream);
+  border-radius: 50%;
+  background: var(--c-purple);
+  box-shadow: 0 0 0 8px var(--c-purple); /* a clear margin over the moving text */
+  color: var(--c-cream);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.drop-band__toggle[hidden] {
+  display: none;
+}
+
+.drop-band__toggle:hover {
+  background: var(--c-cream);
+  color: var(--c-purple);
+}
+
+.drop-band__toggle:focus-visible {
+  outline: 2px solid var(--c-cream);
+  outline-offset: 2px;
+}
+
+.drop-band__icon {
+  width: 14px;
+  height: 14px;
+}
+
+.drop-band__toggle[aria-pressed="true"] .drop-band__icon--pause,
+.drop-band__toggle[aria-pressed="false"] .drop-band__icon--play {
+  display: none;
+}
+
+/* 6. Steps ------------------------------------------------------------------ */
+.drop-steps__title {
+  padding: 96px var(--gutter) 40px;
+}
+
+.drop-steps__list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  min-height: 380px;
+  padding: 40px var(--panel-pad) 48px var(--gutter);
+  color: var(--c-ink);
+}
+
+.step--mint {
+  background: var(--c-mint);
+}
+
+.step--yellow {
+  background: var(--c-yellow);
+}
+
+.step--blush {
+  background: var(--c-blush);
+}
+
+.step__num {
+  color: var(--c-purple);
+  font-family: var(--f-display);
+  font-size: clamp(88px, 9vw, 136px);
+  line-height: 0.8;
+}
+
+.step__title {
+  margin: auto 0 0;
+  padding-top: 48px;
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(28px, 2.6vw, 38px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.step__copy {
+  max-width: 34ch;
+  margin-top: 14px;
+  font-size: 17px;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* 7. Details & FAQ ---------------------------------------------------------- */
+.drop-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px clamp(40px, 6vw, 120px);
+  padding: 112px var(--gutter) 120px;
+}
+
+.drop-info__title {
+  margin-bottom: 32px;
+}
+
+.specs {
+  margin: 0;
+  border-top: 2px solid var(--c-ink);
+}
+
+.specs__row {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  padding: 16px 0 15px;
+  border-bottom: 2px solid var(--c-ink);
+}
+
+.specs dt {
+  color: var(--c-purple);
+}
+
+.specs dd {
+  margin: 0;
+  color: var(--c-ink);
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.faq {
+  border-top: 2px solid var(--c-ink);
+}
+
+.faq__item {
+  border-bottom: 2px solid var(--c-ink);
+}
+
+.faq__q {
+  position: relative;
+  display: block;
+  padding: 18px 56px 17px 0;
+  color: var(--c-ink);
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.35;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq__q::-webkit-details-marker {
+  display: none;
+}
+
+/* Plus that turns into a minus: two bars in a purple disc. */
+.faq__q::before,
+.faq__q::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  width: 14px;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--c-cream);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.faq__q::after {
+  transform: rotate(90deg);
+}
+
+.faq__item[open] > .faq__q::after {
+  transform: rotate(0deg);
+}
+
+.faq__q {
+  background: radial-gradient(circle at calc(100% - 20px) 50%, var(--c-purple) 0 16px, transparent 16.5px);
+}
+
+.faq__q:hover {
+  color: var(--c-purple);
+}
+
+.faq__a {
+  max-width: 58ch;
+  padding: 0 56px 20px 0;
+  color: var(--c-ink);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.drop-info__more {
+  margin-top: 24px;
+  color: var(--c-ink);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+/* 8. Closing call to action ------------------------------------------------- */
+.drop-cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 40px;
+  overflow: hidden;
+  padding: 96px var(--gutter);
+  background: var(--c-red);
+}
+
+.drop-cta__title {
+  color: var(--c-cream); /* 4.1:1 on red: large type only */
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(56px, 8.4vw, 132px);
+  line-height: 0.9;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+}
+
+.drop-cta__note {
+  margin-top: 24px;
+  color: var(--c-cream);
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: clamp(24px, 2.2vw, 30px); /* 24px+: large text on red */
+  line-height: 1.2;
+}
+
+.drop-cta .buy-button {
+  margin-top: 32px;
+}
+
+.drop-cta__art {
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: min(100%, 440px);
+  aspect-ratio: 1;
+  border: 2px solid var(--c-ink);
+  border-radius: 50%;
+  background: var(--c-yellow);
+  box-shadow: 6px 6px 0 var(--c-ink);
+}
+
+.drop-cta__img {
+  width: 58%;
+  height: auto;
+  transform: rotate(-6deg);
+}
+
+/* 9. Footer ----------------------------------------------------------------- */
+.store-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px 24px;
+  padding: 32px var(--gutter) 40px;
+  color: var(--c-ink);
+}
+
+.store-footer a {
+  text-decoration: none;
+}
+
+.store-footer a:hover {
+  color: var(--c-purple);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.store-footer__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+/* Tablet -------------------------------------------------------------------- */
+@media (max-width: 1399.98px) {
+  .drop-panel {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  .step {
+    min-height: 340px;
+    padding-right: 32px;
+  }
+
+  .specs dd {
+    font-size: 17px;
+  }
+}
+
+/* Phone --------------------------------------------------------------------- */
+@media (max-width: 809.98px) {
+  .drop-hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .drop-stage {
+    height: min(66vw, 300px);
+  }
+
+  .drop-stage__flower {
+    width: min(76vw, 340px);
+  }
+
+  .drop-stage__img {
+    width: min(40vw, 180px);
+  }
+
+  .drop-badge {
+    top: 14px;
+    right: 14px;
+    width: 88px;
+    box-shadow: 3px 3px 0 var(--c-ink);
+  }
+
+  .drop-badge__num {
+    font-size: 36px;
+  }
+
+  .drop-badge__text {
+    font-size: 8.5px;
+  }
+
+  .drop-stage__tag {
+    bottom: 14px;
+    left: 14px;
+  }
+
+  .drop-panel {
+    padding: 24px var(--gutter) 40px;
+  }
+
+  .drop-title {
+    margin-top: 14px;
+    font-size: min(76px, 17.4vw);
+    line-height: 0.9;
+  }
+
+  .drop-standfirst {
+    margin-top: 12px;
+    font-size: 18px;
+  }
+
+  .drop-price {
+    margin-top: 14px;
+  }
+
+  .drop-price__amount {
+    font-size: 40px;
+  }
+
+  .drop-price__note {
+    font-size: 14px;
+  }
+
+  .drop-status {
+    margin-top: 12px;
+    font-size: 13px;
+  }
+
+  .buy-button {
+    width: min(100%, 480px);
+    min-height: 56px;
+    padding: 14px 22px;
+    font-size: 14px;
+  }
+
+  .drop-band__toggle {
+    right: 8px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .drop-steps__title {
+    padding: 64px var(--gutter) 28px;
+  }
+
+  .drop-steps__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .step {
+    min-height: 0;
+    padding: 28px var(--gutter) 32px;
+  }
+
+  .step__num {
+    font-size: 72px;
+  }
+
+  .step__title {
+    padding-top: 20px;
+    font-size: 28px;
+  }
+
+  .step__copy {
+    font-size: 16px;
+  }
+
+  .drop-info {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 64px;
+    padding: 72px var(--gutter) 80px;
+  }
+
+  .drop-info__title {
+    margin-bottom: 20px;
+  }
+
+  .specs__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+    padding: 12px 0 11px;
+  }
+
+  .specs dd,
+  .faq__q {
+    font-size: 17px;
+  }
+
+  .faq__q {
+    padding-right: 48px;
+  }
+
+  .faq__a {
+    padding-right: 0;
+    font-size: 16px;
+  }
+
+  .drop-cta {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+    padding: 72px var(--gutter) 64px;
+  }
+
+  .drop-cta__art {
+    width: min(72%, 300px);
+  }
+
+  .store-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* 10. Reduced motion ----------------------------------------------------------
+   The band stands still (only the first group shows) and needs no button. */
+@media (prefers-reduced-motion: reduce) {
+  .drop-band__track {
+    padding-left: var(--gutter);
+  }
+
+  .drop-band__group {
+    animation: none;
+  }
+
+  .drop-band__toggle {
+    display: none;
+  }
+}
