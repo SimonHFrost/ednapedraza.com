@@ -584,20 +584,13 @@ body:not(.page-home) .brand__name {
   box-shadow: var(--tag-shadow);
 }
 
-/* The name sits straight on the photo, with no tag, but with an outline in
-   white or ink, whichever stands out against the photo behind it (chosen
-   per project in js/main.js). The stroke is drawn under the fill,
-   so only its outer half shows. */
+/* The name sits straight on the photo, with no tag, but with a white
+   outline. The stroke is drawn under the fill, so only its outer half shows. */
 .page-home .brand__name {
   display: inline-block;
   line-height: 0.82;
   -webkit-text-stroke: 4px var(--c-white);
   paint-order: stroke fill;
-  transition: -webkit-text-stroke-color 0.35s ease;
-}
-
-.page-home .brand__name[data-outline="ink"] {
-  -webkit-text-stroke-color: var(--c-ink);
 }
 
 @media (max-width: 1399.98px) {
