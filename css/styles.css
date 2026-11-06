@@ -1,19 +1,19 @@
 /* ==========================================================================
    Edna Pedraza — static site styles
    --------------------------------------------------------------------------
-   1. Fonts           6. Home              11. 404 / not found
-   2. Tokens          7. Project page      12. Utilities
-   3. Base            8. About             13. Reduced motion
-   4. Header          9. Contact
-   5. Menu           10. Empty media frame
+   1. Fonts           5. Menu              9. Contact
+   2. Tokens          6. Home             10. 404 / not found
+   3. Base            7. Project page     11. Utilities
+   4. Header          8. About            12. Reduced motion
    Breakpoints: desktop >= 1400px · tablet 810–1399px · phone < 810px
 
    The site is set like a printed magazine: paper, a warm black ink and
    three spot inks (Edna's purple, red and pink, mixed as pigments rather
-   than screen colours), used for type and rules only. Photographs are never
-   tinted, filtered or boxed over. Type that sits on a photograph carries a
-   hairline paper edge (-webkit-text-stroke painted under the fill), which
-   keeps it legible on any image while covering nothing but the letters.
+   than screen colours), used for type and rules only, plus marigold, used
+   sparingly as a rule. Photographs are never tinted, filtered or boxed
+   over. Type that sits on a photograph carries a hairline edge
+   (-webkit-text-stroke painted under the fill), which keeps it legible on
+   any image while covering nothing but the letters.
    ========================================================================== */
 
 /* 1. Fonts -----------------------------------------------------------------
@@ -77,19 +77,24 @@
 /* 2. Tokens ---------------------------------------------------------------- */
 :root {
   /* Paper and inks. Contrast on paper: ink 15.5, morado 9.9, grana 6.7,
-     rosa 5.2 (all AA for small text). */
+     rosa 5.2 (all AA for small text). Paper on grana 6.7. */
   --c-paper: #f6f1e6;          /* uncoated stock */
+  --c-paper-dim: #e7cbc4;      /* placeholders on grana: 4.9:1 */
   --c-ink: #1c1915;            /* warm black */
   --c-ink-deep: #0e0c0a;       /* on the project colour fields: AA even on the red one */
   --c-morado: #3d2a86;         /* Edna's purple, as an ink */
-  --c-grana: #a3202b;          /* cochineal red */
+  --c-grana: #a3202b;          /* cochineal red; the contact wall */
   --c-rosa: #c2185b;           /* rosa mexicano, deep enough for small type */
   --c-rosa-light: #f06aa0;     /* rosa on black (404): 7.3:1 */
-  --c-placeholder: #6b655c;    /* 4.9:1 on paper */
+  /* Marigold (cempasúchil), the fourth ink: only ever a rule or an
+     underline, never a box and never type on paper. */
+  --c-marigold: #f0a01c;
   --c-black: #000;
-  --c-error: #a3201b;
   --c-about-page: #f0c3cc;     /* a lime-washed pink wall */
-  --c-wall-empty: #bda9eb;     /* stands in for a project with no photo */
+  --c-wall-empty: #bda9eb;     /* home cover for a project with no photo */
+
+  /* A pencil stroke, as a mask: the underline under Edna's address. */
+  --mark-underline: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'%3E%3Cpath d='M1.5 5.4C13 4 26 3.5 40 4.3s28 2 43 .9 25-2 35.5-1.2' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
 
   /* families */
   --f-display: "DM Serif Display", Didot, "Bodoni 72", Georgia, "Times New Roman", serif;
@@ -105,15 +110,17 @@
   --fs-standfirst: clamp(24px, 2.35vw, 36px);
   --fs-body: 18px;
   --fs-small: 15px;
-  --fs-folio: 12px;
+  --fs-folio: 12px;                        /* plate numbers */
   --fs-count: 450px;                       /* 404 countdown */
 
-  /* the paper edge on type over photographs (half of it shows) */
-  --halo: 3px;
+  /* The paper edge on type over photographs: a 2px stroke painted under
+     the letters, so about 1px of it shows. */
+  --halo: 2px;
 
   /* spacing */
   --gutter: 24px;
   --col-gap: 24px;
+  --bar-h: 0px;                            /* the phone menu bar (below) */
 
   /* motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -137,6 +144,9 @@
     --fs-title: min(64px, 15.4vw);
     --fs-body: 17px;
     --fs-count: 200px;
+    /* Room kept under the page for the fixed menu bar: three lines of
+       links at 320px, plus the home indicator on notched phones. */
+    --bar-h: calc(92px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -226,7 +236,7 @@ main:focus {
   transform: none;
 }
 
-/* Small UI text: labels, errors, the project kicker. Sentence case. */
+/* Small UI text: form labels and errors. Sentence case. */
 .ui-label {
   font: 500 13px / 1.3 var(--f-sans);
   letter-spacing: 0.005em;
@@ -272,6 +282,7 @@ body:not(.page-home) .site-header::after {
   text-decoration: none;
 }
 
+/* The masthead: the one line set in capitals. */
 .brand__name {
   font-family: var(--f-display);
   font-weight: 400;
@@ -339,7 +350,7 @@ body:not(.page-home) .site-header::after {
    on top, solid (nothing shows or blurs through it). */
 @media (max-width: 809.98px) {
   body {
-    padding-bottom: 92px;
+    padding-bottom: var(--bar-h);
   }
 
   .site-header .site-menu {
@@ -360,7 +371,8 @@ body:not(.page-home) .site-header::after {
 
 /* 6. Home -------------------------------------------------------------------
    A magazine cover: the photograph full-bleed, the name as the masthead,
-   the menu as the cover's top line and the projects as a contents list. */
+   the menu as the cover's top line and the projects as its contents. On
+   phones the cover becomes a photobook of the projects (below). */
 .page-home {
   background: var(--c-black);
 }
@@ -413,87 +425,99 @@ body:not(.page-home) .site-header::after {
 
 /* Type on the photograph. As on a printed cover, the type takes its colour
    from the picture it sits on: ink (the name in morado) on light pictures,
-   paper on dark ones, judged where the type actually falls (the list of
-   dark pictures follows). A hairline edge in the opposite tone, painted
-   under the letters, keeps every word AA where a picture changes tone
-   beneath it; on a matching ground it disappears. */
+   paper on dark ones, judged where each piece of type actually falls. The
+   choice is data: each project's `tone` in js/data.js, which main.js
+   copies to its background layer as data-tone. A hairline edge in the
+   opposite tone, painted under the letters, keeps every word legible where
+   a picture changes tone beneath it; on a matching ground it disappears. */
 .page-home {
   --name-fill: var(--c-morado);
   --name-edge: var(--c-paper);
-  --head-fill: var(--c-ink);
-  --head-edge: var(--c-paper);
+  --role-fill: var(--c-ink);
+  --role-edge: var(--c-paper);
   --menu-fill: var(--c-ink);
   --menu-edge: var(--c-paper);
-  --index-fill: var(--c-ink);
-  --index-edge: var(--c-paper);
+  --list-fill: var(--c-ink);
+  --list-edge: var(--c-paper);
+}
+
+/* The picture on show is the hovered project's (.is-active) or, with none
+   hovered, the resting one (.is-base). */
+.page-home:has(.home-bg__layer.is-active[data-tone~="name-paper"]),
+.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base[data-tone~="name-paper"]) {
+  --name-fill: var(--c-paper);
+  --name-edge: var(--c-ink);
+}
+
+.page-home:has(.home-bg__layer.is-active[data-tone~="name-ink"]),
+.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base[data-tone~="name-ink"]) {
+  --name-fill: var(--c-ink);
+}
+
+.page-home:has(.home-bg__layer.is-active[data-tone~="role-paper"]),
+.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base[data-tone~="role-paper"]) {
+  --role-fill: var(--c-paper);
+  --role-edge: var(--c-ink);
+}
+
+.page-home:has(.home-bg__layer.is-active[data-tone~="menu-paper"]),
+.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base[data-tone~="menu-paper"]) {
+  --menu-fill: var(--c-paper);
+  --menu-edge: var(--c-ink);
+}
+
+.page-home:has(.home-bg__layer.is-active[data-tone~="list-paper"]),
+.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base[data-tone~="list-paper"]) {
+  --list-fill: var(--c-paper);
+  --list-edge: var(--c-ink);
+}
+
+.page-home .brand__name {
+  --fill: var(--name-fill);
+  --edge: var(--name-edge);
+}
+
+.page-home .brand__role {
+  --fill: var(--role-fill);
+  --edge: var(--role-edge);
+}
+
+.page-home .site-menu__link {
+  --fill: var(--menu-fill);
+  --edge: var(--menu-edge);
+}
+
+.index-title,
+.work-list {
+  --fill: var(--list-fill);
+  --edge: var(--list-edge);
 }
 
 .page-home .brand__name,
 .page-home .brand__role,
 .page-home .site-menu__link,
-.work-row,
-.work-list::before {
-  -webkit-text-stroke-width: var(--halo);
+.index-title,
+.work-row {
+  color: var(--fill);
+  -webkit-text-stroke: var(--halo) var(--edge);
   paint-order: stroke fill;
   transition: color 0.35s ease, -webkit-text-stroke-color 0.35s ease;
 }
 
-.page-home .brand__name {
-  color: var(--name-fill);
-  -webkit-text-stroke-color: var(--name-edge);
-}
-
-.page-home .brand__role {
-  color: var(--head-fill);
-  -webkit-text-stroke-color: var(--head-edge);
-}
-
-.page-home .site-menu__link {
-  color: var(--menu-fill);
-  -webkit-text-stroke-color: var(--menu-edge);
-}
-
-.work-row,
-.work-list::before {
-  color: var(--index-fill);
-  -webkit-text-stroke-color: var(--index-edge);
-}
-
-/* The picture on show is the hovered project's (.is-active) or, with none,
-   the resting one (.is-base). Dark behind all of the type: */
-.page-home:has(.home-bg__layer.is-active :is(img[src*="crocs-meow-"], img[src*="fabrica-social-"], img[src*="tqm-meow-"])),
-.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base :is(img[src*="crocs-meow-"], img[src*="fabrica-social-"], img[src*="tqm-meow-"])) {
-  --name-fill: var(--c-paper);
-  --name-edge: var(--c-ink);
-  --head-fill: var(--c-paper);
-  --head-edge: var(--c-ink);
-  --menu-fill: var(--c-paper);
-  --menu-edge: var(--c-ink);
-  --index-fill: var(--c-paper);
-  --index-edge: var(--c-ink);
-}
-
-/* Dark behind the name only: */
-.page-home:has(.home-bg__layer.is-active img[src*="meowndalista-"]),
-.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base img[src*="meowndalista-"]) {
-  --name-fill: var(--c-paper);
-  --name-edge: var(--c-ink);
-}
-
-/* Dark behind the menu and the contents only: */
-.page-home:has(.home-bg__layer.is-active img[src*="skechers-meow-"]),
-.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base img[src*="skechers-meow-"]) {
-  --menu-fill: var(--c-paper);
-  --menu-edge: var(--c-ink);
-  --index-fill: var(--c-paper);
-  --index-edge: var(--c-ink);
-}
-
-/* Dark behind the contents only: */
-.page-home:has(.home-bg__layer.is-active img[src*="kfc-alina-"]),
-.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base img[src*="kfc-alina-"]) {
-  --index-fill: var(--c-paper);
-  --index-edge: var(--c-ink);
+/* Where paint-order does not reach HTML text, a centred stroke would eat
+   into the letters; a one-pixel shadow on every side draws the same edge
+   outside them instead. */
+@supports not (paint-order: stroke fill) {
+  .page-home .brand__name,
+  .page-home .brand__role,
+  .page-home .site-menu__link,
+  .index-title,
+  .work-row {
+    -webkit-text-stroke: 0;
+    text-shadow:
+      1px 0 var(--edge), -1px 0 var(--edge), 0 1px var(--edge), 0 -1px var(--edge),
+      1px 1px var(--edge), -1px 1px var(--edge), 1px -1px var(--edge), -1px -1px var(--edge);
+  }
 }
 
 .page-home .site-header {
@@ -514,27 +538,23 @@ body:not(.page-home) .site-header::after {
   letter-spacing: -0.012em;
 }
 
-/* "Directora creativa y estilista de moda", in the italic, sentence case. */
+/* "Directora creativa y estilista de moda", in the italic. */
 .page-home .brand__role {
   display: block;
   margin-top: 0.55em;
   padding-left: 0.12em;
   font: italic 400 var(--fs-role) / 1.1 var(--f-display);
-  text-transform: lowercase;
   white-space: nowrap;
-}
-
-.page-home .brand__role::first-letter {
-  text-transform: uppercase;
 }
 
 .page-home .site-menu {
   padding-top: 0.3em;
 }
 
-/* No folder icons: the menu is words. */
-.page-home .site-menu__link::before {
-  content: none;
+/* Shop is the one marigold line on the cover. */
+.page-home .site-menu__link[data-shop-link]:is(:hover, :focus-visible, :active) .site-menu__label {
+  text-decoration: underline 2px var(--c-marigold);
+  text-underline-offset: 0.3em;
 }
 
 .page-home .site-menu__link:focus-visible,
@@ -544,24 +564,67 @@ body:not(.page-home) .site-header::after {
   box-shadow: 0 0 0 6px var(--c-paper);
 }
 
-/* Desktop / tablet contents: folio, title in the serif, set tight and low
-   on the left of the cover, clear of the picture's centre. */
+/* Desktop / tablet contents: "Índice", then folio and title in the serif,
+   set low on the left of the cover, clear of the picture's centre. The
+   cover is the first screen: main is a grid whose ::before spans the
+   heading's row and the list's row and is a screen tall, so the heading's
+   row (1fr) takes whatever the list leaves and the two sit at the foot. */
+.page-home {
+  --folio-w: calc(var(--fs-index) * 2.1); /* the folio column */
+}
+
 .work-list {
   counter-reset: folio;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: flex-start;
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: 230px var(--gutter) 40px;
+  padding: 0 var(--gutter) 40px;
 }
 
-.work-list::before {
-  content: "Índice";
-  content: "Índice" / "";
-  margin: 0 0 12px 34px;
-  font: italic 400 20px / 1 var(--f-display);
+@media (min-width: 810px) {
+  .page-home .home {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 1fr;
+  }
+
+  .page-home .home::before {
+    content: "";
+    grid-area: 1 / 1 / 3 / 2;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .index-title {
+    grid-area: 1 / 1;
+    align-self: end;
+    /* never under the masthead, however short the screen */
+    margin: max(200px, calc(var(--fs-name) * 1.6 + 70px)) var(--gutter) 10px calc(var(--gutter) + var(--folio-w));
+    font: italic 400 var(--fs-index) / 1 var(--f-display);
+  }
+
+  .work-list {
+    grid-area: 2 / 1;
+  }
+}
+
+/* Narrow tablets: the picture is cropped to its middle, where the
+   subject is, so the contents move up under the masthead, as on a cover's
+   top left, and the foot of the picture stays clear. (The extra height of
+   the first screen goes below the list instead of above it.) */
+@media (min-width: 810px) and (max-width: 1179.98px) {
+  .page-home .home {
+    grid-template-rows: auto 1fr;
+  }
+
+  .index-title {
+    align-self: start;
+    margin-top: calc(var(--fs-name) * 0.82 + 110px);
+  }
+
+  .work-list {
+    align-self: start;
+  }
 }
 
 .work-list > li {
@@ -573,19 +636,18 @@ body:not(.page-home) .site-header::after {
   display: block;
   padding: 2px 2.5em 2px 0;
   text-decoration: none;
-  font: 400 var(--fs-index) / 1.12 var(--f-display);
-  letter-spacing: 0.012em;
-  text-transform: uppercase;
+  font: 400 var(--fs-index) / 1.14 var(--f-display);
+  letter-spacing: 0.006em;
   white-space: nowrap;
 }
 
+/* The folio, in the italic at the title's size. */
 .work-row::before {
   content: counter(folio, decimal-leading-zero);
+  content: counter(folio, decimal-leading-zero) / "";
   display: inline-block;
-  width: 34px;
-  font: 500 var(--fs-folio) / 1 var(--f-sans);
-  letter-spacing: 0.04em;
-  font-variant-numeric: tabular-nums;
+  width: var(--folio-w);
+  font-style: italic;
 }
 
 .work-row__band {
@@ -599,26 +661,19 @@ body:not(.page-home) .site-header::after {
 }
 
 /* Hover and focus also bring up the discipline, in the italic, after the
-   title (the span is otherwise for screen readers only). */
+   title (the span is otherwise for screen readers only), lower case after
+   the dash: "— dirección creativa y moda". */
 .work-row:hover .visually-hidden,
 .work-row:focus-visible .visually-hidden {
   clip: auto;
   clip-path: none;
   width: auto;
   height: auto;
-  margin: 0 0 0 0.45em;
+  margin: 0 0 0 0.3em;
   overflow: visible;
   font: italic 400 0.8em / 1 var(--f-display);
   letter-spacing: 0;
-  text-transform: none;
-}
-
-/* Short screens: the list starts under the masthead and the page scrolls. */
-@media (max-height: 760px) and (min-width: 810px) {
-  .work-list {
-    justify-content: flex-start;
-    padding-top: max(200px, calc(var(--fs-name) * 1.6 + 70px));
-  }
+  text-transform: lowercase;
 }
 
 /* Narrow tablets: the menu wraps sooner so it clears the masthead. */
@@ -634,8 +689,10 @@ body:not(.page-home) .site-header::after {
   display: none;
 }
 
-/* Phones: the masthead sits on paper, the photograph below it is the
-   cover, and the contents follow on paper, with captions under pictures. */
+/* Phones have no pointer to cross-fade with, so home is the index itself:
+   a photobook, every project's picture at its own proportions, one under
+   the other, with its folio and title underneath. A project without a
+   picture is just its line of type. The masthead sits on paper. */
 @media (max-width: 809.98px) {
   html:has(.page-home),
   .page-home {
@@ -645,6 +702,7 @@ body:not(.page-home) .site-header::after {
   .page-home .site-header {
     padding: 16px var(--gutter) 14px;
     background: var(--c-paper);
+    color: var(--c-ink);
     pointer-events: auto;
   }
 
@@ -655,15 +713,13 @@ body:not(.page-home) .site-header::after {
   .page-home .brand__name,
   .page-home .brand__role,
   .page-home .site-menu__link {
-    color: var(--c-ink);
+    color: inherit;
     -webkit-text-stroke: 0;
+    text-shadow: none;
   }
 
   .page-home .brand__name {
     color: var(--c-morado);
-  }
-
-  .page-home .brand__name {
     font-size: min(46px, 12.4vw);
   }
 
@@ -672,18 +728,13 @@ body:not(.page-home) .site-header::after {
     font-size: 16px;
   }
 
-  .home-bg {
-    position: absolute;
-    inset: var(--cover-top) 0 auto;
-    height: var(--cover-h);
+  .page-home .site-menu__link:focus-visible {
+    outline-color: currentColor;
+    box-shadow: none;
   }
 
-  .page-home {
-    --cover-top: calc(min(46px, 12.4vw) * 0.82 + 56px); /* the header's height */
-    --cover-h: max(300px, calc(100svh - var(--cover-top) - 220px));
-  }
-
-  .home-bg__layer:not(.is-base) {
+  .home-bg,
+  .work-list {
     display: none;
   }
 
@@ -692,39 +743,29 @@ body:not(.page-home) .site-header::after {
     color: var(--c-ink);
   }
 
-  .work-list {
-    display: none;
+  /* Clear of the fixed masthead: its name line plus the role line. */
+  .page-home .home {
+    padding-top: calc(min(46px, 12.4vw) * 0.82 + 92px);
   }
 
-  /* Padding, not a margin on the grid, which would collapse through body. */
-  .page-home .home {
-    padding-top: calc(var(--cover-top) + var(--cover-h));
+  .index-title {
+    margin: 0 var(--gutter) 20px;
+    color: var(--c-ink);
+    -webkit-text-stroke: 0;
+    text-shadow: none;
+    font: italic 400 24px / 1 var(--f-display);
   }
 
   .work-grid {
     counter-reset: folio;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 30px var(--col-gap);
-    padding: 18px var(--gutter) 56px;
-    background: var(--c-paper);
-  }
-
-  .work-grid::before {
-    content: "Índice";
-    content: "Índice" / "";
-    grid-column: 1 / -1;
-    font: italic 400 22px / 1 var(--f-display);
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 36px;
+    padding: 0 var(--gutter) 64px;
   }
 
   .work-card {
     counter-increment: folio;
-  }
-
-  /* A large picture, then a pair; the last one alone goes large too. */
-  .work-card:nth-child(3n + 1),
-  .work-card:last-child:nth-child(3n + 2) {
-    grid-column: 1 / -1;
   }
 
   .work-card__link {
@@ -737,67 +778,41 @@ body:not(.page-home) .site-header::after {
   .work-card__media {
     order: -1;
     display: block;
-    aspect-ratio: 4 / 5;
-    margin-bottom: 9px;
-    overflow: hidden;
-  }
-
-  .work-card:nth-child(3n + 1) .work-card__media,
-  .work-card:last-child:nth-child(3n + 2) .work-card__media {
-    aspect-ratio: 3 / 2;
+    margin-bottom: 10px;
   }
 
   .work-card__media img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
   }
 
+  .work-card__media.is-empty {
+    display: none;
+  }
+
+  /* The folio hangs in the margin of the title, so a title that wraps
+     lines up under its first word. */
   .work-card__title {
-    font: 400 18px / 1.1 var(--f-display);
-    letter-spacing: 0.012em;
-    text-transform: uppercase;
+    padding-left: 2.1em;
+    text-indent: -2.1em;
+    font: 400 22px / 1.15 var(--f-display);
+    letter-spacing: 0.004em;
     overflow-wrap: break-word;
   }
 
   .work-card__title::before {
     content: counter(folio, decimal-leading-zero);
-    margin-right: 8px;
-    font: 500 11px / 1 var(--f-sans);
-    letter-spacing: 0.04em;
-    vertical-align: 0.12em;
-  }
-
-  /* The discipline as the caption's second line. */
-  .work-card .visually-hidden {
-    position: static !important;
-    width: auto;
-    height: auto;
-    margin: 4px 0 0;
-    overflow: visible;
-    clip: auto;
-    clip-path: none;
-    white-space: normal;
-    font: italic 400 15px / 1.2 var(--f-display);
+    content: counter(folio, decimal-leading-zero) / "";
+    display: inline-block;
+    width: 2.1em;
+    text-indent: 0;
+    font-style: italic;
   }
 
   .work-card__link:hover .work-card__title,
   .work-card__link:focus-visible .work-card__title {
     text-decoration: underline 1.5px;
     text-underline-offset: 0.18em;
-  }
-
-  /* No photograph: a flat wall with the folio set large. */
-  .work-card__media.is-empty {
-    display: grid;
-    place-items: center;
-    background: var(--c-wall-empty);
-  }
-
-  .work-card__media.is-empty::before {
-    content: counter(folio, decimal-leading-zero);
-    content: counter(folio, decimal-leading-zero) / "";
-    font: 400 84px / 1 var(--f-display);
   }
 }
 
@@ -826,7 +841,7 @@ html:has(.page-project) {
   grid-column: 1 / -1;
 }
 
-/* Kicker: client in small capitals, the discipline in the italic. */
+/* Kicker: the client as written, then the discipline in the italic. */
 .project__tags {
   display: flex;
   flex-wrap: wrap;
@@ -835,19 +850,16 @@ html:has(.page-project) {
 }
 
 .tag--pill {
-  font: 600 12px / 1.3 var(--f-sans);
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  font: 500 14px / 1.3 var(--f-sans);
 }
 
 .tag--pill + .tag--pill {
   font: italic 400 19px / 1.2 var(--f-display);
-  letter-spacing: 0;
-  text-transform: none;
 }
 
 .tag--pill + .tag--pill::before {
   content: "—";
+  content: "—" / "";
   margin: 0 0.45em;
   font-style: normal;
 }
@@ -881,17 +893,20 @@ html:has(.page-project) {
   display: none;
 }
 
-/* Credits as a small masthead on the left, the standfirst on the right. */
+/* Credits as a small masthead on the left, the standfirst on the right.
+   The standfirst spans a third, flexible row, so its height lands there
+   and the credits stay under their heading. */
 .project__body {
   display: grid;
   grid-template-columns: subgrid;
+  grid-template-rows: auto auto 1fr;
   align-items: start;
   margin-top: 44px;
 }
 
 .project__lede {
   grid-column: 5 / -1;
-  grid-row: 1;
+  grid-row: 1 / span 3;
   max-width: 30em;
   font: 400 var(--fs-standfirst) / 1.22 var(--f-display);
   letter-spacing: -0.004em;
@@ -903,21 +918,21 @@ html:has(.page-project) {
   font-style: italic;
 }
 
-.project__credits {
+.project__credits-title {
   grid-column: 1 / span 3;
   grid-row: 1;
-  display: grid;
-  gap: 6px;
   padding-top: 10px;
   border-top: 1px solid currentColor;
-  font: 500 var(--fs-small) / 1.35 var(--f-sans);
+  font: italic 400 19px / 1.2 var(--f-display);
 }
 
-.project__credits::before {
-  content: "Créditos";
-  content: "Créditos" / "";
-  margin-bottom: 4px;
-  font: italic 400 19px / 1.2 var(--f-display);
+.project__credits {
+  grid-column: 1 / span 3;
+  grid-row: 2;
+  display: grid;
+  gap: 6px;
+  margin-top: 4px;
+  font: 500 var(--fs-small) / 1.35 var(--f-sans);
 }
 
 /* Gallery: each picture at its own proportions, placed like a spread:
@@ -987,24 +1002,9 @@ html:has(.page-project) {
   text-align: right;
 }
 
-/* "Next" / "Previous" stay in the markup for assistive tech; on the page
-   they read as the magazine would print them. */
 .pager__label {
-  font-size: 0;
-}
-
-.pager__label::after {
   font: italic 400 19px / 1.2 var(--f-display);
-}
-
-.pager__item--next .pager__label::after {
-  content: "Siguiente historia";
-  content: "Siguiente historia" / "";
-}
-
-.pager__item--prev .pager__label::after {
-  content: "Historia anterior";
-  content: "Historia anterior" / "";
+  letter-spacing: 0;
 }
 
 .pager__dot {
@@ -1029,12 +1029,18 @@ html:has(.page-project) {
 @media (max-width: 1099.98px) {
   .project__lede {
     grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .project__credits-title {
+    grid-column: 1 / span 6;
+    grid-row: 2;
+    margin-top: 40px;
   }
 
   .project__credits {
     grid-column: 1 / span 6;
-    grid-row: 2;
-    margin-top: 40px;
+    grid-row: 3;
   }
 }
 
@@ -1075,8 +1081,12 @@ html:has(.page-project) {
     font-size: 23px;
   }
 
+  .project__credits-title,
   .project__credits {
     grid-column: 1 / span 5;
+  }
+
+  .project__credits-title {
     margin-top: 32px;
   }
 
@@ -1125,8 +1135,8 @@ html:has(.page-project) {
 
 /* 8. About -----------------------------------------------------------------
    An article page on a pink wall: the first paragraph as the standfirst,
-   the rest in two columns, the portrait beside them; then the pictures as
-   a photobook sequence; a colophon at the foot. */
+   the rest in two columns, the portrait beside them; then the pictures
+   edited like a contact sheet; a colophon at the foot. */
 html:has(.page-about),
 .page-about {
   background: var(--c-about-page);
@@ -1172,14 +1182,15 @@ html:has(.page-about),
   grid-row: 3;
 }
 
+/* Every name the bio marks (hers, her titles, the magazine, the studio)
+   is set the same way: in the serif italic, as an editor would. */
 .about__bio strong {
-  font-weight: inherit;
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-style: italic;
 }
 
-/* Names of a magazine and a studio, italicised as an editor would. */
-.about__bio p:nth-of-type(3) strong:nth-of-type(n + 2) {
-  font-family: var(--f-display);
-  font-style: italic;
+.about__bio p + p strong {
   font-size: 1.1em;
   line-height: 1;
 }
@@ -1192,21 +1203,21 @@ html:has(.page-about),
   margin-top: 10px;
 }
 
-/* Photobook: pictures at their own proportions and at three sizes, with
-   plate numbers. A ten-picture sequence, repeated. */
+/* Contact sheet: nine pictures to a sequence, each at its own proportions
+   and with its plate number. Three chosen ones large and stepped, then a
+   strip of six small frames on one line. */
 .masonry {
   counter-reset: plate;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--col-gap);
-  row-gap: 48px;
+  gap: 36px var(--col-gap);
   align-items: start;
-  margin-top: 120px;
+  margin-top: 88px;
 }
 
 .masonry__item {
   counter-increment: plate;
-  grid-column: span 3;
+  grid-column: span 2;
 }
 
 .masonry__item img {
@@ -1221,18 +1232,18 @@ html:has(.page-about),
   margin-top: 8px;
   font: 500 var(--fs-folio) / 1 var(--f-sans);
   letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
 }
 
-.masonry__item:nth-child(10n + 1) { grid-column: 1 / span 4; }
-.masonry__item:nth-child(10n + 2) { grid-column: 6 / span 3; align-self: end; }
-.masonry__item:nth-child(10n + 3) { grid-column: 10 / span 3; }
-.masonry__item:nth-child(10n + 4) { grid-column: 2 / span 3; }
-.masonry__item:nth-child(10n + 5) { grid-column: 6 / span 4; }
-.masonry__item:nth-child(10n + 6) { grid-column: 11 / span 2; align-self: end; }
-.masonry__item:nth-child(10n + 7) { grid-column: 1 / span 3; align-self: end; }
-.masonry__item:nth-child(10n + 8) { grid-column: 5 / span 2; align-self: center; }
-.masonry__item:nth-child(10n + 9) { grid-column: 8 / span 3; }
-.masonry__item:nth-child(10n + 10) { grid-column: 11 / span 2; align-self: end; }
+.masonry__item:nth-child(9n + 1) { grid-column: 1 / span 3; }
+.masonry__item:nth-child(9n + 2) { grid-column: 5 / span 3; align-self: end; }
+.masonry__item:nth-child(9n + 3) { grid-column: 10 / span 3; align-self: center; }
+.masonry__item:nth-child(9n + 4) { grid-column: 1 / span 2; align-self: end; }
+.masonry__item:nth-child(9n + 5) { grid-column: 3 / span 2; align-self: end; }
+.masonry__item:nth-child(9n + 6) { grid-column: 5 / span 2; align-self: end; }
+.masonry__item:nth-child(9n + 7) { grid-column: 7 / span 2; align-self: end; }
+.masonry__item:nth-child(9n + 8) { grid-column: 9 / span 2; align-self: end; }
+.masonry__item:nth-child(9n + 9) { grid-column: 11 / span 2; align-self: end; }
 
 /* Colophon. */
 .about-footer {
@@ -1240,8 +1251,8 @@ html:has(.page-about),
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--col-gap);
   row-gap: 36px;
-  margin: 160px var(--gutter) 0;
-  padding: 16px 0 88px;
+  margin: 104px var(--gutter) 0;
+  padding: 16px 0 72px;
   border-top: 1px solid currentColor;
 }
 
@@ -1257,32 +1268,9 @@ html:has(.page-about),
   grid-column: 9 / span 4;
 }
 
-/* The markup's "[ Servicios ]" keeps its words for assistive tech; on the
-   page the heading reads plainly, in the italic. */
-.about-footer__label.ui-label {
+.about-footer__label {
   margin-bottom: 12px;
-  font-size: 0;
-  line-height: 0;
-  white-space: normal;
-}
-
-.about-footer__label::after {
   font: italic 400 21px / 1.2 var(--f-display);
-}
-
-.about-footer__col:nth-child(1) .about-footer__label::after {
-  content: "Servicios";
-  content: "Servicios" / "";
-}
-
-.about-footer__col:nth-child(2) .about-footer__label::after {
-  content: "Clientes";
-  content: "Clientes" / "";
-}
-
-.about-footer__col:nth-child(3) .about-footer__label::after {
-  content: "Contacto";
-  content: "Contacto" / "";
 }
 
 .about-footer__list {
@@ -1338,28 +1326,23 @@ html:has(.page-about),
     grid-column: 1;
   }
 
+  /* Phones: one large picture, a small one beside it set low, then a
+     small one and a medium one. */
   .masonry {
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    row-gap: 28px;
-    margin-top: 80px;
+    gap: 24px var(--col-gap);
+    margin-top: 72px;
   }
 
   .masonry__item:nth-child(n) {
-    grid-column: span 3;
+    grid-column: auto;
     align-self: start;
   }
 
-  .masonry__item:nth-child(5n + 1) {
-    grid-column: 1 / -1;
-  }
-
-  .masonry__item:nth-child(5n + 4) {
-    grid-column: 2 / span 4;
-  }
-
-  .masonry__item:nth-child(5n + 5) {
-    grid-column: 1 / -1;
-  }
+  .masonry__item:nth-child(4n + 1) { grid-column: 1 / span 4; }
+  .masonry__item:nth-child(4n + 2) { grid-column: 5 / span 2; align-self: end; }
+  .masonry__item:nth-child(4n + 3) { grid-column: 2 / span 2; align-self: end; }
+  .masonry__item:nth-child(4n + 4) { grid-column: 4 / span 3; }
 
   .about-footer {
     margin-top: 96px;
@@ -1372,9 +1355,10 @@ html:has(.page-about),
 }
 
 /* 9. Contact ---------------------------------------------------------------
-   The back page: Edna's portrait, her address set large in the serif, and
-   the form as a quiet second way to write. On paper, so its solid ground
-   covers the fixed cover photograph as it scrolls up. */
+   The back page, on a grana wall: her address set as large as the page
+   allows, underlined in marigold pencil, then the taglines, her portrait
+   and the form as a quiet second way to write. All type in paper (6.7:1).
+   Its solid ground covers the fixed cover photograph as it scrolls up. */
 .contact {
   container-type: inline-size;
   position: relative;
@@ -1384,88 +1368,125 @@ html:has(.page-about),
   align-content: center;
   align-items: start;
   min-height: 100vh;
-  padding: 120px var(--gutter) 96px;
-  background: var(--c-paper);
-  color: var(--c-ink);
+  padding: 96px var(--gutter) 72px;
+  background: var(--c-grana);
+  color: var(--c-paper);
+}
+
+.contact :focus-visible {
+  outline: 2px solid var(--c-paper);
+  outline-offset: 4px;
 }
 
 .contact__intro {
   display: contents;
 }
 
-.contact__portrait {
-  grid-column: 1 / span 4;
-  grid-row: 1 / span 4;
-  width: 100%;
-  max-width: 460px;
-  height: auto;
-}
-
 .contact__title {
-  grid-column: 6 / -1;
+  grid-column: 1 / -1;
   grid-row: 1;
-  color: var(--c-grana);
-  font: 600 13px / 1.3 var(--f-sans);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font: italic 400 28px / 1.2 var(--f-display);
 }
 
 .contact__links {
-  grid-column: 6 / -1;
+  grid-column: 1 / -1;
   grid-row: 2;
   display: grid;
   justify-items: start;
-  gap: 18px;
-  margin-top: 18px;
+  gap: 0.2em;
+  margin-top: 6px;
   font-family: var(--f-display);
-}
-
-.contact__links li:first-child {
-  font-size: min(84px, 5.2cqi);
-  line-height: 1;
-  letter-spacing: -0.015em;
-}
-
-.contact__links li:last-child {
-  font-size: min(40px, 2.6cqi);
+  /* the second line's size; the address is set larger below */
+  font-size: min(48px, 3.4cqi);
   line-height: 1.1;
 }
 
-.contact__links a {
+.contact__links li:first-child {
+  margin-left: -0.04em; /* the serif's side bearing, so the line aligns */
+  font-size: min(168px, 8.9cqi);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+
+.contact__link {
+  --icon: 0.62em;
+  --icon-gap: 0.26em;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.14em;
   text-decoration: none;
-  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
-  padding-bottom: 0.06em;
 }
 
-.contact__links li:first-child a {
-  color: var(--c-grana);
+.contact__links li:first-child .contact__link {
+  --icon: 0.42em;
+  --icon-gap: 0.16em;
+  padding-bottom: 0.1em;
 }
 
-.contact__links a:hover {
-  background-size: 100% 2px;
+/* Sized to the words they precede, centred on the x-height. */
+.contact__icon {
+  display: inline-block;
+  width: var(--icon);
+  height: var(--icon);
+  margin-right: var(--icon-gap);
+  vertical-align: middle;
+}
+
+/* A marigold pencil line under the words (not the icon). */
+.contact__link::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--icon) + var(--icon-gap));
+  right: -0.04em;
+  bottom: 0;
+  height: max(8px, 0.1em);
+  background: var(--c-marigold);
+  -webkit-mask: var(--mark-underline) 0 0 / 100% 100% no-repeat;
+  mask: var(--mark-underline) 0 0 / 100% 100% no-repeat;
+  transition: height var(--dur-fast) var(--ease-out);
+}
+
+.contact__link:hover::after {
+  height: max(11px, 0.15em);
 }
 
 /* The serif's second voice. */
 .contact__taglines {
-  grid-column: 6 / span 3;
+  grid-column: 1 / span 4;
   grid-row: 3;
-  margin-top: 56px;
-  font: italic 400 24px / 1.2 var(--f-display);
+  margin-top: 72px;
+  font: italic 400 28px / 1.2 var(--f-display);
+}
+
+.contact__portrait {
+  grid-column: 5 / span 4;
+  grid-row: 3;
+  justify-self: center;
+  width: min(100%, 300px);
+  height: auto;
+  margin-top: 76px;
 }
 
 .contact-form {
   grid-column: 9 / -1;
-  grid-row: 3 / span 2;
-  margin-top: 56px;
+  grid-row: 3;
+  margin-top: 72px;
+}
+
+@media (min-width: 1800px) {
+  .contact__portrait {
+    width: min(100%, 360px);
+  }
 }
 
 .field {
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .field__label {
   display: block;
   margin-bottom: 2px;
+  font-size: 14px;
 }
 
 .field__control {
@@ -1474,16 +1495,23 @@ html:has(.page-about),
   margin: 0;
   padding: 8px 0 9px;
   border: 0;
-  border-bottom: 1px solid var(--c-ink);
+  border-bottom: 1px solid var(--c-paper);
   border-radius: 0;
   background: transparent;
-  color: var(--c-ink);
+  color: var(--c-paper);
+  caret-color: var(--c-paper);
   font: 400 17px / 1.4 var(--f-sans);
 }
 
 .field__control::placeholder {
-  color: var(--c-placeholder);
+  color: var(--c-paper-dim);
   opacity: 1;
+}
+
+/* Browser autofill keeps the wall's colours. */
+.field__control:-webkit-autofill {
+  -webkit-text-fill-color: var(--c-paper);
+  box-shadow: inset 0 0 0 100px var(--c-grana);
 }
 
 .field__control:focus {
@@ -1492,8 +1520,8 @@ html:has(.page-about),
   padding-bottom: 8px;
 }
 
-.field__control:focus-visible {
-  outline: 2px solid var(--c-ink);
+.contact .field__control:focus-visible {
+  outline: 2px solid var(--c-paper);
   outline-offset: 4px;
 }
 
@@ -1503,19 +1531,23 @@ textarea.field__control {
   resize: vertical;
 }
 
+/* An invalid field: a heavier rule, broken like a correction mark. */
 .field__control[aria-invalid="true"] {
-  border-bottom-color: var(--c-error);
+  border-bottom: 2px dashed var(--c-paper);
+  padding-bottom: 8px;
 }
 
 .field__error {
-  margin-top: 6px;
-  color: var(--c-error);
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .field__error:empty {
   display: none;
 }
 
+/* Send: a slip of paper with the word in grana. */
 .contact-form__submit {
   display: inline-flex;
   align-items: baseline;
@@ -1524,11 +1556,11 @@ textarea.field__control {
   padding: 13px 20px 14px;
   border: 0;
   border-radius: 0;
-  background: var(--c-ink);
-  color: var(--c-paper);
-  font: 500 16px / 1.2 var(--f-sans);
+  background: var(--c-paper);
+  color: var(--c-grana);
+  font: 600 16px / 1.2 var(--f-sans);
   cursor: pointer;
-  transition: background-color var(--dur-fast) ease;
+  transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
 }
 
 .contact-form__submit::after {
@@ -1537,12 +1569,22 @@ textarea.field__control {
 }
 
 .contact-form__submit:hover {
-  background: var(--c-grana);
+  background: transparent;
+  color: var(--c-paper);
+  box-shadow: inset 0 0 0 1.5px var(--c-paper);
 }
 
 .contact-form__submit:focus-visible {
-  outline: 2px solid var(--c-ink);
+  outline: 2px solid var(--c-paper);
   outline-offset: 3px;
+}
+
+.contact-form__submit[aria-disabled="true"] {
+  background: var(--c-paper);
+  color: var(--c-grana);
+  box-shadow: none;
+  opacity: 0.8; /* grana on the faded slip: 4.7:1 */
+  cursor: progress;
 }
 
 .contact-form__status {
@@ -1555,41 +1597,52 @@ textarea.field__control {
 }
 
 .contact-form__status--error {
-  color: var(--c-error);
+  font: 600 15px / 1.4 var(--f-sans);
 }
 
-.contact-form__submit[aria-disabled="true"] {
-  background: var(--c-ink);
-  opacity: 0.6;
-  cursor: progress;
-}
+/* Tablet: the address across the page, the form on the right, the
+   taglines and under them the portrait on the left. */
+@media (max-width: 1399.98px) {
+  .contact__links li:first-child {
+    font-size: 8.9cqi;
+  }
 
-@media (max-width: 1199.98px) {
+  .contact__links {
+    font-size: 4cqi;
+  }
+
   .contact__taglines {
-    grid-column: 6 / -1;
+    grid-column: 1 / span 6;
+    margin-top: 64px;
+  }
+
+  .contact__portrait {
+    grid-column: 1 / span 5;
+    grid-row: 4;
+    justify-self: start;
+    width: min(100%, 300px);
     margin-top: 40px;
   }
 
   .contact-form {
-    grid-column: 6 / -1;
-    grid-row: 4;
-    margin-top: 40px;
-  }
-
-  .contact__links li:first-child {
-    font-size: 5.6cqi;
-  }
-
-  .contact__links li:last-child {
-    font-size: 3cqi;
+    grid-column: 7 / -1;
+    grid-row: 3 / span 2;
+    margin-top: 64px;
   }
 }
 
+/* Phones: address, Instagram, taglines, portrait, form; clear of the
+   fixed menu bar at the end of the page. */
 @media (max-width: 809.98px) {
+  .page-home {
+    padding-bottom: 0;
+  }
+
   .contact {
     grid-template-columns: minmax(0, 1fr);
     align-content: start;
-    padding: 64px var(--gutter) 48px;
+    min-height: 0;
+    padding: 64px var(--gutter) calc(56px + var(--bar-h));
   }
 
   .contact__title,
@@ -1601,52 +1654,113 @@ textarea.field__control {
     grid-row: auto;
   }
 
+  .contact__title {
+    font-size: 24px;
+  }
+
   .contact__links {
     order: 1;
-    margin-top: 14px;
+    margin-top: 10px;
+    font-size: min(30px, 8cqi);
+  }
+
+  .contact__links li:first-child {
+    font-size: min(46px, 9.4cqi);
   }
 
   .contact__taglines {
     order: 2;
+    margin-top: 36px;
+    font-size: 23px;
   }
 
   .contact__portrait {
     order: 3;
-  }
-
-  .contact-form {
-    order: 4;
-  }
-
-  .contact__links li:first-child {
-    font-size: min(40px, 9.4cqi);
-  }
-
-  .contact__links li:last-child {
-    font-size: 26px;
-  }
-
-  .contact__taglines {
-    margin-top: 28px;
-    font-size: 21px;
-  }
-
-  .contact__portrait {
-    width: 64%;
+    width: 200px;
     margin-top: 32px;
   }
 
   .contact-form {
+    order: 4;
     margin-top: 40px;
   }
 }
 
-/* 10. Empty media frame ------------------------------------------------------ */
-.is-empty {
-  background: var(--c-wall-empty);
+/* While the grana wall is behind them, the running head and the phone's
+   menu bar take its colours, so they never sit as a paper strip (or as
+   cover-coloured type) on the wall. Scroll-driven, where supported.
+   Desktop: the type turns paper once the wall is behind most of it (its
+   top 120px up the screen) and the head takes the wall's ground only once
+   the wall fills the screen (its top 1px from the top), so it never covers
+   the photograph; then the address does not show through the head.
+   Phones: the menu bar turns once the wall is behind it, the running head
+   (paper, on the photobook) once the wall reaches the top of the screen. */
+@supports (timeline-scope: --contact) and (animation-range: entry 0%) {
+  .page-home {
+    timeline-scope: --contact;
+  }
+
+  .contact {
+    view-timeline: --contact block;
+  }
+
+  @media (min-width: 810px) {
+    .page-home .site-header {
+      animation: on-grana-type linear none, on-grana-ground linear none;
+      animation-timeline: --contact, --contact;
+      animation-range: cover calc(100vh - 120px) cover 100%, cover calc(100vh - 1px) cover 100%;
+    }
+  }
+
+  @media (max-width: 809.98px) {
+    .page-home .site-header .site-menu {
+      animation: on-grana-ground linear none;
+      animation-timeline: --contact;
+      animation-range: cover 72px cover 100%;
+    }
+
+    .page-home .site-header {
+      animation: on-grana-ground linear none;
+      animation-timeline: --contact;
+      animation-range: cover calc(100vh - 1px) cover 100%;
+    }
+
+    .page-home .site-header .brand__name {
+      animation: on-grana-name linear none;
+      animation-timeline: --contact;
+      animation-range: cover calc(100vh - 1px) cover 100%;
+    }
+  }
 }
 
-/* 11. 404 / not found ----------------------------------------------------- */
+@keyframes on-grana-type {
+  from,
+  to {
+    --name-fill: var(--c-paper);
+    --name-edge: var(--c-grana);
+    --role-fill: var(--c-paper);
+    --role-edge: var(--c-grana);
+    --menu-fill: var(--c-paper);
+    --menu-edge: var(--c-grana);
+  }
+}
+
+@keyframes on-grana-ground {
+  from,
+  to {
+    background: var(--c-grana);
+    color: var(--c-paper);
+  }
+}
+
+@keyframes on-grana-name {
+  from,
+  to {
+    color: var(--c-paper);
+  }
+}
+
+/* 10. 404 / not found ----------------------------------------------------- */
 html:has(.page-404),
 .page-404 {
   background: var(--c-black);
@@ -1667,18 +1781,10 @@ html:has(.page-404),
   padding-left: calc(100% / 12);
 }
 
-.not-found__code.ui-label {
+.not-found__code {
   margin-bottom: 14px;
-  font-size: 0;
-}
-
-/* "Error 404 / Not found" stays in the markup for assistive tech. */
-.not-found__code::after {
-  content: "Error 404";
-  content: "Error 404" / "";
-  font: 600 12px / 1.3 var(--f-sans);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  color: var(--c-rosa-light);
+  font: italic 400 24px / 1.2 var(--f-display);
 }
 
 .not-found__copy {
@@ -1699,15 +1805,7 @@ html:has(.page-404),
   text-align: right;
 }
 
-/* "Redirecting home in.." stays for assistive tech; on the page it is
-   said in Spanish, in the italic. */
-.not-found__redirect.ui-label {
-  font-size: 0;
-}
-
-.not-found__redirect::after {
-  content: "Te llevo al inicio en…";
-  content: "Te llevo al inicio en…" / "";
+.not-found__redirect {
   color: var(--c-rosa-light);
   font: italic 400 24px / 1.2 var(--f-display);
 }
@@ -1747,12 +1845,12 @@ html:has(.page-404),
     margin-top: calc(24vh - 8px);
   }
 
-  .not-found__redirect::after {
+  .not-found__redirect {
     font-size: 22px;
   }
 }
 
-/* 12. Utilities ------------------------------------------------------------ */
+/* 11. Utilities ------------------------------------------------------------ */
 .visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -1776,7 +1874,7 @@ html:has(.page-404),
   line-height: 1.4;
 }
 
-/* 13. Reduced motion ------------------------------------------------------- */
+/* 12. Reduced motion ------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

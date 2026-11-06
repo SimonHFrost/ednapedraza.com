@@ -6,17 +6,27 @@
  *
  * Project fields
  *   slug        URL key: project.html?slug=<slug>
- *   title       Title as written in the home list (pages upper-case it in CSS)
+ *   title       Title as written in the home list and on the project page
  *   discipline  Service line: drives the menu filters and the project-page pill
  *   client      Client label shown in the first pill on the project page
  *   bg / pill   Page colour and pill colour of the project page
  *   hero        Hero / background image, or null when the project has none
+ *   tone        Type colours over the hero on the home cover (see below)
  *   gallery     Square images, shown in one row under the description
  *   description Array of text runs; runs at odd positions are rendered bold
  *   credits     Credit lines in the right-hand column
  *
  * description and credits may be empty arrays: the project page then omits
  * that block. Photos and copy come from Edna's Framer site.
+ *
+ * tone: space-separated tokens, measured on the hero where each piece of
+ * type falls on the home cover (desktop and tablet). With no token the type
+ * is ink with a paper edge and the name is purple.
+ *   name-paper  name in paper, ink edge (dark or red ground behind it)
+ *   name-ink    name in ink rather than purple, paper edge
+ *   role-paper  "Directora creativa…" line in paper, ink edge
+ *   menu-paper  menu in paper, ink edge
+ *   list-paper  "Índice" and the contents list in paper, ink edge
  */
 (function () {
   'use strict';
@@ -32,12 +42,13 @@
   window.PROJECTS = [
     {
       slug: 'frutifantastimeow',
-      title: 'FRUTI-FANTASTI MEOW',
+      title: 'Fruti-Fantasti Meow',
       discipline: 'Dirección Creativa y Arte',
-      client: 'MEOW MAGAZINE PARA STEVE MADDEN',
+      client: 'MEOW Magazine para Steve Madden',
       bg: 'rgb(242, 206, 61)',
       pill: 'rgb(250, 20, 250)',
       hero: IMG + 'frutifantastimeow-hero.jpg',
+      tone: '',
       gallery: gallery('frutifantastimeow', 4),
       description: [
         'Dirección creativa y de arte para una oda a esos deliciosos pretextos que nos llenan de sabor y vitaminas. Esta ',
@@ -56,10 +67,11 @@
       slug: 'coca-cola-alina',
       title: 'Coca Cola x Alina Montero',
       discipline: 'Fashion Styling',
-      client: 'COCA COLA / STINK',
+      client: 'Coca Cola / Stink',
       bg: 'rgb(189, 169, 235)',
       pill: 'rgb(89, 41, 41)',
       hero: null, // the live page shows an empty media frame here
+      tone: '',
       gallery: gallery('coca-cola-alina', 3),
       description: [],
       credits: [
@@ -69,12 +81,13 @@
     },
     {
       slug: 'fabrica-social',
-      title: 'FÁBRICA SOCIAL',
+      title: 'Fábrica Social',
       discipline: 'Dirección Creativa y Moda',
-      client: 'FÁBRICA SOCIAL',
+      client: 'Fábrica Social',
       bg: 'rgb(104, 212, 194)',
       pill: 'rgb(34, 54, 61)',
       hero: IMG + 'fabrica-social-hero.jpg',
+      tone: 'name-ink menu-paper list-paper',
       gallery: gallery('fabrica-social', 4),
       description: [
         'Desde 2024 he estado colaborando con ',
@@ -92,10 +105,11 @@
       slug: 'harpers-mx',
       title: 'Harper’s Bazaar MX',
       discipline: 'Fashion Styling',
-      client: 'HARPER’S BAZAAR MX',
+      client: 'Harper’s Bazaar MX',
       bg: 'rgb(201, 222, 240)',
       pill: 'rgb(21, 31, 56)',
       hero: IMG + 'harpers-mx-hero.jpg',
+      tone: '',
       gallery: gallery('harpers-mx', 4),
       description: [
         'Una historia de ',
@@ -111,10 +125,11 @@
       slug: 'crocs-meow',
       title: 'Dark Romance',
       discipline: 'Dirección Creativa y Fashion Styling',
-      client: 'MEOW MAGAZINE PARA CROCS',
+      client: 'MEOW Magazine para Crocs',
       bg: 'rgb(232, 60, 60)',
       pill: 'rgb(37, 38, 38)',
       hero: IMG + 'crocs-meow-hero.jpg',
+      tone: 'name-paper role-paper menu-paper list-paper',
       gallery: gallery('crocs-meow', 4),
       description: [
         'Nos inspiramos en la nueva campaña de ',
@@ -132,10 +147,11 @@
       slug: 'tqm-meow',
       title: 'TQM x MEOW',
       discipline: 'Dirección Creativa y Arte',
-      client: 'MEOW MAGAZINE PARA STEVE MADDEN',
+      client: 'MEOW Magazine para Steve Madden',
       bg: 'rgb(235, 169, 201)',
       pill: 'rgb(51, 71, 46)',
       hero: IMG + 'tqm-meow-hero.jpg',
+      tone: 'name-paper role-paper menu-paper list-paper',
       gallery: gallery('tqm-meow', 3),
       description: [
         'Dirección creativa y de arte para una noche de celebración con la comunidad de DJs ',
@@ -155,10 +171,11 @@
       slug: 'mabel-meow',
       title: 'Mabel Cadena x MEOW',
       discipline: 'Fashion Styling',
-      client: 'MEOW MAGAZINE',
+      client: 'MEOW Magazine',
       bg: 'rgb(141, 186, 224)',
       pill: 'rgb(69, 31, 31)',
       hero: IMG + 'mabel-meow-hero.jpg',
+      tone: 'name-ink list-paper',
       gallery: gallery('mabel-meow', 4),
       description: [
         'Estilismo de Moda para la actriz ',
@@ -175,10 +192,11 @@
       slug: 'skechers-meow',
       title: 'Happy Feet',
       discipline: 'Dirección de Arte',
-      client: 'MEOW MAGAZINE PARA SKECHERS',
+      client: 'MEOW Magazine para Skechers',
       bg: 'rgb(125, 199, 146)',
       pill: 'rgb(26, 58, 82)',
       hero: IMG + 'skechers-meow-hero.jpg',
+      tone: 'menu-paper list-paper',
       gallery: gallery('skechers-meow', 4),
       description: [
         'Dirección creativa y de arte para ',
@@ -199,6 +217,7 @@
       bg: 'rgb(172, 145, 227)',
       pill: 'rgb(42, 26, 61)',
       hero: IMG + 'kfc-alina-hero.jpg',
+      tone: 'list-paper',
       gallery: gallery('kfc-alina', 3),
       description: [],
       credits: [
@@ -208,12 +227,13 @@
     },
     {
       slug: 'meowndalista',
-      title: 'MEOWNDALISTA',
+      title: 'Meowndalista',
       discipline: 'Dirección Creativa y Moda',
-      client: 'MEOW MAGAZINE PARA STEVE MADDEN',
+      client: 'MEOW Magazine para Steve Madden',
       bg: 'rgb(240, 176, 146)',
       pill: 'rgb(35, 64, 58)',
       hero: IMG + 'meowndalista-hero.jpg',
+      tone: 'name-paper',
       gallery: gallery('meowndalista', 4),
       description: [
         'La fiebre del mundial llegó a ',
@@ -231,10 +251,11 @@
       slug: 'ben-frank',
       title: 'Ben & Frank',
       discipline: 'Dirección de Arte',
-      client: 'BEN & FRANK',
+      client: 'Ben & Frank',
       bg: 'rgb(255, 132, 0)',
       pill: 'rgb(17, 194, 35)',
       hero: IMG + 'ben-frank-hero.jpg',
+      tone: '',
       gallery: gallery('ben-frank', 5),
       description: [
         'Desde hace aproximadamente 7 años he estado colaborando con ',

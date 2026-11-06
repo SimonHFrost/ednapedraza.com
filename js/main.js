@@ -95,9 +95,9 @@
   function buildBackgroundLayer(project, index, baseIndex) {
     var classes = 'home-bg__layer' + (index === baseIndex ? ' is-base' : '');
     if (!project.hero) {
-      return el('div', { class: classes + ' home-bg__layer--empty is-empty', 'data-index': index });
+      return el('div', { class: classes + ' home-bg__layer--empty is-empty', 'data-index': index, 'data-tone': project.tone || null });
     }
-    return el('div', { class: classes, 'data-index': index }, [
+    return el('div', { class: classes, 'data-index': index, 'data-tone': project.tone || null }, [
       el('img', {
         src: project.hero,
         alt: '',
@@ -259,7 +259,8 @@
     var parts = [];
     if (project.description.length) parts.push(buildLede(project.description));
     if (project.credits.length) {
-      parts.push(el('ul', { class: 'project__credits', 'aria-label': 'Créditos' }, project.credits.map(function (line) {
+      parts.push(el('h2', { class: 'project__credits-title', id: 'project-credits' }, ['Créditos']));
+      parts.push(el('ul', { class: 'project__credits', 'aria-labelledby': 'project-credits' }, project.credits.map(function (line) {
         return el('li', {}, [line]);
       })));
     }
@@ -272,7 +273,7 @@
       el('a', { class: 'pager__link', href: projectUrl(project), rel: direction }, [
         el('span', { class: 'pager__label ui-label' }, [
           el('span', { class: 'pager__dot', 'aria-hidden': 'true' }),
-          isPrev ? 'Previous' : 'Next'
+          isPrev ? 'Historia anterior' : 'Siguiente historia'
         ]),
         el('span', { class: 'pager__title' }, [project.title])
       ])

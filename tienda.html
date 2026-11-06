@@ -12,19 +12,20 @@
 
     key            current value                          markers
     -------------  -------------------------------------  -------
-    name           Tote Flor  (mailto: Tote%20Flor)            6
-    drop           Edición 01                                  1
+    name           Tote Flor  (mailto: Tote%20Flor)            5
+    drop           edición 01                                  1
     price          MX$650                                      2
     shipping-cost  envío aparte  (or: envío incluido)          1
     edition        50                                          3
     preorder-end   30 de noviembre                             2
     ship-date      15 de diciembre  (first shipping day)       1
-    made-in        CDMX                                        3
+    made-in        CDMX                                        2
     shipping       todo México                                 1
     material       Lona 100% algodón, bordada                  1
     size           38 × 42 × 10 cm · asas de 60 cm             1
     buy-url        mailto:edna.sapi@gmail.com?subject=...      1
     image          assets/img/tote-flor.jpg (+ -600.jpg)       1
+    image-caption  Foto de referencia.                         1
 
   Check the counts:
     grep -o 'data-placeholder="[a-z -]*"' tienda.html | cut -d'"' -f2 | tr ' ' '\n' | sort | uniq -c
@@ -39,6 +40,10 @@
   in srcset), cropped to fill. Replace it with Edna's own photograph of the
   finished tote before launch. To move the crop, set style="--focus: 50% 60%"
   (x y) on the <img>. Photos are never tinted or overlaid.
+  Caption (image-caption): "Foto de referencia." says honestly that the
+  picture is not the finished piece. Once the real photograph is in,
+  replace it with a real caption (what the picture shows: the piece, who
+  took it), here and on proximamente.html.
   ==========================================================================
 -->
 <html lang="es" class="no-js">
@@ -81,7 +86,9 @@
   </header>
 
   <main id="main" class="store" tabindex="-1">
-    <!-- One spread: the photograph as the left page, all the type on the right. -->
+    <!-- One spread: the photograph as the left page, all the type on the
+         right. Below it, the details on an añil band that closes the page
+         (outside the spread, so the sticky photograph lets go there). -->
     <article class="drop" aria-labelledby="drop-title">
       <figure class="drop-photo">
         <img class="drop-photo__img" data-placeholder="image name" src="assets/img/tote-flor.jpg"
@@ -89,34 +96,37 @@
              sizes="(max-width: 809.98px) 100vw, 52vw" width="1016" height="1020"
              fetchpriority="high" decoding="async"
              alt="Tote Flor: bolsa de lona color crudo con flores silvestres bordadas, sobre fondo rosa.">
-        <figcaption class="drop-photo__caption"><span data-placeholder="name">Tote Flor</span>. Edición de <span data-placeholder="edition">50</span> piezas, hecha en <span data-placeholder="made-in">CDMX</span>.</figcaption>
+        <figcaption class="drop-photo__caption" data-placeholder="image-caption">Foto de referencia.</figcaption>
       </figure>
 
       <div class="drop-text">
-        <p class="drop-kicker">Tienda · <span data-placeholder="drop">Edición 01</span></p>
+        <p class="drop-kicker">La tienda, <span data-placeholder="drop">edición 01</span></p>
         <h1 class="drop-title" id="drop-title" data-placeholder="name">Tote Flor</h1>
         <p class="drop-standfirst">Lona cruda con flores bordadas.</p>
 
-        <p class="drop-price"><span class="visually-hidden">Precio: </span><span data-placeholder="price">MX$650</span> <span class="drop-price__note" data-placeholder="shipping-cost">envío aparte</span></p>
-        <p class="drop-status">Preventa abierta hasta el <span data-placeholder="preorder-end">30 de noviembre</span>.</p>
+        <p class="drop-price"><span class="visually-hidden">Precio: </span><span class="drop-price__amount" data-placeholder="price">MX$650</span> <span class="drop-price__note" data-placeholder="shipping-cost">envío aparte</span></p>
 
         <!-- PLACEHOLDER: replace the mailto with the Stripe Payment Link or Tiendanube product URL. -->
         <a class="buy-button" href="mailto:edna.sapi@gmail.com?subject=Quiero%20apartar%20mi%20Tote%20Flor" data-placeholder="buy-url name">Comprar en preventa, <span data-placeholder="price">MX$650</span> <span aria-hidden="true">→</span></a>
+        <p class="drop-status">Preventa abierta hasta el <span data-placeholder="preorder-end">30 de noviembre</span>.</p>
 
         <p class="drop-how">Apartas la tuya en preventa, se hace en <span data-placeholder="made-in">CDMX</span> y llega a tu casa.</p>
-
-        <section class="drop-details" aria-labelledby="details-title">
-          <h2 class="drop-details__title" id="details-title">Detalles</h2>
-          <dl class="specs">
-            <div class="specs__row"><dt>Material</dt><dd data-placeholder="material">Lona 100% algodón, bordada</dd></div>
-            <div class="specs__row"><dt>Medidas</dt><dd data-placeholder="size">38 × 42 × 10&nbsp;cm&nbsp;· asas de 60&nbsp;cm</dd></div>
-            <div class="specs__row"><dt>Envío</dt><dd>A <span data-placeholder="shipping">todo México</span> desde el <span data-placeholder="ship-date">15 de diciembre</span></dd></div>
-          </dl>
-        </section>
-
-        <p class="drop-edition"><span data-placeholder="edition">50</span> piezas.<br> <em>Ni una más.</em></p>
       </div>
     </article>
+
+    <section class="drop-band" aria-labelledby="details-title">
+      <div class="drop-details">
+        <h2 class="drop-details__title" id="details-title">Detalles</h2>
+        <dl class="specs">
+          <div class="specs__row"><dt>Edición</dt><dd><span data-placeholder="edition">50</span> piezas numeradas</dd></div>
+          <div class="specs__row"><dt>Material</dt><dd data-placeholder="material">Lona 100% algodón, bordada</dd></div>
+          <div class="specs__row"><dt>Medidas</dt><dd data-placeholder="size">38 × 42 × 10&nbsp;cm&nbsp;· asas de 60&nbsp;cm</dd></div>
+          <div class="specs__row"><dt>Envío</dt><dd>A <span data-placeholder="shipping">todo México</span> desde el <span data-placeholder="ship-date">15 de diciembre</span></dd></div>
+        </dl>
+      </div>
+
+      <p class="drop-edition"><span data-placeholder="edition">50</span> piezas.<br> <em>Ni una más.</em></p>
+    </section>
   </main>
 
   <footer class="store-footer">
