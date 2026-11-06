@@ -998,6 +998,18 @@ html:has(.page-about) {
   font-weight: 700;
 }
 
+/* Edna's portrait: right of the bio on wider screens, above it on phones. */
+.about__bio {
+  display: flow-root;
+}
+
+.about__portrait {
+  float: right;
+  width: min(360px, 30vw);
+  height: auto;
+  margin: 0 0 24px 40px;
+}
+
 .masonry {
   columns: 5;
   column-gap: 20px;
@@ -1049,6 +1061,12 @@ html:has(.page-about) {
 }
 
 @media (max-width: 809.98px) {
+  .about__portrait {
+    float: none;
+    width: 60%;
+    margin: 0 0 32px;
+  }
+
   .masonry {
     columns: 3;
     column-gap: 10px;
@@ -1121,6 +1139,13 @@ html:has(.page-about) {
 .contact__links a {
   color: var(--c-purple);
   text-underline-offset: 3px;
+}
+
+.contact__portrait {
+  width: 280px;
+  max-width: 100%;
+  height: auto;
+  margin-top: 40px;
 }
 
 .field {
@@ -1217,6 +1242,16 @@ textarea.field__control {
   display: none;
 }
 
+.contact-form__status--error {
+  color: var(--c-error);
+}
+
+.contact-form__submit[aria-disabled="true"] {
+  background: var(--c-purple);
+  opacity: 0.6;
+  cursor: progress;
+}
+
 @media (max-width: 1399.98px) {
   .contact {
     grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
@@ -1256,6 +1291,11 @@ textarea.field__control {
 
   .contact__links {
     margin-top: 24px;
+  }
+
+  .contact__portrait {
+    width: 200px;
+    margin-top: 32px;
   }
 }
 
