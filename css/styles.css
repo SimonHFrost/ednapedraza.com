@@ -1096,20 +1096,25 @@ html:has(.page-about) {
 .contact {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 280px) minmax(0, 520px);
   align-content: center;
   align-items: start;
-  column-gap: 80px;
+  column-gap: 48px;
   min-height: 100vh;
   padding: 160px var(--gutter) 96px;
   background: var(--c-contact-page);
+}
+
+/* The title is sized from its own column so it never runs into the photo. */
+.contact__intro {
+  container-type: inline-size;
 }
 
 .contact__title {
   color: var(--c-purple);
   font-family: var(--f-display);
   font-weight: 400;
-  font-size: var(--fs-display);
+  font-size: min(var(--fs-display), 14cqi);
   line-height: 1;
   letter-spacing: -0.01em;
   text-transform: uppercase;
@@ -1141,11 +1146,19 @@ html:has(.page-about) {
   text-underline-offset: 3px;
 }
 
+.contact__ig {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact__icon {
+  flex: none;
+}
+
 .contact__portrait {
-  width: 280px;
-  max-width: 100%;
+  width: 100%;
   height: auto;
-  margin-top: 40px;
 }
 
 .field {
@@ -1248,10 +1261,16 @@ textarea.field__control {
     column-gap: 48px;
   }
 
-  /* One long word: sized from its own column so it never runs into the
-     form; the tagline follows it down. */
-  .contact__intro {
-    container-type: inline-size;
+  /* Photo drops under the intro; the form spans both rows on the right. */
+  .contact-form {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .contact__portrait {
+    width: 280px;
+    max-width: 100%;
+    margin-top: 40px;
   }
 
   .contact__title {
@@ -1283,9 +1302,14 @@ textarea.field__control {
     margin-top: 24px;
   }
 
+  .contact-form {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
   .contact__portrait {
     width: 200px;
-    margin-top: 32px;
+    margin-top: 0;
   }
 }
 
