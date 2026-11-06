@@ -1235,3 +1235,26 @@ html:has(.page-store) {
     transform: none;
   }
 }
+
+/* 12. Coming soon (proximamente.html) ----------------------------------------
+   The same hero, alone: it fills the screen below the header (no band), and
+   on phones the standfirst stays above the button, since there is no price
+   or status to lead with. */
+.page-soon .drop-hero {
+  min-height: max(560px, calc(100vh - var(--store-header-h)));
+  min-height: max(560px, calc(100svh - var(--store-header-h)));
+}
+
+.page-soon .drop-standfirst {
+  order: 0;
+}
+
+@media (max-width: 809.98px) {
+  .page-soon .drop-hero {
+    min-height: 0;
+  }
+
+  .page-soon .drop-stage {
+    height: clamp(220px, 38svh, 340px);
+  }
+}
