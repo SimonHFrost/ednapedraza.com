@@ -585,16 +585,25 @@ body:not(.page-home) .brand__name {
 }
 
 /* The name sits straight on the photo, with no tag, but with a white
-   outline. The stroke is drawn under the fill, so only its outer half shows. */
+   outline and a black one around that. The stroke is drawn under the fill,
+   so only its outer half shows; the black ring is four hard drop shadows of
+   the filled and stroked text, one per side. */
 .page-home .brand__name {
+  --ring: 2px;
   display: inline-block;
   line-height: 0.82;
   -webkit-text-stroke: 4px var(--c-white);
   paint-order: stroke fill;
+  filter:
+    drop-shadow(var(--ring) 0 0 var(--c-ink))
+    drop-shadow(calc(var(--ring) * -1) 0 0 var(--c-ink))
+    drop-shadow(0 var(--ring) 0 var(--c-ink))
+    drop-shadow(0 calc(var(--ring) * -1) 0 var(--c-ink));
 }
 
 @media (max-width: 1399.98px) {
   .page-home .brand__name {
+    --ring: 1px;
     -webkit-text-stroke-width: 2.5px;
   }
 }
