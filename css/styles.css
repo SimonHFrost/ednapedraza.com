@@ -4,10 +4,16 @@
    1. Fonts           6. Home              11. 404 / not found
    2. Tokens          7. Project page      12. Utilities
    3. Base            8. About             13. Reduced motion
-   4. Brand header    9. Contact
+   4. Header          9. Contact
    5. Menu           10. Empty media frame
-   Breakpoints (measured on the live Framer site):
-     desktop >= 1400px · tablet 810–1399px · phone < 810px
+   Breakpoints: desktop >= 1400px · tablet 810–1399px · phone < 810px
+
+   The site is set like a printed magazine: paper, a warm black ink and
+   three spot inks (Edna's purple, red and pink, mixed as pigments rather
+   than screen colours), used for type and rules only. Photographs are never
+   tinted, filtered or boxed over. Type that sits on a photograph carries a
+   hairline paper edge (-webkit-text-stroke painted under the fill), which
+   keeps it legible on any image while covering nothing but the letters.
    ========================================================================== */
 
 /* 1. Fonts -----------------------------------------------------------------
@@ -70,56 +76,47 @@
 
 /* 2. Tokens ---------------------------------------------------------------- */
 :root {
-  /* palette */
-  --c-purple: #551ee3;
-  --c-purple-a50: rgb(85 30 227 / 0.5);
-  --c-red: #d9443f;
-  --c-pink: #f54edc;
-  --c-pink-alt: #ed53e0;
-  --c-cream: #fcfaf5;
-  --c-cream-a20: rgb(252 250 245 / 0.2);
-  --c-ink: #181818;
-  --c-line: #222;
+  /* Paper and inks. Contrast on paper: ink 15.5, morado 9.9, grana 6.7,
+     rosa 5.2 (all AA for small text). */
+  --c-paper: #f6f1e6;          /* uncoated stock */
+  --c-ink: #1c1915;            /* warm black */
+  --c-ink-deep: #0e0c0a;       /* on the project colour fields: AA even on the red one */
+  --c-morado: #3d2a86;         /* Edna's purple, as an ink */
+  --c-grana: #a3202b;          /* cochineal red */
+  --c-rosa: #c2185b;           /* rosa mexicano, deep enough for small type */
+  --c-rosa-light: #f06aa0;     /* rosa on black (404): 7.3:1 */
+  --c-placeholder: #6b655c;    /* 4.9:1 on paper */
   --c-black: #000;
-  --c-white: #fff;
   --c-error: #a3201b;
-  --c-about-page: rgb(245 186 228);
-  --c-about-body: rgb(246 214 221);
-  --c-contact-page: rgb(186 255 190);
-  --c-empty-fill: rgb(136 136 136 / 0.2);
-  --c-empty-line: rgb(255 255 255 / 0.12);
+  --c-about-page: #f0c3cc;     /* a lime-washed pink wall */
+  --c-wall-empty: #bda9eb;     /* stands in for a project with no photo */
 
   /* families */
   --f-display: "DM Serif Display", Didot, "Bodoni 72", Georgia, "Times New Roman", serif;
   --f-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  /* type scale (desktop values; overridden per breakpoint) */
-  --fs-display: 88px;      /* big header name */
-  --fs-subtitle: 20px;     /* role line under the name */
-  --fs-brand-sm: 30px;     /* small header name, prev/next titles */
-  --fs-title: 120px;       /* project h1 */
-  --fs-lede: 30px;         /* project description */
-  --fs-credit: 17px;
-  --fs-bio: 24px;
-  --fs-tagline: 28px;      /* contact taglines */
-  --fs-small: 15px;        /* about footer, 404 copy */
-  --fs-label: 12px;        /* UI labels */
-  --fs-menu: 15px;         /* always-visible menu */
-  --fs-count: 450px;       /* 404 countdown */
+  /* type scale */
+  --fs-name: clamp(46px, 6.4vw, 100px);   /* home masthead */
+  --fs-name-sm: 22px;                      /* masthead on inner pages */
+  --fs-role: clamp(17px, 1.5vw, 22px);
+  --fs-menu: 15px;
+  --fs-index: clamp(19px, 1.65vw, 24px);  /* home contents */
+  --fs-title: clamp(64px, 8.6vw, 132px);  /* project h1 */
+  --fs-standfirst: clamp(24px, 2.35vw, 36px);
+  --fs-body: 18px;
+  --fs-small: 15px;
+  --fs-folio: 12px;
+  --fs-count: 450px;                       /* 404 countdown */
 
-  /* tracking for uppercase UI text */
-  --track-label: 0.07em;
-  --track-menu: 0.05em;
+  /* the paper edge on type over photographs (half of it shows) */
+  --halo: 3px;
 
   /* spacing */
   --gutter: 24px;
-  --pill-top: 20px;
-  --pill-right: 24px;
-  --row-gap: 20px;
+  --col-gap: 24px;
 
   /* motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-fast: 0.2s;
   --dur-med: 0.4s;
   --dur-slow: 0.6s;
@@ -127,14 +124,6 @@
 
 @media (max-width: 1399.98px) {
   :root {
-    --fs-display: 30px;
-    --fs-subtitle: 15px;
-    --fs-brand-sm: 24px;
-    --fs-title: 103px;
-    --fs-bio: 22px;
-    --fs-tagline: 22px;
-    --fs-small: 12px;
-    --fs-menu: 13px;
     --fs-count: 400px;
   }
 }
@@ -142,22 +131,18 @@
 @media (max-width: 809.98px) {
   :root {
     --gutter: 16px;
-    --fs-subtitle: 12px;
-    --fs-brand-sm: 21px;     /* the serif's hairlines need a little more size */
-    --fs-title: min(63px, 15.6vw);
-    --fs-bio: 19px;
-    --fs-tagline: 18px;
-    --fs-small: 13px;
-    --track-menu: 0.04em;
+    --col-gap: 12px;
+    --fs-name-sm: 20px;
+    --fs-menu: 14px;
+    --fs-title: min(64px, 15.4vw);
+    --fs-body: 17px;
     --fs-count: 200px;
-    --pill-right: 16px;
   }
 }
 
-/* Very small phones: keeps the bottom menu bar to two lines. */
 @media (max-width: 359.98px) {
   :root {
-    --fs-menu: 12px;
+    --fs-menu: 13px;
   }
 }
 
@@ -172,17 +157,19 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  background: var(--c-paper);
 }
 
 body {
+  --page-ink: var(--c-ink);
   margin: 0;
   min-height: 100vh;
   position: relative;
   font-family: var(--f-sans);
   font-optical-sizing: auto;
   font-synthesis: none; /* DM Serif Display has one weight: never fake a bold */
-  color: var(--c-ink);
-  background: var(--c-black);
+  color: var(--page-ink);
+  background: var(--c-paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -195,6 +182,8 @@ img {
 
 a {
   color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 
 h1,
@@ -211,7 +200,7 @@ ul {
 }
 
 :focus-visible {
-  outline: 2px solid var(--c-purple);
+  outline: 2px solid currentColor;
   outline-offset: 3px;
 }
 
@@ -225,12 +214,9 @@ main:focus {
   top: 8px;
   left: 8px;
   padding: 10px 14px;
-  border-radius: 100px;
-  background: var(--c-cream);
-  color: var(--c-ink);
-  font: 600 var(--fs-label) / 1.2 var(--f-sans);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
+  background: var(--c-ink);
+  color: var(--c-paper);
+  font: 500 15px / 1.2 var(--f-sans);
   text-decoration: none;
   transform: translateY(calc(-100% - 16px));
   transition: transform var(--dur-fast) var(--ease-out);
@@ -240,148 +226,80 @@ main:focus {
   transform: none;
 }
 
+/* Small UI text: labels, errors, the project kicker. Sentence case. */
 .ui-label {
-  font: 600 var(--fs-label) / 1.2 var(--f-sans);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
+  font: 500 13px / 1.3 var(--f-sans);
+  letter-spacing: 0.005em;
 }
 
-/* 4. Brand header ------------------------------------------------------------
-   The header is absolutely positioned and deliberately creates NO stacking
-   context: the menu inside it uses mix-blend-mode and must blend with the
-   whole page, exactly like the live site. */
-.site-header {
-  position: absolute;
-  inset: 0 0 auto;
-}
-
-.brand {
-  position: absolute;
-  z-index: 3; /* above the home list, which otherwise covers it and eats clicks */
-  top: 20px;
-  left: var(--gutter);
-  display: block;
-  text-decoration: none;
-}
-
-.brand__name {
-  font-family: var(--f-display);
-  font-weight: 400;
-  font-size: var(--fs-display);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--c-purple);
-}
-
-.brand__role {
-  font-weight: 600;
-  font-size: var(--fs-subtitle);
-  line-height: 1;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--c-red);
-}
-
-/* About uses the big name without the role line. */
-.brand--plain {
-  top: 20px;
-}
-
-/* Project pages and 404 use a small cream name. */
-.brand--small {
-  top: 28px;
-}
-
-.brand--small .brand__name {
-  font-size: var(--fs-brand-sm);
-  color: var(--c-cream);
-}
-
-@media (max-width: 1399.98px) {
-  .brand--plain {
-    top: 28px;
-  }
-
-  .brand--small {
-    top: 31px;
-  }
-}
-
-@media (max-width: 809.98px) {
-  .brand--small {
-    top: 34px;
-  }
-}
-
-/* The name and menu sit in one fixed bar that slides away while scrolling
-   down and comes back on scrolling up (main.js toggles .is-hidden and sets
-   --header-h). It animates `top`, not transform, so the phone menu bar
-   inside it stays fixed to the viewport. */
+/* 4. Header ------------------------------------------------------------------
+   One fixed bar: the masthead name on the left, the menu on the right. It
+   slides away while scrolling down and comes back on scrolling up (main.js
+   toggles .is-hidden and sets --header-h). It animates `top`, not
+   transform, so the phone menu bar inside it stays fixed to the viewport. */
 .site-header {
   position: fixed;
   z-index: 5;
-  top: 0;
+  inset: 0 0 auto;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: 24px;
-  padding: 16px var(--gutter);
+  padding: 20px var(--gutter) 16px;
   background: inherit;
+  color: var(--page-ink);
   transition: top var(--dur-med) var(--ease-out);
+}
+
+/* A hairline under the running head, inside the margins, as in print. */
+body:not(.page-home) .site-header::after {
+  content: "";
+  position: absolute;
+  right: var(--gutter);
+  bottom: 0;
+  left: var(--gutter);
+  border-bottom: 1px solid currentColor;
 }
 
 .site-header.is-hidden:not(:focus-within) {
   top: calc(-1 * var(--header-h, 120px));
 }
 
-.site-header .brand,
-.site-header .site-menu {
-  position: static;
+.brand {
+  display: block;
+  flex: none;
+  color: inherit;
+  text-decoration: none;
 }
 
-body:not(.page-home) .brand__name {
-  font-size: var(--fs-brand-sm);
+.brand__name {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: var(--fs-name-sm);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.site-menu__list {
-  max-width: none;
-  gap: 8px 16px;
+.brand__role {
+  display: none; /* shown on the home page only */
 }
 
-/* Home: no bar behind the tags, so the photo stays uncovered; clicks pass
-   through the empty parts of the header to the list below. */
-.page-home .site-header {
-  align-items: flex-start;
-  background: none;
-  pointer-events: none;
+/* The nameplate is printed in Edna's purple on paper and on the pink wall. */
+.page-about .brand__name,
+.page-store .brand__name {
+  color: var(--c-morado);
 }
 
-.page-home .brand,
-.page-home .site-menu {
-  pointer-events: auto;
-}
-
-@media (max-width: 809.98px) {
-  .site-header .site-menu {
-    position: fixed;
-  }
-}
-
-/* 5. Menu -------------------------------------------------------------------
-   Always visible in the header; each label sits in a white tag. */
-.site-menu {
-  --tag-bg: var(--c-white);
-  --tag-border: 2px solid currentColor;
-  --tag-shadow: 3px 3px 0 currentColor;
-}
-
+/* 5. Menu ------------------------------------------------------------------
+   Plain words in the sans. Hover underlines; the current page is set in
+   the serif italic, the site's second voice. */
 .site-menu__list {
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-end;
+  gap: 6px 26px;
 }
 
 .site-menu__item {
@@ -389,75 +307,64 @@ body:not(.page-home) .brand__name {
 }
 
 .site-menu__link {
-  display: inline-flex;
-  color: var(--c-ink);
+  display: inline-block;
+  color: inherit;
   text-decoration: none;
-  font: 600 var(--fs-menu) / 1.2 var(--f-sans);
-  letter-spacing: var(--track-menu);
-  text-transform: uppercase;
+  font: 500 var(--fs-menu) / 1.3 var(--f-sans);
+  letter-spacing: 0.005em;
+  white-space: nowrap;
 }
 
-.site-menu__label {
-  padding: 2px calc(5px - var(--track-menu)) 1px 5px; /* tracking pads the right */
-  background: var(--tag-bg);
-  border: var(--tag-border);
-  box-shadow: var(--tag-shadow);
+.site-menu__link:hover .site-menu__label {
+  text-decoration: underline 1px;
+  text-underline-offset: 0.3em;
 }
 
-/* Hovered or current: the tag inverts. */
-.site-menu__link:hover .site-menu__label,
-.site-menu__link:focus-visible .site-menu__label,
 .site-menu__link[aria-current="page"] .site-menu__label {
-  border-color: var(--c-ink);
-  background: var(--c-ink);
-  box-shadow: 3px 3px 0 var(--c-ink);
-  color: var(--tag-bg);
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 1.16em;
+  line-height: 1;
+  text-decoration: underline 1.5px;
+  text-underline-offset: 0.22em;
 }
 
-.site-menu__link:focus-visible {
-  outline-color: var(--c-ink);
+/* On paper and on the pink wall the rule under the current page is rosa. */
+:is(.page-about, .page-store) .site-menu__link[aria-current="page"] .site-menu__label {
+  text-decoration-color: var(--c-rosa);
 }
 
-/* Phones: no room beside the brand, so the menu becomes a bar pinned to the
-   bottom of the screen, in the old menu pill's colours. */
+/* Phones: no room beside the name, so the menu becomes a running foot
+   pinned to the bottom of the screen: the page's own ground, a hairline
+   on top, solid (nothing shows or blurs through it). */
 @media (max-width: 809.98px) {
   body {
-    padding-bottom: 120px;
+    padding-bottom: 92px;
   }
 
-  .site-menu {
-    top: auto;
-    right: 8px;
-    bottom: 8px;
-    left: 8px;
-    padding: 10px 12px;
-    border-radius: 24px;
-    background: var(--c-purple-a50);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+  .site-header .site-menu {
+    position: fixed;
+    z-index: 6;
+    inset: auto 0 0;
+    padding: 11px var(--gutter) calc(12px + env(safe-area-inset-bottom, 0px));
+    background: inherit;
+    color: inherit;
+    border-top: 1px solid currentColor;
   }
 
   .site-menu__list {
     justify-content: center;
-    gap: 8px 12px;
-    max-width: none;
-  }
-
-  .site-menu__label {
-    padding: 1px calc(4px - var(--track-menu)) 0 4px;
-    border-width: 1.5px;
-    box-shadow: 2px 2px 0 currentColor;
+    gap: 6px 18px;
   }
 }
 
-/* 6. Home ------------------------------------------------------------------- */
+/* 6. Home -------------------------------------------------------------------
+   A magazine cover: the photograph full-bleed, the name as the masthead,
+   the menu as the cover's top line and the projects as a contents list. */
 .page-home {
-  --pill-top: 47px;
-  --pill-right: 24px;
+  background: var(--c-black);
 }
 
-/* Background: the first project's image, plus one layer per project that
-   cross-fades in while its row is hovered or focused. */
 .home-bg {
   position: fixed;
   z-index: 0;
@@ -495,394 +402,571 @@ body:not(.page-home) .brand__name {
   }
 }
 
+/* A project without a photograph shows a flat wall, not a placeholder. */
+.home-bg__layer--empty {
+  background: var(--c-wall-empty);
+}
+
 .home {
   position: relative;
 }
 
-/* Desktop / tablet list: 11 full-width rows, vertically centred below the
-   header (measured: centre = 50vh + 40px, pitch 46px). */
+/* Type on the photograph. As on a printed cover, the type takes its colour
+   from the picture it sits on: ink (the name in morado) on light pictures,
+   paper on dark ones, judged where the type actually falls (the list of
+   dark pictures follows). A hairline edge in the opposite tone, painted
+   under the letters, keeps every word AA where a picture changes tone
+   beneath it; on a matching ground it disappears. */
+.page-home {
+  --name-fill: var(--c-morado);
+  --name-edge: var(--c-paper);
+  --head-fill: var(--c-ink);
+  --head-edge: var(--c-paper);
+  --menu-fill: var(--c-ink);
+  --menu-edge: var(--c-paper);
+  --index-fill: var(--c-ink);
+  --index-edge: var(--c-paper);
+}
+
+.page-home .brand__name,
+.page-home .brand__role,
+.page-home .site-menu__link,
+.work-row,
+.work-list::before {
+  -webkit-text-stroke-width: var(--halo);
+  paint-order: stroke fill;
+  transition: color 0.35s ease, -webkit-text-stroke-color 0.35s ease;
+}
+
+.page-home .brand__name {
+  color: var(--name-fill);
+  -webkit-text-stroke-color: var(--name-edge);
+}
+
+.page-home .brand__role {
+  color: var(--head-fill);
+  -webkit-text-stroke-color: var(--head-edge);
+}
+
+.page-home .site-menu__link {
+  color: var(--menu-fill);
+  -webkit-text-stroke-color: var(--menu-edge);
+}
+
+.work-row,
+.work-list::before {
+  color: var(--index-fill);
+  -webkit-text-stroke-color: var(--index-edge);
+}
+
+/* The picture on show is the hovered project's (.is-active) or, with none,
+   the resting one (.is-base). Dark behind all of the type: */
+.page-home:has(.home-bg__layer.is-active :is(img[src*="crocs-meow-"], img[src*="fabrica-social-"], img[src*="tqm-meow-"])),
+.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base :is(img[src*="crocs-meow-"], img[src*="fabrica-social-"], img[src*="tqm-meow-"])) {
+  --name-fill: var(--c-paper);
+  --name-edge: var(--c-ink);
+  --head-fill: var(--c-paper);
+  --head-edge: var(--c-ink);
+  --menu-fill: var(--c-paper);
+  --menu-edge: var(--c-ink);
+  --index-fill: var(--c-paper);
+  --index-edge: var(--c-ink);
+}
+
+/* Dark behind the name only: */
+.page-home:has(.home-bg__layer.is-active img[src*="meowndalista-"]),
+.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base img[src*="meowndalista-"]) {
+  --name-fill: var(--c-paper);
+  --name-edge: var(--c-ink);
+}
+
+/* Dark behind the menu and the contents only: */
+.page-home:has(.home-bg__layer.is-active img[src*="skechers-meow-"]),
+.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base img[src*="skechers-meow-"]) {
+  --menu-fill: var(--c-paper);
+  --menu-edge: var(--c-ink);
+  --index-fill: var(--c-paper);
+  --index-edge: var(--c-ink);
+}
+
+/* Dark behind the contents only: */
+.page-home:has(.home-bg__layer.is-active img[src*="kfc-alina-"]),
+.page-home:not(:has(.home-bg__layer.is-active)):has(.home-bg__layer.is-base img[src*="kfc-alina-"]) {
+  --index-fill: var(--c-paper);
+  --index-edge: var(--c-ink);
+}
+
+.page-home .site-header {
+  align-items: flex-start;
+  padding-top: 22px;
+  background: none;
+  pointer-events: none; /* clicks pass through to the contents list */
+}
+
+.page-home .brand,
+.page-home .site-menu {
+  pointer-events: auto;
+}
+
+.page-home .brand__name {
+  font-size: var(--fs-name);
+  line-height: 0.82;
+  letter-spacing: -0.012em;
+}
+
+/* "Directora creativa y estilista de moda", in the italic, sentence case. */
+.page-home .brand__role {
+  display: block;
+  margin-top: 0.55em;
+  padding-left: 0.12em;
+  font: italic 400 var(--fs-role) / 1.1 var(--f-display);
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+.page-home .brand__role::first-letter {
+  text-transform: uppercase;
+}
+
+.page-home .site-menu {
+  padding-top: 0.3em;
+}
+
+/* No folder icons: the menu is words. */
+.page-home .site-menu__link::before {
+  content: none;
+}
+
+.page-home .site-menu__link:focus-visible,
+.work-row:focus-visible {
+  outline: 2px solid var(--c-ink);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--c-paper);
+}
+
+/* Desktop / tablet contents: folio, title in the serif, set tight and low
+   on the left of the cover, clear of the picture's centre. */
 .work-list {
+  counter-reset: folio;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: var(--row-gap);
+  justify-content: flex-end;
+  align-items: flex-start;
   min-height: 100vh;
-  padding: 80px 0 0;
+  min-height: 100svh;
+  padding: 230px var(--gutter) 40px;
+}
+
+.work-list::before {
+  content: "Índice";
+  content: "Índice" / "";
+  margin: 0 0 12px 34px;
+  font: italic 400 20px / 1 var(--f-display);
+}
+
+.work-list > li {
+  counter-increment: folio;
 }
 
 .work-row {
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-  padding: 2px 26px;
-  color: var(--c-ink);
+  display: block;
+  padding: 2px 2.5em 2px 0;
   text-decoration: none;
-  /* Same type as the menu labels. */
-  font: 600 var(--fs-menu) / 22px var(--f-sans);
-  letter-spacing: var(--track-menu);
+  font: 400 var(--fs-index) / 1.12 var(--f-display);
+  letter-spacing: 0.012em;
   text-transform: uppercase;
-}
-
-.work-row__title {
-  position: relative;
-  z-index: 1;
   white-space: nowrap;
-  transition: color var(--dur-fast) ease;
 }
 
-/* The hover band: a cream strip, difference-blended over the image so it
-   reads as an inverted slice of the photograph. Grows from the centre. */
+.work-row::before {
+  content: counter(folio, decimal-leading-zero);
+  display: inline-block;
+  width: 34px;
+  font: 500 var(--fs-folio) / 1 var(--f-sans);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
 .work-row__band {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 0;
-  background: var(--c-cream);
-  mix-blend-mode: difference;
-  pointer-events: none;
-  transition: top 0.22s var(--ease-out), height 0.22s var(--ease-out);
-}
-
-.work-row:hover .work-row__band,
-.work-row:focus-visible .work-row__band {
-  top: 0;
-  height: 100%;
+  display: none;
 }
 
 .work-row:hover .work-row__title,
 .work-row:focus-visible .work-row__title {
-  color: var(--c-white);
+  text-decoration: underline 2px;
+  text-underline-offset: 0.16em;
 }
 
-.work-row:focus-visible {
-  outline: 2px solid var(--c-cream);
-  outline-offset: -2px;
+/* Hover and focus also bring up the discipline, in the italic, after the
+   title (the span is otherwise for screen readers only). */
+.work-row:hover .visually-hidden,
+.work-row:focus-visible .visually-hidden {
+  clip: auto;
+  clip-path: none;
+  width: auto;
+  height: auto;
+  margin: 0 0 0 0.45em;
+  overflow: visible;
+  font: italic 400 0.8em / 1 var(--f-display);
+  letter-spacing: 0;
+  text-transform: none;
 }
 
-/* Hatched overlay used when a project has no image (see section 10). */
-.home-bg__layer--empty {
-  background-color: var(--c-empty-fill);
-}
-
-/* Tags: text over the home photos sits on tight white tags with a border
-   and hard offset in the text's own colour, so it reads on any photo while
-   covering as little of it as possible. */
-.page-home {
-  --tag-bg: var(--c-white);
-  --tag-border: 2px solid currentColor;
-  --tag-shadow: 3px 3px 0 currentColor;
-}
-
-.page-home .brand__role,
-.work-row__title,
-.work-card__title {
-  background: var(--tag-bg);
-  border: var(--tag-border);
-  box-shadow: var(--tag-shadow);
-}
-
-/* The name sits straight on the photo, with no tag, but with a white
-   outline. The stroke is drawn under the fill, so only its outer half shows. */
-.page-home .brand__name {
-  display: inline-block;
-  line-height: 0.82;
-  -webkit-text-stroke: 4px var(--c-white);
-  paint-order: stroke fill;
-}
-
-@media (max-width: 1399.98px) {
-  .page-home .brand__name {
-    -webkit-text-stroke-width: 2.5px;
+/* Short screens: the list starts under the masthead and the page scrolls. */
+@media (max-height: 760px) and (min-width: 810px) {
+  .work-list {
+    justify-content: flex-start;
+    padding-top: max(200px, calc(var(--fs-name) * 1.6 + 70px));
   }
 }
 
-.page-home .brand__role {
-  display: table;
-  margin: 6px 0 0 -6px;
-  padding: 3px 3.5px 3px 4px; /* the tracking adds ~1.5px more on the right */
-}
-
-@media (max-width: 1399.98px) {
-  .page-home .brand__role {
-    padding-top: 3.5px;
-    padding-bottom: 2.5px;
-  }
-}
-
-.work-row__title {
-  display: inline-block;
-  margin-left: -6px;
-  padding: 2px calc(5px - var(--track-menu)) 1px 5px; /* as .site-menu__label */
-  line-height: 1.2;
-}
-
-/* On hover the tag inverts. */
-.work-row:hover .work-row__title,
-.work-row:focus-visible .work-row__title {
-  border-color: var(--c-ink);
-  background: var(--c-ink);
-  color: var(--tag-bg);
-}
-
-/* Home menu: each link is a blue desktop folder with its label tag
-   underneath, like files on a Mac desktop. */
-.page-home .site-menu__link {
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.page-home .site-menu__link::before {
-  content: "";
-  width: 56px;
-  aspect-ratio: 64 / 52;
-  background: url("../assets/img/folder.svg") center / contain no-repeat;
-  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.25));
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-
-.page-home .site-menu__link:hover::before,
-.page-home .site-menu__link:focus-visible::before {
-  transform: translateY(-2px);
-}
-
-@media (max-width: 809.98px) {
-  .page-home .site-menu__link {
-    gap: 4px;
-  }
-
-  .page-home .site-menu__link::before {
-    width: 28px;
-  }
-}
-
-@media (min-width: 810px) {
+/* Narrow tablets: the menu wraps sooner so it clears the masthead. */
+@media (min-width: 810px) and (max-width: 1179.98px) {
   .page-home .site-menu__list {
-    gap: 10px 16px;
+    max-width: 42vw;
+    gap: 4px 20px;
   }
 }
 
-/* Narrow tablets: wrap the menu sooner so its tags clear the role line. */
-@media (min-width: 810px) and (max-width: 1099.98px) {
-  .page-home .site-menu__list {
-    max-width: 40vw;
-  }
-}
-
-/* Phone grid (hidden on desktop / tablet). */
+/* Phone contents (hidden on desktop and tablet). */
 .work-grid {
   display: none;
 }
 
-/* Short screens: start the list below the header instead of centring it, or
-   the first rows slide under the name and role tags. */
-@media (min-width: 1400px) and (max-height: 800px) {
-  .work-list {
-    justify-content: flex-start;
-    padding: 190px 0 48px;
-  }
-}
-
-@media (min-width: 810px) and (max-width: 1399.98px) and (max-height: 700px) {
-  .work-list {
-    justify-content: flex-start;
-    padding-top: 110px;
-  }
-}
-
+/* Phones: the masthead sits on paper, the photograph below it is the
+   cover, and the contents follow on paper, with captions under pictures. */
 @media (max-width: 809.98px) {
+  html:has(.page-home),
+  .page-home {
+    background: var(--c-paper);
+  }
+
+  .page-home .site-header {
+    padding: 16px var(--gutter) 14px;
+    background: var(--c-paper);
+    pointer-events: auto;
+  }
+
+  .page-home .site-menu {
+    background: var(--c-paper);
+  }
+
+  .page-home .brand__name,
+  .page-home .brand__role,
+  .page-home .site-menu__link {
+    color: var(--c-ink);
+    -webkit-text-stroke: 0;
+  }
+
+  .page-home .brand__name {
+    color: var(--c-morado);
+  }
+
+  .page-home .brand__name {
+    font-size: min(46px, 12.4vw);
+  }
+
+  .page-home .brand__role {
+    margin-top: 0.5em;
+    font-size: 16px;
+  }
+
   .home-bg {
     position: absolute;
+    inset: var(--cover-top) 0 auto;
+    height: var(--cover-h);
+  }
+
+  .page-home {
+    --cover-top: calc(min(46px, 12.4vw) * 0.82 + 56px); /* the header's height */
+    --cover-h: max(300px, calc(100svh - var(--cover-top) - 220px));
   }
 
   .home-bg__layer:not(.is-base) {
     display: none;
   }
 
+  .page-home .noscript-note {
+    padding-top: 40px;
+    color: var(--c-ink);
+  }
+
   .work-list {
     display: none;
   }
 
+  /* Padding, not a margin on the grid, which would collapse through body. */
+  .page-home .home {
+    padding-top: calc(var(--cover-top) + var(--cover-h));
+  }
+
   .work-grid {
+    counter-reset: folio;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px 10px;
-    padding: 116px 16px 100px;
+    gap: 30px var(--col-gap);
+    padding: 18px var(--gutter) 56px;
+    background: var(--c-paper);
+  }
+
+  .work-grid::before {
+    content: "Índice";
+    content: "Índice" / "";
+    grid-column: 1 / -1;
+    font: italic 400 22px / 1 var(--f-display);
+  }
+
+  .work-card {
+    counter-increment: folio;
+  }
+
+  /* A large picture, then a pair; the last one alone goes large too. */
+  .work-card:nth-child(3n + 1),
+  .work-card:last-child:nth-child(3n + 2) {
+    grid-column: 1 / -1;
   }
 
   .work-card__link {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    color: var(--c-ink);
     text-decoration: none;
   }
 
-  .work-card__title {
-    display: inline-block;
-    max-width: 100%;
-    margin-bottom: 6px;
-    padding: 2px 4px 1px;
+  .work-card__media {
+    order: -1;
+    display: block;
+    aspect-ratio: 4 / 5;
+    margin-bottom: 9px;
     overflow: hidden;
-    color: var(--c-ink);
-    font: 600 var(--fs-menu) / 1.2 var(--f-sans);
-    letter-spacing: var(--track-menu);
-    text-transform: uppercase;
-    white-space: nowrap;
-    text-overflow: ellipsis;
   }
 
-  .work-card__media {
-    display: block;
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
+  .work-card:nth-child(3n + 1) .work-card__media,
+  .work-card:last-child:nth-child(3n + 2) .work-card__media {
+    aspect-ratio: 3 / 2;
   }
 
   .work-card__media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--dur-slow) var(--ease-out);
   }
 
-  .work-card__link:hover img,
-  .work-card__link:focus-visible img {
-    transform: scale(1.04);
+  .work-card__title {
+    font: 400 18px / 1.1 var(--f-display);
+    letter-spacing: 0.012em;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
   }
 
-  .work-card__link:focus-visible {
-    outline-color: var(--c-cream);
+  .work-card__title::before {
+    content: counter(folio, decimal-leading-zero);
+    margin-right: 8px;
+    font: 500 11px / 1 var(--f-sans);
+    letter-spacing: 0.04em;
+    vertical-align: 0.12em;
+  }
+
+  /* The discipline as the caption's second line. */
+  .work-card .visually-hidden {
+    position: static !important;
+    width: auto;
+    height: auto;
+    margin: 4px 0 0;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    white-space: normal;
+    font: italic 400 15px / 1.2 var(--f-display);
+  }
+
+  .work-card__link:hover .work-card__title,
+  .work-card__link:focus-visible .work-card__title {
+    text-decoration: underline 1.5px;
+    text-underline-offset: 0.18em;
+  }
+
+  /* No photograph: a flat wall with the folio set large. */
+  .work-card__media.is-empty {
+    display: grid;
+    place-items: center;
+    background: var(--c-wall-empty);
+  }
+
+  .work-card__media.is-empty::before {
+    content: counter(folio, decimal-leading-zero);
+    content: counter(folio, decimal-leading-zero) / "";
+    font: 400 84px / 1 var(--f-display);
   }
 }
 
-/* 7. Project page ---------------------------------------------------------- */
+/* 7. Project page ------------------------------------------------------------
+   An opening spread on the project's own colour (js/data.js): kicker,
+   title flush left, the picture, then standfirst and credits, then the
+   pictures at their own proportions and sizes. All type in the deep ink,
+   which holds AA on every project colour. */
+html:has(.page-project) {
+  background: var(--project-bg, var(--c-paper));
+}
+
 .page-project {
-  background: var(--project-bg, var(--c-ink));
+  --page-ink: var(--c-ink-deep);
+  background: var(--project-bg, var(--c-paper));
 }
 
 .project {
-  padding-top: 120px;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  padding: 150px var(--gutter) 0;
 }
 
+.project > * {
+  grid-column: 1 / -1;
+}
+
+/* Kicker: client in small capitals, the discipline in the italic. */
 .project__tags {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 8px 12px;
-  margin: 0 var(--gutter);
+  align-items: baseline;
+  gap: 4px 0;
 }
 
 .tag--pill {
-  display: inline-flex;
-  align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 20px;
-  background: var(--project-pill, var(--c-ink));
-  color: var(--c-white);
-  white-space: nowrap;
+  font: 600 12px / 1.3 var(--f-sans);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.tag--pill + .tag--pill {
+  font: italic 400 19px / 1.2 var(--f-display);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.tag--pill + .tag--pill::before {
+  content: "—";
+  margin: 0 0.45em;
+  font-style: normal;
 }
 
 .project__title {
-  max-width: 1100px;
-  margin: 32px auto 0;
-  padding: 0 var(--gutter);
-  color: var(--c-purple);
+  max-width: 12ch;
+  margin-top: 18px;
   font-family: var(--f-display);
   font-weight: 400;
   font-size: var(--fs-title);
-  line-height: 1.02;
-  letter-spacing: -0.01em;
-  text-align: center;
-  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.018em;
   overflow-wrap: break-word;
   text-wrap: balance;
 }
 
-@media (min-width: 1148px) {
-  .project__title {
-    padding: 0;
-  }
-}
-
 .project__rule {
-  height: 1px;
-  margin: 32px var(--gutter) 8px;
-  border: 0;
-  background: var(--c-cream);
-  opacity: 0.2;
+  display: none;
 }
 
 .project__hero {
-  margin: 0 var(--gutter);
-  aspect-ratio: 1392 / 824;
-  overflow: hidden;
+  margin-top: 56px;
 }
 
 .project__hero img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
 }
 
+.project__hero.is-empty {
+  display: none;
+}
+
+/* Credits as a small masthead on the left, the standfirst on the right. */
 .project__body {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 40px;
-  margin: 75px var(--gutter) 0;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: start;
+  margin-top: 44px;
 }
 
 .project__lede {
-  max-width: 841px;
-  color: var(--c-black);
-  font-weight: 400;
-  font-size: var(--fs-lede);
-  line-height: 1.38;
-  letter-spacing: -0.02em;
+  grid-column: 5 / -1;
+  grid-row: 1;
+  max-width: 30em;
+  font: 400 var(--fs-standfirst) / 1.22 var(--f-display);
+  letter-spacing: -0.004em;
   text-wrap: pretty;
 }
 
 .project__lede strong {
-  font-weight: 700;
+  font-weight: 400;
+  font-style: italic;
 }
 
 .project__credits {
+  grid-column: 1 / span 3;
+  grid-row: 1;
   display: grid;
-  gap: 20px;
-  flex: none;
-  width: 350px;
-  color: var(--c-purple);
-  font-weight: 500;
-  font-size: var(--fs-credit);
-  line-height: 1.3;
-  letter-spacing: -0.005em;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid currentColor;
+  font: 500 var(--fs-small) / 1.35 var(--f-sans);
 }
 
+.project__credits::before {
+  content: "Créditos";
+  content: "Créditos" / "";
+  margin-bottom: 4px;
+  font: italic 400 19px / 1.2 var(--f-display);
+}
+
+/* Gallery: each picture at its own proportions, placed like a spread:
+   one large, one small set low, one indented, one wide. */
 .project__gallery {
   display: grid;
-  grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
-  margin: 63px var(--gutter) 0;
+  grid-template-columns: subgrid;
+  align-items: start;
+  row-gap: 56px;
+  margin-top: 96px;
+}
+
+.project__gallery li {
+  grid-column: span 4;
 }
 
 .project__gallery img {
   width: 100%;
   height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
+}
+
+.project__gallery li:nth-child(4n + 1) {
+  grid-column: 1 / span 6;
+}
+
+.project__gallery li:nth-child(4n + 2) {
+  grid-column: 8 / span 4;
+  align-self: end;
+}
+
+.project__gallery li:nth-child(4n + 3) {
+  grid-column: 2 / span 4;
+}
+
+.project__gallery li:nth-child(4n + 4) {
+  grid-column: 7 / span 6;
+  margin-top: 18%;
 }
 
 .project-footer {
-  margin: 123px var(--gutter) 0;
-  padding: 11px 0 60px;
-  border-top: 1px solid var(--c-cream-a20);
+  margin: 120px var(--gutter) 0;
+  padding: 14px 0 72px;
+  border-top: 1px solid var(--page-ink);
 }
 
 .pager__list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 24px;
 }
 
 .pager__item--next {
@@ -893,7 +977,8 @@ body:not(.page-home) .brand__name {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: 10px;
+  color: inherit;
   text-decoration: none;
 }
 
@@ -902,116 +987,226 @@ body:not(.page-home) .brand__name {
   text-align: right;
 }
 
+/* "Next" / "Previous" stay in the markup for assistive tech; on the page
+   they read as the magazine would print them. */
 .pager__label {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--c-pink);
+  font-size: 0;
+}
+
+.pager__label::after {
+  font: italic 400 19px / 1.2 var(--f-display);
+}
+
+.pager__item--next .pager__label::after {
+  content: "Siguiente historia";
+  content: "Siguiente historia" / "";
+}
+
+.pager__item--prev .pager__label::after {
+  content: "Historia anterior";
+  content: "Historia anterior" / "";
 }
 
 .pager__dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: var(--c-cream);
-  opacity: 0.8;
+  display: none;
 }
 
 .pager__title {
-  color: var(--c-cream);
   font-family: var(--f-display);
   font-weight: 400;
-  font-size: var(--fs-brand-sm);
-  line-height: 1.2;
+  font-size: clamp(32px, 3.6vw, 56px);
+  line-height: 0.98;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
   text-wrap: balance;
-  transition: color var(--dur-fast) ease;
 }
 
 .pager__link:hover .pager__title,
 .pager__link:focus-visible .pager__title {
-  color: var(--c-purple);
+  text-decoration: underline 2px;
+  text-underline-offset: 0.14em;
 }
 
-@media (max-width: 1399.98px) {
-  .project__body {
-    flex-direction: column;
-    gap: 46px;
-  }
-
+@media (max-width: 1099.98px) {
   .project__lede {
-    max-width: none;
+    grid-column: 1 / -1;
   }
 
   .project__credits {
-    width: auto;
+    grid-column: 1 / span 6;
+    grid-row: 2;
+    margin-top: 40px;
   }
 }
 
 @media (max-width: 809.98px) {
+  .project {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    padding-top: 108px;
+  }
+
+  .project__tags {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tag--pill + .tag--pill {
+    font-size: 17px;
+  }
+
+  .tag--pill + .tag--pill::before {
+    content: none;
+  }
+
+  .project__title {
+    max-width: none;
+    margin-top: 12px;
+  }
+
   .project__hero {
-    aspect-ratio: 358 / 523;
+    margin-top: 32px;
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .project__body {
+    margin-top: 32px;
+  }
+
+  .project__lede {
+    font-size: 23px;
+  }
+
+  .project__credits {
+    grid-column: 1 / span 5;
+    margin-top: 32px;
   }
 
   .project__gallery {
-    margin-top: 64px;
+    row-gap: 24px;
+    margin-top: 56px;
+  }
+
+  .project__gallery li:nth-child(4n + 1) {
+    grid-column: 1 / -1;
+    margin-inline: calc(-1 * var(--gutter));
+  }
+
+  .project__gallery li:nth-child(4n + 2) {
+    grid-column: 1 / span 3;
+  }
+
+  .project__gallery li:nth-child(4n + 3) {
+    grid-column: 4 / span 3;
+    margin-top: 40%;
+  }
+
+  .project__gallery li:nth-child(4n + 4) {
+    grid-column: 2 / span 5;
+    margin-top: 0;
   }
 
   .project-footer {
-    margin-top: 122px;
+    margin-top: 80px;
+    padding-bottom: 48px;
+  }
+
+  .pager__list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .pager__item--next {
+    grid-column: 1;
+  }
+
+  .pager__title {
+    font-size: 30px;
   }
 }
 
-/* 8. About ----------------------------------------------------------------- */
-html:has(.page-about) {
-  background: var(--c-about-body);
-}
-
+/* 8. About -----------------------------------------------------------------
+   An article page on a pink wall: the first paragraph as the standfirst,
+   the rest in two columns, the portrait beside them; then the pictures as
+   a photobook sequence; a colophon at the foot. */
+html:has(.page-about),
 .page-about {
-  --pill-top: 47px;
   background: var(--c-about-page);
 }
 
 .about {
-  padding: 186px 24px 0;
+  padding: 150px var(--gutter) 0;
+}
+
+.about__bio {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  align-items: start;
 }
 
 .about__bio p {
-  max-width: 54ch; /* about 80 characters a line ("ch" is DM Sans's wide zero) */
-  margin-bottom: 20px;
-  font-weight: 400;
-  font-size: var(--fs-bio);
-  line-height: 1.42;
-  letter-spacing: -0.015em;
+  margin: 0 0 1em;
+  font: 400 var(--fs-body) / 1.5 var(--f-sans);
+  letter-spacing: -0.003em;
   text-wrap: pretty;
 }
 
-.about__bio strong {
-  font-weight: 700;
+.about__bio p:first-of-type {
+  grid-column: 1 / span 8;
+  margin-bottom: 48px;
+  font: 400 var(--fs-standfirst) / 1.2 var(--f-display);
+  letter-spacing: -0.004em;
 }
 
-/* Edna's portrait: right of the bio on wider screens, above it on phones. */
-.about__bio {
-  display: flow-root;
+.about__bio p:nth-of-type(2) {
+  grid-column: 1 / span 4;
+  grid-row: 2 / span 2;
+}
+
+.about__bio p:nth-of-type(3) {
+  grid-column: 5 / span 4;
+  grid-row: 2;
+}
+
+.about__bio p:nth-of-type(4) {
+  grid-column: 5 / span 4;
+  grid-row: 3;
+}
+
+.about__bio strong {
+  font-weight: inherit;
+}
+
+/* Names of a magazine and a studio, italicised as an editor would. */
+.about__bio p:nth-of-type(3) strong:nth-of-type(n + 2) {
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 1.1em;
+  line-height: 1;
 }
 
 .about__portrait {
-  float: right;
-  width: min(360px, 30vw);
+  grid-column: 10 / -1;
+  grid-row: 1 / span 3;
+  width: 100%;
   height: auto;
-  margin: 0 0 24px 40px;
+  margin-top: 10px;
 }
 
+/* Photobook: pictures at their own proportions and at three sizes, with
+   plate numbers. A ten-picture sequence, repeated. */
 .masonry {
-  columns: 5;
-  column-gap: 20px;
-  margin-top: 108px;
+  counter-reset: plate;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  row-gap: 48px;
+  align-items: start;
+  margin-top: 120px;
 }
 
 .masonry__item {
-  margin-bottom: 20px;
-  break-inside: avoid;
+  counter-increment: plate;
+  grid-column: span 3;
 }
 
 .masonry__item img {
@@ -1019,168 +1214,291 @@ html:has(.page-about) {
   height: auto;
 }
 
-.about-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 174px 24px 80px;
+.masonry__item::after {
+  content: counter(plate, decimal-leading-zero);
+  content: counter(plate, decimal-leading-zero) / "";
+  display: block;
+  margin-top: 8px;
+  font: 500 var(--fs-folio) / 1 var(--f-sans);
+  letter-spacing: 0.04em;
 }
 
-.about-footer__label {
-  margin-bottom: 24px;
-  white-space: pre;
+.masonry__item:nth-child(10n + 1) { grid-column: 1 / span 4; }
+.masonry__item:nth-child(10n + 2) { grid-column: 6 / span 3; align-self: end; }
+.masonry__item:nth-child(10n + 3) { grid-column: 10 / span 3; }
+.masonry__item:nth-child(10n + 4) { grid-column: 2 / span 3; }
+.masonry__item:nth-child(10n + 5) { grid-column: 6 / span 4; }
+.masonry__item:nth-child(10n + 6) { grid-column: 11 / span 2; align-self: end; }
+.masonry__item:nth-child(10n + 7) { grid-column: 1 / span 3; align-self: end; }
+.masonry__item:nth-child(10n + 8) { grid-column: 5 / span 2; align-self: center; }
+.masonry__item:nth-child(10n + 9) { grid-column: 8 / span 3; }
+.masonry__item:nth-child(10n + 10) { grid-column: 11 / span 2; align-self: end; }
+
+/* Colophon. */
+.about-footer {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  row-gap: 36px;
+  margin: 160px var(--gutter) 0;
+  padding: 16px 0 88px;
+  border-top: 1px solid currentColor;
+}
+
+.about-footer__col:nth-child(1) {
+  grid-column: 1 / span 3;
+}
+
+.about-footer__col:nth-child(2) {
+  grid-column: 5 / span 3;
+}
+
+.about-footer__col:nth-child(3) {
+  grid-column: 9 / span 4;
+}
+
+/* The markup's "[ Servicios ]" keeps its words for assistive tech; on the
+   page the heading reads plainly, in the italic. */
+.about-footer__label.ui-label {
+  margin-bottom: 12px;
+  font-size: 0;
+  line-height: 0;
+  white-space: normal;
+}
+
+.about-footer__label::after {
+  font: italic 400 21px / 1.2 var(--f-display);
+}
+
+.about-footer__col:nth-child(1) .about-footer__label::after {
+  content: "Servicios";
+  content: "Servicios" / "";
+}
+
+.about-footer__col:nth-child(2) .about-footer__label::after {
+  content: "Clientes";
+  content: "Clientes" / "";
+}
+
+.about-footer__col:nth-child(3) .about-footer__label::after {
+  content: "Contacto";
+  content: "Contacto" / "";
 }
 
 .about-footer__list {
   display: grid;
-  gap: 10px;
-  font-size: var(--fs-small);
-  line-height: 1.2;
-  letter-spacing: -0.005em;
+  gap: 3px;
+  font: 400 var(--fs-small) / 1.4 var(--f-sans);
 }
 
-@media (max-width: 1399.98px) {
-  .page-about {
-    --pill-top: 20px;
+@media (max-width: 1099.98px) {
+  .about__bio p:first-of-type {
+    grid-column: 1 / span 12;
   }
 
-  .masonry {
-    columns: 4;
+  .about__portrait {
+    grid-column: 9 / -1;
+    grid-row: 2 / span 2;
+    margin-top: 6px;
   }
 
-  .about-footer__list {
-    gap: 10.5px;
+  .about__bio p:nth-of-type(2),
+  .about__bio p:nth-of-type(3),
+  .about__bio p:nth-of-type(4) {
+    grid-column: 1 / span 7;
+    grid-row: auto;
   }
 }
 
 @media (max-width: 809.98px) {
+  .about {
+    padding-top: 100px;
+  }
+
+  .about__bio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .about__portrait {
-    float: none;
-    width: 60%;
-    margin: 0 0 32px;
+    grid-column: 1;
+    grid-row: auto;
+    width: 64%;
+    margin: 0 0 28px;
+  }
+
+  .about__bio p:first-of-type {
+    grid-column: 1;
+    margin-bottom: 28px;
+    font-size: 22px;
+  }
+
+  .about__bio p:nth-of-type(2),
+  .about__bio p:nth-of-type(3),
+  .about__bio p:nth-of-type(4) {
+    grid-column: 1;
   }
 
   .masonry {
-    columns: 3;
-    column-gap: 10px;
-    margin-top: 120px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    row-gap: 28px;
+    margin-top: 80px;
   }
 
-  .masonry__item {
-    margin-bottom: 10px;
+  .masonry__item:nth-child(n) {
+    grid-column: span 3;
+    align-self: start;
+  }
+
+  .masonry__item:nth-child(5n + 1) {
+    grid-column: 1 / -1;
+  }
+
+  .masonry__item:nth-child(5n + 4) {
+    grid-column: 2 / span 4;
+  }
+
+  .masonry__item:nth-child(5n + 5) {
+    grid-column: 1 / -1;
   }
 
   .about-footer {
-    flex-direction: column;
-    gap: 38px;
-    padding-top: 125px;
+    margin-top: 96px;
+    padding-bottom: 48px;
   }
 
-  .about-footer__list {
-    gap: 10px;
-    font-size: 13px;
+  .about-footer__col:nth-child(n) {
+    grid-column: 1 / -1;
   }
 }
 
 /* 9. Contact ---------------------------------------------------------------
-   A full-height section below the project list on the home page; its solid
-   background covers the fixed project image as it scrolls up. Intro on the
-   left, form on the right; stacked on phones. */
+   The back page: Edna's portrait, her address set large in the serif, and
+   the form as a quiet second way to write. On paper, so its solid ground
+   covers the fixed cover photograph as it scrolls up. */
 .contact {
+  container-type: inline-size;
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
   align-content: center;
   align-items: start;
-  column-gap: 80px;
   min-height: 100vh;
-  padding: 160px var(--gutter) 96px;
-  background: var(--c-contact-page);
+  padding: 120px var(--gutter) 96px;
+  background: var(--c-paper);
+  color: var(--c-ink);
 }
 
-.contact__title {
-  color: var(--c-purple);
-  font-family: var(--f-display);
-  font-weight: 400;
-  font-size: var(--fs-display);
-  line-height: 1;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-}
-
-/* The serif's second voice: italic, like a magazine standfirst. */
-.contact__taglines {
-  display: grid;
-  gap: 4px;
-  margin-top: 28px;
-  color: var(--c-pink-alt);
-  font-family: var(--f-display);
-  font-style: italic;
-  font-size: var(--fs-tagline);
-  line-height: 1.15;
-}
-
-.contact__links {
-  display: grid;
-  gap: 8px;
-  margin: 40px 0 0;
-  padding: 0;
-  list-style: none;
-  font: 500 17px / 1.3 var(--f-sans);
-}
-
-.contact__links a {
-  color: var(--c-purple);
-  text-underline-offset: 3px;
+.contact__intro {
+  display: contents;
 }
 
 .contact__portrait {
-  width: 280px;
-  max-width: 100%;
+  grid-column: 1 / span 4;
+  grid-row: 1 / span 4;
+  width: 100%;
+  max-width: 460px;
   height: auto;
-  margin-top: 40px;
+}
+
+.contact__title {
+  grid-column: 6 / -1;
+  grid-row: 1;
+  color: var(--c-grana);
+  font: 600 13px / 1.3 var(--f-sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.contact__links {
+  grid-column: 6 / -1;
+  grid-row: 2;
+  display: grid;
+  justify-items: start;
+  gap: 18px;
+  margin-top: 18px;
+  font-family: var(--f-display);
+}
+
+.contact__links li:first-child {
+  font-size: min(84px, 5.2cqi);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+.contact__links li:last-child {
+  font-size: min(40px, 2.6cqi);
+  line-height: 1.1;
+}
+
+.contact__links a {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 0.06em;
+}
+
+.contact__links li:first-child a {
+  color: var(--c-grana);
+}
+
+.contact__links a:hover {
+  background-size: 100% 2px;
+}
+
+/* The serif's second voice. */
+.contact__taglines {
+  grid-column: 6 / span 3;
+  grid-row: 3;
+  margin-top: 56px;
+  font: italic 400 24px / 1.2 var(--f-display);
+}
+
+.contact-form {
+  grid-column: 9 / -1;
+  grid-row: 3 / span 2;
+  margin-top: 56px;
 }
 
 .field {
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .field__label {
   display: block;
-  margin-bottom: 8px;
-  color: var(--c-purple);
+  margin-bottom: 2px;
 }
 
 .field__control {
   display: block;
   width: 100%;
   margin: 0;
-  padding: 12px 14px;
+  padding: 8px 0 9px;
   border: 0;
-  border-bottom: 2px solid var(--c-purple);
+  border-bottom: 1px solid var(--c-ink);
   border-radius: 0;
-  background: rgb(255 255 255 / 0.45);
+  background: transparent;
   color: var(--c-ink);
-  font: 400 16px / 24px var(--f-sans);
+  font: 400 17px / 1.4 var(--f-sans);
 }
 
 .field__control::placeholder {
-  color: #7a7a7a;
+  color: var(--c-placeholder);
   opacity: 1;
 }
 
 .field__control:focus {
   outline: none;
-  background: rgb(255 255 255 / 0.8);
+  border-bottom-width: 2px;
+  padding-bottom: 8px;
 }
 
 .field__control:focus-visible {
-  outline: 2px solid var(--c-purple);
-  outline-offset: 2px;
+  outline: 2px solid var(--c-ink);
+  outline-offset: 4px;
 }
 
 textarea.field__control {
-  height: 160px;
+  height: 128px;
   min-height: 96px;
   resize: vertical;
 }
@@ -1199,36 +1517,37 @@ textarea.field__control {
 }
 
 .contact-form__submit {
-  display: block;
-  width: 100%;
-  margin: 8px 0 0;
-  padding: 16px 24px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin: 6px 0 0;
+  padding: 13px 20px 14px;
   border: 0;
-  border-radius: 100px;
-  background: var(--c-purple);
-  color: var(--c-cream);
-  font: 600 14px / 1.2 var(--f-sans);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  border-radius: 0;
+  background: var(--c-ink);
+  color: var(--c-paper);
+  font: 500 16px / 1.2 var(--f-sans);
   cursor: pointer;
   transition: background-color var(--dur-fast) ease;
 }
 
+.contact-form__submit::after {
+  content: "→";
+  content: "→" / "";
+}
+
 .contact-form__submit:hover {
-  background: var(--c-pink);
+  background: var(--c-grana);
 }
 
 .contact-form__submit:focus-visible {
-  outline: 2px solid var(--c-purple);
+  outline: 2px solid var(--c-ink);
   outline-offset: 3px;
 }
 
 .contact-form__status {
   margin-top: 16px;
-  color: var(--c-purple);
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 1.3;
+  font: italic 400 19px / 1.3 var(--f-display);
 }
 
 .contact-form__status:empty {
@@ -1240,94 +1559,135 @@ textarea.field__control {
 }
 
 .contact-form__submit[aria-disabled="true"] {
-  background: var(--c-purple);
+  background: var(--c-ink);
   opacity: 0.6;
   cursor: progress;
 }
 
-@media (max-width: 1399.98px) {
-  .contact {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
-    column-gap: 48px;
-  }
-
-  /* One long word: sized from its own column so it never runs into the
-     form; the tagline follows it down. */
-  .contact__intro {
-    container-type: inline-size;
-  }
-
-  .contact__title {
-    font-size: min(56px, 14cqi);
-  }
-
+@media (max-width: 1199.98px) {
   .contact__taglines {
-    font-size: min(var(--fs-tagline), 6.3cqi);
+    grid-column: 6 / -1;
+    margin-top: 40px;
+  }
+
+  .contact-form {
+    grid-column: 6 / -1;
+    grid-row: 4;
+    margin-top: 40px;
+  }
+
+  .contact__links li:first-child {
+    font-size: 5.6cqi;
+  }
+
+  .contact__links li:last-child {
+    font-size: 3cqi;
   }
 }
 
 @media (max-width: 809.98px) {
   .contact {
     grid-template-columns: minmax(0, 1fr);
-    row-gap: 40px;
     align-content: start;
-    padding: 72px var(--gutter) 48px;
+    padding: 64px var(--gutter) 48px;
   }
 
-  .contact__title {
-    font-size: 40px;
-  }
-
-  .contact__taglines {
-    margin-top: 16px;
+  .contact__title,
+  .contact__links,
+  .contact__taglines,
+  .contact__portrait,
+  .contact-form {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .contact__links {
-    margin-top: 24px;
+    order: 1;
+    margin-top: 14px;
+  }
+
+  .contact__taglines {
+    order: 2;
   }
 
   .contact__portrait {
-    width: 200px;
+    order: 3;
+  }
+
+  .contact-form {
+    order: 4;
+  }
+
+  .contact__links li:first-child {
+    font-size: min(40px, 9.4cqi);
+  }
+
+  .contact__links li:last-child {
+    font-size: 26px;
+  }
+
+  .contact__taglines {
+    margin-top: 28px;
+    font-size: 21px;
+  }
+
+  .contact__portrait {
+    width: 64%;
     margin-top: 32px;
+  }
+
+  .contact-form {
+    margin-top: 40px;
   }
 }
 
-/* 10. Empty media frame ----------------------------------------------------
-   The live Coca-Cola page has no hero; its frame shows the editor's empty
-   placeholder (grey wash + fine diagonal hatching). Reproduced in CSS. */
+/* 10. Empty media frame ------------------------------------------------------ */
 .is-empty {
-  background-color: var(--c-empty-fill);
-  background-image: repeating-linear-gradient(-45deg, var(--c-empty-line) 0 1px, transparent 1px 14px);
+  background: var(--c-wall-empty);
 }
 
-/* 11. 404 / not found ------------------------------------------------------ */
+/* 11. 404 / not found ----------------------------------------------------- */
+html:has(.page-404),
 .page-404 {
   background: var(--c-black);
 }
 
+.page-404 {
+  --page-ink: var(--c-paper);
+}
+
 .not-found {
   min-height: 100vh;
-  padding: 150px 24px 48px;
-  color: var(--c-cream);
+  padding: 150px var(--gutter) 48px;
+  color: var(--c-paper);
 }
 
 .not-found__intro {
-  padding: 0 100px;
+  max-width: 34rem;
+  padding-left: calc(100% / 12);
 }
 
-.not-found__code {
-  margin-bottom: 24px;
-  color: var(--c-pink);
+.not-found__code.ui-label {
+  margin-bottom: 14px;
+  font-size: 0;
+}
+
+/* "Error 404 / Not found" stays in the markup for assistive tech. */
+.not-found__code::after {
+  content: "Error 404";
+  content: "Error 404" / "";
+  font: 600 12px / 1.3 var(--f-sans);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .not-found__copy {
-  font-size: var(--fs-small);
-  line-height: 1.2;
-  letter-spacing: -0.005em;
+  font: 400 var(--fs-small) / 1.45 var(--f-sans);
 }
 
-.not-found__copy + .not-found__copy {
-  margin-top: 10px;
+.not-found__copy:first-of-type {
+  margin-bottom: 12px;
+  font: italic 400 clamp(30px, 3vw, 44px) / 1.1 var(--f-display);
 }
 
 .not-found__copy a {
@@ -1335,16 +1695,25 @@ textarea.field__control {
 }
 
 .not-found__countdown {
-  margin-top: 96px;
+  margin-top: 40px;
   text-align: right;
 }
 
-.not-found__redirect {
-  color: var(--c-pink);
+/* "Redirecting home in.." stays for assistive tech; on the page it is
+   said in Spanish, in the italic. */
+.not-found__redirect.ui-label {
+  font-size: 0;
+}
+
+.not-found__redirect::after {
+  content: "Te llevo al inicio en…";
+  content: "Te llevo al inicio en…" / "";
+  color: var(--c-rosa-light);
+  font: italic 400 24px / 1.2 var(--f-display);
 }
 
 .not-found__count {
-  margin-top: 16px;
+  margin-top: 8px;
   font-family: var(--f-display);
   font-weight: 400;
   font-size: var(--fs-count);
@@ -1360,34 +1729,26 @@ textarea.field__control {
 }
 
 @media (max-width: 1399.98px) {
-  .not-found__intro {
-    padding: 0 60px;
-  }
-
-  .not-found__copy + .not-found__copy {
-    margin-top: 11px;
-  }
-
   .not-found__countdown {
-    margin-top: 20px;
+    margin-top: 24px;
   }
 }
 
 @media (max-width: 809.98px) {
+  .not-found {
+    padding-top: 110px;
+  }
+
   .not-found__intro {
-    padding: 0;
+    padding-left: 0;
   }
 
   .not-found__countdown {
-    margin-top: calc(28vh - 8px);
+    margin-top: calc(24vh - 8px);
   }
 
-  .not-found__count {
-    margin-top: 18px;
-  }
-
-  .not-found__copy + .not-found__copy {
-    margin-top: 10px;
+  .not-found__redirect::after {
+    font-size: 22px;
   }
 }
 
@@ -1410,7 +1771,7 @@ textarea.field__control {
   max-width: 40rem;
   margin: 0 auto;
   padding: 220px 24px 40px;
-  color: var(--c-cream);
+  color: var(--c-paper);
   font-size: 15px;
   line-height: 1.4;
 }
