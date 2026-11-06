@@ -15,6 +15,7 @@
   <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
   <script src="js/data.js" defer></script>
   <script src="js/main.js" defer></script>
+  <script src="js/shop-link.js" defer></script>
 </head>
 <body class="page-home" data-page="home">
   <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -34,6 +35,9 @@
         <li class="site-menu__item"><a class="site-menu__link" href="index.html?servicio=direccion-creativa"><span class="site-menu__label">Creative direction</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="index.html?servicio=fashion-styling"><span class="site-menu__label">Fashion styling</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="index.html?servicio=direccion-de-arte"><span class="site-menu__label">Art direction</span></a></li>
+        <!-- Shop: a tap opens the "coming soon" page; pressing and holding
+             (js/shop-link.js) opens the store page itself, for previewing. -->
+        <li class="site-menu__item"><a class="site-menu__link" href="proximamente.html" data-shop-link data-hold-href="tienda.html"><span class="site-menu__label">Shop</span></a></li>
       </ul>
     </nav>
   </header>
