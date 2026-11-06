@@ -7,11 +7,12 @@
    Set as a magazine's shopping page. One spread on paper: the photograph as
    the left page, the right page all type (kicker, name, standfirst, price,
    one button, the dates, a sentence on how it works). Under it, full width,
-   the page's one colour moment: an añil band with the details as a colophon
-   in paper and the edition line in marigold display type.
+   the page's one colour moment: a morado band (Edna's purple, the same ink
+   as the portfolio) with the details as a colophon in paper and the edition
+   line in marigold display type.
    Marigold is never type on paper (1.9:1); on the spread it is only the rule
    under the price. Contrast, measured: ink on paper 15.5, grana on paper
-   6.7, paper on añil 12.6, marigold on añil 6.6. No motion.
+   6.7, paper on morado 9.9, marigold on morado 5.2. No motion.
    ========================================================================== */
 
 /* 1. Tokens -----------------------------------------------------------------
@@ -24,8 +25,8 @@
 }
 
 .page-store {
-  --store-anil: #1d2756;      /* indigo dye; paper on it 12.6:1 */
-  --store-marigold: #f0a01c;  /* cempasúchil; 6.6:1 on añil, never type on paper */
+  --store-band: var(--c-morado); /* #3d2a86; paper on it 9.9:1 */
+  --store-marigold: #f0a01c;  /* cempasúchil; 5.2:1 on morado, never type on paper */
   --store-pad: clamp(32px, 5vw, 88px); /* inner margin of the right page */
 }
 
@@ -207,7 +208,7 @@ html:has(.page-store) {
   grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr);
   align-items: end;
   padding: clamp(64px, 8vw, 120px) 0;
-  background: var(--store-anil);
+  background: var(--store-band);
   color: var(--c-paper);
 }
 

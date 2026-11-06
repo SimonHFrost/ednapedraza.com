@@ -56,7 +56,8 @@
         ' para ',
         'MEOW Magazine',
         ' fusiona ingredientes y recetas frutales con la colección de bolsos y calzado de ',
-        'Steve Madden para el verano 2025.'
+        'Steve Madden',
+        ' para el verano 2025.'
       ],
       credits: [
         'Fotografía: Kon Kau Chuey',
@@ -75,8 +76,8 @@
       gallery: gallery('coca-cola-alina', 3),
       description: [],
       credits: [
-        'Fotografía Kon Kau Chuey',
-        'Producción MEOW Magazine'
+        'Fotografía: Kon Kau Chuey',
+        'Producción: MEOW Magazine'
       ]
     },
     {
@@ -97,8 +98,8 @@
         ' ha sido de mis favoritas.'
       ],
       credits: [
-        'Fotografía Kon Kau Chuey',
-        'Producción Fábrica Social'
+        'Fotografía: Kon Kau Chuey',
+        'Producción: Fábrica Social'
       ]
     },
     {
@@ -117,8 +118,8 @@
         ' para su edición de junio/julio 2026 que celebra el fascinante diseño de uñas como un manifiesto de la creatividad.'
       ],
       credits: [
-        'Fotografía Kon Kau Chuey',
-        'Producción Gio Lozano'
+        'Fotografía: Kon Kau Chuey',
+        'Producción: Gio Lozano'
       ]
     },
     {
@@ -181,7 +182,8 @@
         'Estilismo de Moda para la actriz ',
         'Mabel Cadena',
         ' en entrevista para ',
-        'MEOW Magazine.'
+        'MEOW Magazine',
+        '.'
       ],
       credits: [
         'Fotografía: Noel Higareda',
@@ -202,7 +204,8 @@
         'Dirección creativa y de arte para ',
         'Skechers',
         ' por ',
-        'MEOW Magazine'
+        'MEOW Magazine',
+        '.'
       ],
       credits: [
         'Fotografía: Karla Ximena',
@@ -221,8 +224,8 @@
       gallery: gallery('kfc-alina', 3),
       description: [],
       credits: [
-        'Fotografía Kon Kau Chuey',
-        'Producción MEOW Magazine'
+        'Fotografía: Kon Kau Chuey',
+        'Producción: MEOW Magazine'
       ]
     },
     {
@@ -262,11 +265,11 @@
         'Ben & Frank',
         ', desarrollando a través de mi estudio creativo ',
         'Estrella Cascabel',
-        ' contenido visual para la marca'
+        ' contenido visual para la marca.'
       ],
       credits: [
-        'Fotografía Kon Kau Chuey',
-        'Producción Estrella Cascabel'
+        'Fotografía: Kon Kau Chuey',
+        'Producción: Estrella Cascabel'
       ]
     }
   ];

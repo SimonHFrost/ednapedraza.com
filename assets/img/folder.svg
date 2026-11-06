@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 52">
+  <defs>
+    <linearGradient id="back" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4aa3ec"/>
+      <stop offset="1" stop-color="#2f86d8"/>
+    </linearGradient>
+    <linearGradient id="front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#93d3fc"/>
+      <stop offset="1" stop-color="#5cb2f2"/>
+    </linearGradient>
+  </defs>
+  <!-- back panel with tab -->
+  <path fill="url(#back)" d="M4 6a4 4 0 0 1 4-4h14.3a4 4 0 0 1 2.9 1.2L28.6 7H56a4 4 0 0 1 4 4v33a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
+  <!-- sheet of paper peeking out -->
+  <rect x="8" y="10" width="48" height="20" rx="2" fill="#f4f8fc"/>
+  <!-- front panel -->
+  <path fill="url(#front)" d="M2 17a4 4 0 0 1 4-4h52a4 4 0 0 1 4 4v29a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z"/>
+  <path fill="none" stroke="#c4e8ff" stroke-width="1" d="M6 13.5h52"/>
+</svg>

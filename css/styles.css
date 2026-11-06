@@ -141,7 +141,7 @@
     --col-gap: 12px;
     --fs-name-sm: 20px;
     --fs-menu: 14px;
-    --fs-title: min(64px, 15.4vw);
+    --fs-title: min(64px, 14.8vw); /* "Meowndalista" on one line at 320px */
     --fs-body: 17px;
     --fs-count: 200px;
     /* Room kept under the page for the fixed menu bar: three lines of
@@ -214,7 +214,8 @@ ul {
   outline-offset: 3px;
 }
 
-main:focus {
+main:focus,
+.contact:focus {
   outline: none;
 }
 
@@ -272,6 +273,13 @@ body:not(.page-home) .site-header::after {
 }
 
 .site-header.is-hidden:not(:focus-within) {
+  top: calc(-1 * var(--header-h, 120px));
+}
+
+/* Only a keyboard focus holds the head on screen: a link clicked with the
+   mouse keeps focus in some browsers, which would leave the head (and the
+   home menu's folders) over the contact page after a click on Contact. */
+.site-header.is-hidden:focus-within:not(:has(:focus-visible)) {
   top: calc(-1 * var(--header-h, 120px));
 }
 
@@ -353,6 +361,16 @@ body:not(.page-home) .site-header::after {
     padding-bottom: var(--bar-h);
   }
 
+  /* Whatever takes keyboard focus is scrolled clear of the menu bar. Home
+     sets its taller bar's height on body, so it is restated here. */
+  html {
+    scroll-padding-bottom: calc(var(--bar-h) + 12px);
+  }
+
+  html:has(.page-home) {
+    scroll-padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px) + 12px);
+  }
+
   .site-header .site-menu {
     position: fixed;
     z-index: 6;
@@ -403,7 +421,10 @@ body:not(.page-home) .site-header::after {
   transition: none;
 }
 
+/* The hovered layer always paints over the resting one, which in a
+   filtered list can come after it in the DOM. */
 .home-bg__layer.is-active {
+  z-index: 1;
   opacity: 1;
   animation: bg-in var(--dur-slow) var(--ease-out);
 }
@@ -472,6 +493,19 @@ body:not(.page-home) .site-header::after {
   --list-edge: var(--c-ink);
 }
 
+/* Without JavaScript no picture is placed: the cover is the black ground,
+   so its type is paper. */
+html.no-js .page-home {
+  --name-fill: var(--c-paper);
+  --name-edge: var(--c-ink);
+  --role-fill: var(--c-paper);
+  --role-edge: var(--c-ink);
+  --menu-fill: var(--c-paper);
+  --menu-edge: var(--c-ink);
+  --list-fill: var(--c-paper);
+  --list-edge: var(--c-ink);
+}
+
 .page-home .brand__name {
   --fill: var(--name-fill);
   --edge: var(--name-edge);
@@ -485,6 +519,14 @@ body:not(.page-home) .site-header::after {
 .page-home .site-menu__link {
   --fill: var(--menu-fill);
   --edge: var(--menu-edge);
+}
+
+/* The menu's small type needs a heavier edge than the name to hold on a
+   white patch of a dark picture (still painted under the letters only). */
+@media (min-width: 810px) {
+  .page-home .site-menu__link {
+    --halo: 3.5px;
+  }
 }
 
 .index-title,
@@ -557,6 +599,66 @@ body:not(.page-home) .site-header::after {
   text-underline-offset: 0.3em;
 }
 
+/* Home menu: each link is a blue desktop folder with its name underneath,
+   like files on a Mac desktop (home only; the folders are Edna's). The
+   name is the plain menu type, in the picture's tone like the rest of the
+   cover's type. The folder lifts a little on hover and focus. */
+.page-home .site-menu__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-home .site-menu__link::before {
+  content: "";
+  flex: none;
+  width: 56px;
+  aspect-ratio: 64 / 52;
+  background: url("../assets/img/folder.svg") center / contain no-repeat;
+  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.25));
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.page-home .site-menu__link:hover::before,
+.page-home .site-menu__link:focus-visible::before {
+  transform: translateY(-2px);
+}
+
+@media (min-width: 810px) {
+  .page-home .site-menu {
+    padding-top: 0;
+  }
+
+  .page-home .site-menu__list {
+    gap: 12px 22px;
+  }
+}
+
+/* Wide tablets: one row, a little tighter. */
+@media (min-width: 1180px) and (max-width: 1399.98px) {
+  .page-home .site-menu__list {
+    gap: 12px 16px;
+  }
+}
+
+/* Phones: smaller folders in the menu bar, which grows to two rows of
+   folder and name (about 114px), so the room kept for it under the page
+   grows too. */
+@media (max-width: 809.98px) {
+  .page-home {
+    --bar-h: calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .page-home .site-menu__link {
+    gap: 4px;
+  }
+
+  .page-home .site-menu__link::before {
+    width: 28px;
+  }
+}
+
 .page-home .site-menu__link:focus-visible,
 .work-row:focus-visible {
   outline: 2px solid var(--c-ink);
@@ -605,6 +707,11 @@ body:not(.page-home) .site-header::after {
 
   .work-list {
     grid-area: 2 / 1;
+  }
+
+  /* No JavaScript, no contents: the note takes the cover's place. */
+  html.no-js .page-home .home::before {
+    content: none;
   }
 }
 
@@ -665,6 +772,7 @@ body:not(.page-home) .site-header::after {
    the dash: "— dirección creativa y moda". */
 .work-row:hover .visually-hidden,
 .work-row:focus-visible .visually-hidden {
+  position: static !important; /* on the title's baseline, not the line's top */
   clip: auto;
   clip-path: none;
   width: auto;
@@ -676,11 +784,15 @@ body:not(.page-home) .site-header::after {
   text-transform: lowercase;
 }
 
-/* Narrow tablets: the menu wraps sooner so it clears the masthead. */
+/* Narrow tablets: the folders stand in two rows of three, as on a desktop,
+   so the menu clears the masthead. */
 @media (min-width: 810px) and (max-width: 1179.98px) {
   .page-home .site-menu__list {
-    max-width: 42vw;
-    gap: 4px 20px;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: end;
+    justify-items: center;
+    gap: 12px 20px;
   }
 }
 
@@ -784,6 +896,16 @@ body:not(.page-home) .site-header::after {
   .work-card__media img {
     width: 100%;
     height: auto;
+  }
+
+  /* Edited, not a feed: every second picture of three set in from the
+     left, every third short of the right margin. */
+  .work-card:nth-child(3n + 2) .work-card__link {
+    margin-left: 24%;
+  }
+
+  .work-card:nth-child(3n) .work-card__link {
+    margin-right: 16%;
   }
 
   .work-card__media.is-empty {
@@ -1038,6 +1160,11 @@ html:has(.page-project) {
     margin-top: 40px;
   }
 
+  /* No standfirst above: no space kept for one. */
+  .project__credits-title:first-child {
+    margin-top: 0;
+  }
+
   .project__credits {
     grid-column: 1 / span 6;
     grid-row: 3;
@@ -1090,6 +1217,10 @@ html:has(.page-project) {
     margin-top: 32px;
   }
 
+  .project__credits-title:first-child {
+    margin-top: 0;
+  }
+
   .project__gallery {
     row-gap: 24px;
     margin-top: 56px;
@@ -1102,6 +1233,7 @@ html:has(.page-project) {
 
   .project__gallery li:nth-child(4n + 2) {
     grid-column: 1 / span 3;
+    align-self: start; /* picture 3 is the one set low */
   }
 
   .project__gallery li:nth-child(4n + 3) {
@@ -1245,6 +1377,12 @@ html:has(.page-about),
 .masonry__item:nth-child(9n + 8) { grid-column: 9 / span 2; align-self: end; }
 .masonry__item:nth-child(9n + 9) { grid-column: 11 / span 2; align-self: end; }
 
+/* A sequence cut short after two plates: the second runs wide to the
+   margin and closes the sheet. */
+@media (min-width: 810px) {
+  .masonry__item:nth-child(9n + 2):last-child { grid-column: 7 / span 6; }
+}
+
 /* Colophon. */
 .about-footer {
   display: grid;
@@ -1295,6 +1433,18 @@ html:has(.page-about),
   .about__bio p:nth-of-type(4) {
     grid-column: 1 / span 7;
     grid-row: auto;
+  }
+}
+
+/* Tablets: the portrait is taller than the paragraphs beside it; its extra
+   height goes to an empty last row, so the paragraphs keep their spacing. */
+@media (min-width: 810px) and (max-width: 1099.98px) {
+  .about__bio {
+    grid-template-rows: auto auto auto auto 1fr;
+  }
+
+  .about__portrait {
+    grid-row: 2 / -1;
   }
 }
 
@@ -1376,6 +1526,16 @@ html:has(.page-about),
 .contact :focus-visible {
   outline: 2px solid var(--c-paper);
   outline-offset: 4px;
+}
+
+/* Tabbing back up the wall scrolls up, which brings back the running head
+   (up to 192px tall with the folders): what takes focus lands below it.
+   Set on the controls, not the page, so the scroll to #contacto still puts
+   the wall at the top of the screen. */
+@media (min-width: 810px) {
+  .contact :is(a, input, textarea, button) {
+    scroll-margin-top: 210px;
+  }
 }
 
 .contact__intro {
@@ -1668,6 +1828,12 @@ textarea.field__control {
     font-size: min(46px, 9.4cqi);
   }
 
+  /* The address is barely larger than the handle here: icons of a size. */
+  .contact__links li:first-child .contact__link {
+    --icon: 0.56em;
+    --icon-gap: 0.22em;
+  }
+
   .contact__taglines {
     order: 2;
     margin-top: 36px;
@@ -1716,7 +1882,7 @@ textarea.field__control {
     .page-home .site-header .site-menu {
       animation: on-grana-ground linear none;
       animation-timeline: --contact;
-      animation-range: cover 72px cover 100%;
+      animation-range: cover calc(var(--bar-h) + 6px) cover 100%; /* the bar, with its folders, plus a little */
     }
 
     .page-home .site-header {
@@ -1777,7 +1943,7 @@ html:has(.page-404),
 }
 
 .not-found__intro {
-  max-width: 34rem;
+  max-width: calc(34rem + 100% / 12); /* a 34rem column after the indent */
   padding-left: calc(100% / 12);
 }
 
@@ -1832,9 +1998,15 @@ html:has(.page-404),
   }
 }
 
+/* Phones: the page is one screen above the menu bar, the count at its
+   foot, sized to the screen so a short phone shows all of it. */
 @media (max-width: 809.98px) {
   .not-found {
-    padding-top: 110px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--bar-h));
+    min-height: calc(100svh - var(--bar-h));
+    padding: 110px var(--gutter) 16px;
   }
 
   .not-found__intro {
@@ -1842,7 +2014,13 @@ html:has(.page-404),
   }
 
   .not-found__countdown {
-    margin-top: calc(24vh - 8px);
+    margin-top: auto;
+    padding-top: 24px;
+  }
+
+  .not-found__count {
+    font-size: min(var(--fs-count), 30vh);
+    font-size: min(var(--fs-count), 30svh);
   }
 
   .not-found__redirect {

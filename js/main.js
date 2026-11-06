@@ -72,7 +72,12 @@
     if (!target) return;
 
     function scrollToContact() {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      // Focus follows, as it would for a fragment link: the next Tab goes
+      // into the contact section, not back to the menu.
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
     }
 
     if (window.location.hash === '#contacto') {
@@ -463,11 +468,21 @@
     });
   }
 
-  /** Counts 08 → 01 and then goes home (pauses while the tab is hidden). */
+  /** Counts 08 → 01 and then goes home (pauses while the tab is hidden).
+      Any key, tap, click or focus stops it and takes the count away, so
+      nobody is moved on while reading or using the page. */
   function startRedirectCountdown(node) {
     if (!node) return;
     var remaining = REDIRECT_SECONDS;
     showCount(node, remaining);
+    function stop() {
+      window.clearInterval(timer);
+      var countdown = node.closest('.not-found__countdown');
+      if (countdown) countdown.hidden = true;
+    }
+    ['keydown', 'pointerdown', 'focusin'].forEach(function (type) {
+      document.addEventListener(type, stop, { once: true });
+    });
     var timer = window.setInterval(function () {
       if (document.hidden) return;
       remaining -= 1;
@@ -489,16 +504,22 @@
     if (!header) return;
     var lastY = window.scrollY;
     var ticking = false;
+    // Home, desktop and tablet: the head has no ground over the cover, so it
+    // stays away while the cover is part-scrolled (it would print over the
+    // contents) and comes back at the very top or on the contact wall.
+    var wall = document.body.getAttribute('data-page') === 'home' && document.getElementById('contacto');
 
     function update() {
       var y = window.scrollY;
+      var overCover = wall && window.innerWidth >= 810 && y > 0 && wall.getBoundingClientRect().top > 1;
       header.style.setProperty('--header-h', header.offsetHeight + 'px');
-      if (y > lastY && y > header.offsetHeight) header.classList.add('is-hidden');
+      if (overCover || (y > lastY && y > header.offsetHeight)) header.classList.add('is-hidden');
       else if (y < lastY) header.classList.remove('is-hidden');
       lastY = y;
       ticking = false;
     }
 
+    update(); // a reload can land mid-page
     window.addEventListener('scroll', function () {
       if (!ticking) {
         ticking = true;
