@@ -453,12 +453,36 @@
     if (error) error.textContent = message;
   }
 
-  /** No backend: validates locally, never sends data anywhere. */
+  function showStatus(status, message, isError) {
+    status.textContent = message;
+    status.classList.toggle('contact-form__status--error', Boolean(isError));
+  }
+
+  /** Posts the form to the Worker (worker/index.js), which emails it to Edna.
+      Resolves to { ok, message }; message is the Worker's, if it sent one. */
+  function sendContactForm(form) {
+    return fetch(form.getAttribute('action') || '/api/contacto', {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: new URLSearchParams(new FormData(form))
+    }).then(function (response) {
+      return response.json().catch(function () { return {}; }).then(function (data) {
+        return { ok: response.ok && data.ok === true, message: data.message };
+      });
+    }, function () {
+      return { ok: false };
+    });
+  }
+
+  /** Validates locally, then sends; keeps what was typed if sending fails. */
   function initContactForm() {
     var form = document.querySelector('[data-contact-form]');
     if (!form) return;
     var fields = Array.prototype.slice.call(form.querySelectorAll('.field__control'));
     var status = form.querySelector('[data-form-status]');
+    var submit = form.querySelector('[type="submit"]');
+    var sending = false;
+    form.noValidate = true; // show our messages, not the browser's
 
     fields.forEach(function (field) {
       field.addEventListener('blur', function () {
@@ -471,6 +495,7 @@
 
     form.addEventListener('submit', function (event) {
       event.preventDefault();
+      if (sending) return;
       var firstInvalid = null;
       fields.forEach(function (field) {
         var message = validateField(field);
@@ -478,14 +503,26 @@
         if (message && !firstInvalid) firstInvalid = field;
       });
       if (firstInvalid) {
-        status.textContent = '';
+        showStatus(status, '');
         firstInvalid.focus();
         return;
       }
       var name = form.elements.nombre.value.trim().split(/\s+/)[0];
-      form.reset();
-      fields.forEach(function (field) { field.removeAttribute('aria-invalid'); });
-      status.textContent = '¡Gracias, ' + name + '! Esto es una demostración: el mensaje no se ha enviado a ningún sitio.';
+      // aria-disabled rather than disabled, so the button keeps keyboard focus.
+      sending = true;
+      submit.setAttribute('aria-disabled', 'true');
+      showStatus(status, 'Enviando…');
+      sendContactForm(form).then(function (result) {
+        sending = false;
+        submit.removeAttribute('aria-disabled');
+        if (!result.ok) {
+          showStatus(status, result.message || 'No se pudo enviar el mensaje. Escríbeme directamente a edna.sapi@gmail.com.', true);
+          return;
+        }
+        form.reset();
+        fields.forEach(function (field) { field.removeAttribute('aria-invalid'); });
+        showStatus(status, '¡Gracias, ' + name + '! Tu mensaje se envió. Te respondo pronto.');
+      });
     });
   }
 
