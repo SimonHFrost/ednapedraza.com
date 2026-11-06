@@ -1,12 +1,12 @@
 /* ==========================================================================
    Tienda — the drop page (tienda.html). Loaded after styles.css.
    --------------------------------------------------------------------------
-   1. Tokens          5. Marquee band     9. Closing call to action
-   2. Page            6. Frames          10. Footer
-   3. Hero stage      7. Steps           11. Tablet and phone
-   4. Buy panel       8. Details & FAQ
-   A colour-blocked poster: pink stage, cream panel, purple band, three
-   photo-ready frames, three flat colour steps, cream details, red finale.
+   1. Tokens          5. Marquee band     9. Footer
+   2. Page            6. Steps           10. Tablet and phone
+   3. Hero stage      7. Details         11. Coming soon page
+   4. Buy panel       8. Closing call to action
+   A colour-blocked poster: product photo, cream panel, purple band, three
+   flat colour steps, cream details, red finale.
    Small text stays on cream, white, mint, yellow or blush (all AA with ink
    or purple); pink and red fields only carry large type or white tags.
    Motion (the band and the status dot) only runs with JavaScript on and
@@ -18,7 +18,7 @@
    (this file only loads on tienda.html) so store.js can override the header
    height on <html>. */
 :root {
-  --store-yellow: #ffd23f;           /* the flower centre in the tote art: sticker, step 02, frame 03, stamp */
+  --store-yellow: #ffd23f;           /* sticker, step 02, stamp */
   --store-mint: var(--c-contact-page);
   --store-blush: var(--c-about-page);
   --store-green: #128a22;            /* status dot: 3.9:1 on mint, a non-text marker */
@@ -98,8 +98,7 @@ html:has(.page-store) {
 /* House tag: white, bordered and shadowed in the text's own colour, as the
    site menu's labels. */
 .drop-kicker,
-.drop-stage__tag,
-.frame__tag {
+.drop-stage__tag {
   padding: 4px 6px 3px 7px;
   border: 2px solid currentColor;
   background: var(--c-white);
@@ -362,14 +361,6 @@ html:has(.page-store) {
   color: var(--c-ink);
 }
 
-.drop-contact {
-  max-width: 52ch;
-  margin-top: 18px;
-  color: var(--c-ink);
-  font-size: 15px;
-  line-height: 1.45;
-}
-
 /* 5. Marquee band ------------------------------------------------------------
    Still by default (no JavaScript, or reduced motion): the four facts wrap,
    centred. With JavaScript and motion allowed, the band is one line; store.js
@@ -531,75 +522,7 @@ html:has(.page-store) {
   display: none;
 }
 
-/* 6. Frames ------------------------------------------------------------------
-   Three photo-ready frames: a flat colour field and a caption tag below it
-   (never on the photo). A real photo fills its frame edge to edge; the
-   crops further down only apply to the placeholder illustration. */
-.drop-frames {
-  padding: 56px var(--gutter) 0;
-}
-
-.drop-frames__list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-
-.frame {
-  margin: 0;
-}
-
-.frame__field {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 1;
-  background: var(--frame-bg, var(--store-mint));
-}
-
-.frame--mint { --frame-bg: var(--store-mint); }
-.frame--pink { --frame-bg: var(--c-pink); }
-.frame--yellow { --frame-bg: var(--store-yellow); }
-
-.frame__img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: var(--focus, 50% 50%);
-}
-
-/* Placeholder crops (tote-placeholder.svg only). */
-.frame__img[src$="tote-placeholder.svg"] {
-  inset: 12%;
-  width: 76%;
-  height: 76%;
-  object-fit: contain;
-}
-
-/* Close-up on the flower: the artwork's flower centre (300, 440 of 600 x
-   720) sits mid-frame, scaled so the window stays below the handles. */
-.frame__img--flower[src$="tote-placeholder.svg"] {
-  inset: 50% auto auto 50%;
-  width: 312.5%;
-  max-width: none;
-  height: auto;
-  transform: translate(-50%, -61.11%);
-}
-
-.frame__img--tilt[src$="tote-placeholder.svg"] {
-  inset: 17%;
-  width: 66%;
-  height: 66%;
-  transform: rotate(-8deg);
-}
-
-.frame__tag {
-  display: inline-block;
-  margin-top: 14px;
-}
-
-/* 7. Steps ------------------------------------------------------------------ */
+/* 6. Steps ------------------------------------------------------------------ */
 .drop-steps__title {
   padding: 96px var(--gutter) 40px;
 }
@@ -607,18 +530,17 @@ html:has(.page-store) {
 .drop-steps__list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: auto 1fr auto auto; /* number, space, title, copy */
-  min-height: 380px;
+  grid-template-rows: auto 1fr auto; /* number, space, title */
+  min-height: 300px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* Subgrid rows keep the three titles on one line whatever the copy's
-   length. */
+/* Subgrid rows keep the three titles on one line. */
 .step {
   display: grid;
-  grid-row: span 4;
+  grid-row: span 3;
   grid-template-rows: subgrid;
   row-gap: 0;
   padding: 40px var(--panel-pad) 48px var(--gutter);
@@ -656,24 +578,17 @@ html:has(.page-store) {
   text-wrap: balance;
 }
 
-.step__copy {
-  max-width: 34ch;
-  margin-top: 14px;
-  font-size: 17px;
-  line-height: 1.45;
-  text-wrap: pretty;
-}
-
-/* 8. Details & FAQ ---------------------------------------------------------- */
+/* 7. Details ---------------------------------------------------------------
+   The heading beside the table on tablet and desktop, above it on phones. */
 .drop-info {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 48px clamp(40px, 6vw, 120px);
   padding: 112px var(--gutter) 120px;
 }
 
-.drop-info__title {
-  margin-bottom: 32px;
+.drop-info__col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px clamp(40px, 6vw, 120px);
+  align-items: start;
 }
 
 .specs {
@@ -702,83 +617,7 @@ html:has(.page-store) {
   text-wrap: balance;
 }
 
-.faq {
-  border-top: 2px solid var(--c-ink);
-}
-
-.faq__item {
-  border-bottom: 2px solid var(--c-ink);
-}
-
-/* Plus that turns into a minus: two bars in a purple disc. */
-.faq__q {
-  position: relative;
-  display: block;
-  padding: 18px 56px 17px 0;
-  background: radial-gradient(circle at calc(100% - 20px) 50%, var(--c-purple) 0 16px, transparent 16.5px);
-  color: var(--c-ink);
-  font-weight: 600;
-  font-size: 19px;
-  line-height: 1.35;
-  list-style: none;
-  cursor: pointer;
-}
-
-.faq__q::-webkit-details-marker {
-  display: none;
-}
-
-.faq__q::before,
-.faq__q::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 13px;
-  width: 14px;
-  height: 2px;
-  margin-top: -1px;
-  background: var(--c-cream);
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-
-.faq__q::after {
-  transform: rotate(90deg);
-}
-
-.faq__item[open] > .faq__q::after {
-  transform: rotate(0deg);
-}
-
-.faq__q:hover {
-  color: var(--c-purple);
-}
-
-/* Forced colours drop the disc and the bars' background: draw the bars in
-   the text colour so the plus / minus stays. */
-@media (forced-colors: active) {
-  .faq__q::before,
-  .faq__q::after {
-    forced-color-adjust: none;
-    background: CanvasText;
-  }
-}
-
-.faq__a {
-  max-width: 58ch;
-  padding: 0 56px 20px 0;
-  color: var(--c-ink);
-  font-size: 17px;
-  line-height: 1.5;
-}
-
-.drop-info__more {
-  margin-top: 24px;
-  color: var(--c-ink);
-  font-size: 15px;
-  line-height: 1.45;
-}
-
-/* 9. Closing call to action -------------------------------------------------- */
+/* 8. Closing call to action -------------------------------------------------- */
 .drop-cta {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
@@ -806,23 +645,7 @@ html:has(.page-store) {
   text-transform: uppercase;
 }
 
-.drop-cta__sub {
-  max-width: 24ch;
-  margin-top: 24px;
-  color: var(--c-cream);
-  font-family: var(--f-display);
-  font-style: italic;
-  font-size: clamp(24px, 2.2vw, 30px); /* 24px+: large text on red */
-  line-height: 1.2;
-  text-wrap: pretty;
-}
-
 /* The hero's mint status pill again, with a hard shadow for the red. */
-.drop-cta .drop-cta__note {
-  margin-top: 28px;
-  border: 2px solid var(--c-ink);
-  box-shadow: 3px 3px 0 var(--c-ink);
-}
 
 .drop-cta .buy-button {
   margin-top: 28px;
@@ -891,7 +714,7 @@ html:has(.page-store) {
   letter-spacing: 0;
 }
 
-/* 10. Footer ----------------------------------------------------------------- */
+/* 9. Footer ----------------------------------------------------------------- */
 .store-footer {
   display: flex;
   flex-wrap: wrap;
@@ -946,21 +769,11 @@ html:has(.page-store) {
   outline-color: var(--c-ink);
 }
 
-.store-footer__note {
-  color: var(--c-ink);
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-/* 11. Tablet and phone ------------------------------------------------------- */
+/* 10. Tablet and phone ------------------------------------------------------- */
 @media (max-width: 1399.98px) {
   .drop-panel {
     padding-top: 32px;
     padding-bottom: 32px;
-  }
-
-  .drop-frames {
-    padding-top: 40px;
   }
 
   .drop-steps__list {
@@ -987,6 +800,12 @@ html:has(.page-store) {
   .drop-stage {
     height: clamp(176px, 30vh, 240px);
     height: clamp(176px, 30svh, 240px);
+  }
+
+  /* A product photo gets more room than the illustration did. */
+  .drop-stage:has(> img[src*=".jpg" i], > img[src*=".jpeg" i]) {
+    height: clamp(200px, 32vh, 320px);
+    height: clamp(200px, 32svh, 320px);
   }
 
   .drop-stage__flower {
@@ -1043,11 +862,6 @@ html:has(.page-store) {
     font-size: 19px;
   }
 
-  .drop-contact {
-    order: 2;
-    margin-top: 12px;
-  }
-
   .drop-price {
     margin-top: 12px;
     font-size: 40px;
@@ -1068,41 +882,6 @@ html:has(.page-store) {
   .drop-band__knob {
     width: 32px;
     height: 32px;
-  }
-
-  .drop-frames {
-    padding: 32px 0 0;
-  }
-
-  /* A swipe row: each frame snaps, the next one peeks in. */
-  .drop-frames__list {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    padding: 0 var(--gutter) 6px;
-    scroll-padding-inline: var(--gutter);
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-
-  .drop-frames__list::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* store.js makes the row a Tab stop while it scrolls; ring drawn inside. */
-  .drop-frames__list:focus-visible {
-    outline-offset: -3px;
-  }
-
-  /* Capped, so wide phones and small tablets show more than one frame. */
-  .drop-frames__list > li {
-    flex: 0 0 min(78%, 340px);
-    scroll-snap-align: start;
-  }
-
-  .frame__tag {
-    margin-top: 12px;
   }
 
   .drop-steps__title {
@@ -1132,18 +911,13 @@ html:has(.page-store) {
     font-size: 28px;
   }
 
-  .step__copy {
-    font-size: 16px;
-  }
-
   .drop-info {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 64px;
     padding: 72px var(--gutter) 80px;
   }
 
-  .drop-info__title {
-    margin-bottom: 20px;
+  .drop-info__col {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
   }
 
   .specs__row {
@@ -1152,18 +926,8 @@ html:has(.page-store) {
     padding: 12px 0 11px;
   }
 
-  .specs dd,
-  .faq__q {
+  .specs dd {
     font-size: 17px;
-  }
-
-  .faq__q {
-    padding-right: 48px;
-  }
-
-  .faq__a {
-    padding-right: 0;
-    font-size: 16px;
   }
 
   .drop-cta {
@@ -1199,10 +963,6 @@ html:has(.page-store) {
     margin-top: 16px;
   }
 
-  .drop-panel > .drop-contact {
-    order: 3;
-  }
-
   .drop-panel > .buy-button {
     margin-top: 14px;
   }
@@ -1236,7 +996,7 @@ html:has(.page-store) {
   }
 }
 
-/* 12. Coming soon (proximamente.html) ----------------------------------------
+/* 11. Coming soon (proximamente.html) ----------------------------------------
    The same hero, alone: it fills the screen below the header (no band), and
    on phones the standfirst stays above the button, since there is no price
    or status to lead with. */
@@ -1253,8 +1013,11 @@ html:has(.page-store) {
   .page-soon .drop-hero {
     min-height: 0;
   }
+}
 
-  .page-soon .drop-stage {
-    height: clamp(220px, 38svh, 340px);
+/* Short phones: the button first, so it clears the bottom menu bar. */
+@media (max-width: 809.98px) and (max-height: 699.98px) {
+  .page-soon .drop-standfirst {
+    order: 1;
   }
 }
