@@ -1504,6 +1504,42 @@ html:has(.page-about),
   }
 }
 
+/* Service pages (/direccion-creativa, /fashion-styling, /direccion-de-arte)
+   are About pages for one discipline: its name as the headline, the intro
+   set like the bio, the project names after it, then its photos. */
+.service__title {
+  margin: 0 0 40px;
+  color: var(--c-morado);
+  font: 400 clamp(52px, 7vw, 112px) / 0.95 var(--f-display);
+  letter-spacing: -0.01em;
+}
+
+.about__bio .service__projects {
+  grid-column: 1 / span 8;
+  font-size: var(--fs-small);
+}
+
+.masonry__item a {
+  display: block;
+}
+
+@media (max-width: 1099.98px) {
+  .about__bio .service__projects {
+    grid-column: 1 / span 7;
+  }
+}
+
+@media (max-width: 809.98px) {
+  .service__title {
+    margin-bottom: 28px;
+    font-size: 44px;
+  }
+
+  .about__bio .service__projects {
+    grid-column: 1;
+  }
+}
+
 /* 9. Contact ---------------------------------------------------------------
    The back page, on a grana wall: her address set as large as the page
    allows, underlined in marigold pencil, then the taglines, her portrait

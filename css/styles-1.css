@@ -1089,6 +1089,24 @@ html:has(.page-about) {
   }
 }
 
+/* Service pages: About for one discipline, headed by its name. */
+.service__title {
+  margin: 0 0 32px;
+  color: var(--c-purple);
+  font: 400 var(--fs-display) / 0.95 var(--f-display);
+  text-transform: uppercase;
+}
+
+.masonry__item a {
+  display: block;
+}
+
+@media (max-width: 809.98px) {
+  .service__title {
+    font-size: 48px;
+  }
+}
+
 /* 9. Contact ---------------------------------------------------------------
    A full-height section below the project list on the home page; its solid
    background covers the fixed project image as it scrolls up. Intro on the
