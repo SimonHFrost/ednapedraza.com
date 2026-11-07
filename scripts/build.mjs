@@ -12,7 +12,8 @@
  *   about.html   <head> SEO block, gallery
  * Whole files:
  *   direccion-creativa.html, fashion-styling.html, direccion-de-arte.html
- *                          index.html with the list filtered to one service
+ *                          about.html with that service's intro (SERVICES
+ *                          below) and its projects' photos
  *   proyectos/<slug>.html  one page per project, from templates/project.html
  *   sitemap.xml
  *
@@ -48,27 +49,54 @@ const ABOUT = {
   image: { src: '/assets/img/og/about.jpg', alt: 'Fotografía de una producción de Edna Pedraza.' }
 };
 
-/** Menu services: the home list filtered by discipline, each at /<slug>.
-    "Dirección Creativa y Moda" counts as creative direction only; Moda is
-    not styling work. */
+/** Menu services, each an About-style page at /<slug>: an intro, then the
+    photos of the projects whose discipline matches. "Dirección Creativa y
+    Moda" counts as creative direction only; Moda is not styling work.
+
+    intro: four paragraphs of HTML (<strong> for names). The first is the
+    standfirst; the projects are listed after the last one.
+    DRAFT COPY: written from Edna's bio and project texts, waiting for her
+    approval. portrait: the picture set beside the intro (left out of the
+    photos below it). */
 const SERVICES = [
   {
     slug: 'direccion-creativa',
     name: 'Dirección Creativa',
     match: /Dirección Creativa/i,
-    description: `Dirección creativa de ${NAME} en CDMX: campañas y editoriales para MEOW Magazine, Steve Madden, Crocs y Fábrica Social.`
+    description: `Dirección creativa de ${NAME} en CDMX: campañas y editoriales para MEOW Magazine, Steve Madden, Crocs y Fábrica Social.`,
+    portrait: '/assets/img/fabrica-social-g1.jpg',
+    intro: [
+      'Como <strong>Directora Creativa</strong>, Edna construye cada proyecto desde la idea: el concepto, la historia y el universo visual que una marca o una revista quiere contar.',
+      'Su punto de partida son los colores, los textiles y el arte hecho en México. Desde ahí convierte cualquier referencia, del rock &amp; roll a la fiebre del mundial, en campañas y editoriales con una voz propia.',
+      'Ha dirigido historias para <strong>MEOW Magazine</strong> en colaboración con <strong>Steve Madden</strong> y <strong>Crocs México</strong>, y desde 2024 colabora con <strong>Fábrica Social</strong> en la realización de sus campañas.',
+      'Cuida cada etapa, de la primera idea al último encuadre, para que la imagen final cuente una sola historia.'
+    ]
   },
   {
     slug: 'fashion-styling',
     name: 'Fashion Styling',
     match: /Fashion Styling/i,
-    description: `Fashion styling de ${NAME} en CDMX: editoriales y campañas para Harper’s Bazaar México, MEOW Magazine, Coca-Cola y KFC.`
+    description: `Fashion styling de ${NAME} en CDMX: editoriales y campañas para Harper’s Bazaar México, MEOW Magazine, Coca-Cola y KFC.`,
+    portrait: '/assets/img/harpers-mx-g1.jpg',
+    intro: [
+      'Como <strong>Estilista de Moda</strong>, Edna elige cada prenda, textura y accesorio para que la ropa diga lo que la imagen necesita contar.',
+      'Para ella la indumentaria es una herramienta de exploración personal y de identidad colectiva, y su estilismo juega con la tensión entre tradición y contemporaneidad.',
+      'Ha hecho el estilismo de editoriales para <strong>Harper’s Bazaar México</strong> y <strong>MEOW Magazine</strong>, de la actriz <strong>Mabel Cadena</strong> y de comerciales para <strong>Coca-Cola</strong> y <strong>KFC</strong> con Alina Montero.',
+      'Trabaja igual de cerca con talento, fotografía y producción, en sets editoriales, campañas y comerciales.'
+    ]
   },
   {
     slug: 'direccion-de-arte',
     name: 'Dirección de Arte',
     match: /Arte\b/i,
-    description: `Dirección de arte de ${NAME} en CDMX: producciones para MEOW Magazine, Steve Madden, Skechers y Ben & Frank.`
+    description: `Dirección de arte de ${NAME} en CDMX: producciones para MEOW Magazine, Steve Madden, Skechers y Ben & Frank.`,
+    portrait: '/assets/img/frutifantastimeow-g1.jpg',
+    intro: [
+      'Como <strong>Directora de Arte</strong>, Edna da forma a lo que rodea a cada imagen: el set, los objetos, el color y la composición.',
+      'Cada producción es un pequeño mundo: frutas y recetas para el verano de <strong>Steve Madden</strong>, una noche de fiesta con las DJs de <strong>TQM</strong> o los pasos felices de <strong>Skechers</strong>, todo para <strong>MEOW Magazine</strong>.',
+      'Desde hace unos siete años desarrolla con su estudio creativo <strong>Estrella Cascabel</strong> el contenido visual de <strong>Ben &amp; Frank</strong>.',
+      'Los colores, los textiles y el arte hecho en México son su mayor referente, en cada set y en cada detalle.'
+    ]
   }
 ];
 
@@ -217,12 +245,14 @@ function seoHead({ title, description, path: pagePath, image, schema }) {
 
 /* ------------------------------------------------------------ home lists */
 
+/** tone (js/data.js) picks the cover type colours that read on this photo. */
 function backgroundLayer(project, index, baseIndex) {
   const base = index === baseIndex;
   const classes = `home-bg__layer${base ? ' is-base' : ''}`;
-  if (!project.hero) return `<div class="${classes} home-bg__layer--empty is-empty" data-index="${index}"></div>`;
+  const tone = project.tone ? ` data-tone="${esc(project.tone)}"` : '';
+  if (!project.hero) return `<div class="${classes} home-bg__layer--empty is-empty" data-index="${index}"${tone}></div>`;
   const loading = base ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
-  return `<div class="${classes}" data-index="${index}"><img src="${esc(project.hero)}" alt="" width="1600" height="1000" decoding="async" ${loading}></div>`;
+  return `<div class="${classes}" data-index="${index}"${tone}><img src="${esc(project.hero)}" alt="" width="1600" height="1000" decoding="async" ${loading}></div>`;
 }
 
 function row(project, index) {
@@ -266,7 +296,8 @@ function projectArticle(project, index) {
     body.push(`  <p class="project__lede">${lede}</p>`);
   }
   if (project.credits.length) {
-    body.push('  <ul class="project__credits" aria-label="Créditos">',
+    body.push('  <h2 class="project__credits-title" id="project-credits">Créditos</h2>',
+      '  <ul class="project__credits" aria-labelledby="project-credits">',
       ...project.credits.map((line) => `    <li>${esc(line)}</li>`),
       '  </ul>');
   }
@@ -303,7 +334,7 @@ function projectArticle(project, index) {
 
 function pagerItem(project, direction) {
   return `<li class="pager__item pager__item--${direction}"><a class="pager__link" href="${projectPath(project)}" rel="${direction}">` +
-    `<span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>${direction === 'prev' ? 'Previous' : 'Next'}</span>` +
+    `<span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>${direction === 'prev' ? 'Historia anterior' : 'Siguiente historia'}</span>` +
     `<span class="pager__title">${esc(project.title)}</span></a></li>`;
 }
 
@@ -398,10 +429,59 @@ about = fill(about, 'about-gallery', ABOUT_GALLERY.map((image, i) =>
 ), 'about.html');
 write('about.html', about);
 
+/* ------------------------------------------------------- service pages */
+
+/** Width and height of a JPEG, read from its SOF marker. */
+function jpegSize(src) {
+  const buf = fs.readFileSync(path.join(ROOT, src));
+  let i = 2;
+  while (i < buf.length) {
+    if (buf[i] !== 0xff) { i += 1; continue; }
+    const marker = buf[i + 1];
+    const length = buf.readUInt16BE(i + 2);
+    if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) {
+      return { width: buf.readUInt16BE(i + 7), height: buf.readUInt16BE(i + 5) };
+    }
+    i += 2 + length;
+  }
+  throw new Error(`${src}: no JPEG size found`);
+}
+
+function servicePhotos(service, projects) {
+  const photos = [];
+  for (const project of projects) {
+    const srcs = [project.hero, ...project.gallery].filter(Boolean);
+    srcs.forEach((src, i) => {
+      if (src !== service.portrait) photos.push({ src, project, n: i + 1, total: srcs.length });
+    });
+  }
+  return photos;
+}
+
+/** "a, b y c" */
+function listEs(items) {
+  return items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} y ${items[items.length - 1]}`;
+}
+
+function serviceIntro(service, projects) {
+  const { width, height } = jpegSize(service.portrait);
+  const links = projects.map((project) => `<a href="${projectPath(project)}">${esc(project.title)}</a>`);
+  return [
+    `<h1 class="service__title" id="service-title">${esc(service.name)}</h1>`,
+    `<section class="about__bio" aria-labelledby="service-title">`,
+    `  <img class="about__portrait" src="${esc(service.portrait)}" width="${width}" height="${height}" decoding="async" alt="">`,
+    ...service.intro.map((html) => `  <p>${html}</p>`),
+    `  <p class="service__projects">Proyectos: ${listEs(links)}.</p>`,
+    '</section>'
+  ];
+}
+
+const aboutBio = /^([ \t]*)<section class="about__bio"[\s\S]*?<\/section>/m;
+
 for (const service of SERVICES) {
   const file = `${service.slug}.html`;
   const projects = PROJECTS.filter((project) => service.match.test(project.discipline));
-  let html = fill(home, 'seo', seoHead({
+  let html = fill(about, 'seo', seoHead({
     title: `${service.name} en CDMX — ${NAME}`,
     description: service.description,
     path: `/${service.slug}`,
@@ -416,12 +496,18 @@ for (const service of SERVICES) {
       areaServed: AREA
     }
   }), file);
-  html = fillHomeLists(html, projects, file);
-  // The page heading names the service; the brand stays as on the home page.
+  html = replaceOnce(html, '<body class="page-about" data-page="about">', '<body class="page-about page-service" data-page="service">', file);
+  // The page heading names the service; the brand stays as on About.
   html = replaceOnce(html, '<h1 class="brand__name">Edna Pedraza</h1>', '<p class="brand__name">Edna Pedraza</p>', file);
-  html = replaceOnce(html, '<h2 class="visually-hidden">Proyectos</h2>', `<h1 class="visually-hidden">${esc(service.name)}: proyectos de ${NAME}</h1>`, file);
+  html = replaceOnce(html, 'href="/about" aria-current="page">', 'href="/about">', file);
   html = replaceOnce(html, `href="/${service.slug}">`, `href="/${service.slug}" aria-current="page">`, file);
-  write(file, finishGenerated(html, 'index.html and js/data.js'));
+  if (!aboutBio.test(html)) throw new Error(`${file}: about.html has no <section class="about__bio">`);
+  html = html.replace(aboutBio, (_, pad) => indent(serviceIntro(service, projects), pad));
+  html = fill(html, 'about-gallery', servicePhotos(service, projects).map(({ src, project, n, total }) => {
+    const { width, height } = jpegSize(src);
+    return `<li class="masonry__item"><a href="${projectPath(project)}"><img src="${esc(src)}" alt="${esc(project.title)}, foto ${n} de ${total}." width="${width}" height="${height}" loading="lazy" decoding="async"></a></li>`;
+  }), file);
+  write(file, finishGenerated(html, 'about.html, js/data.js and the SERVICES list in scripts/build.mjs'));
 }
 
 const template = read('templates/project.html');

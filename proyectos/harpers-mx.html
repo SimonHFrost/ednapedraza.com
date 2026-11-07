@@ -49,6 +49,7 @@
   <link rel="preload" href="/assets/fonts/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/style-switch.js"></script>
   <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
   <script src="/js/main.js" defer></script>
 </head>
@@ -61,7 +62,7 @@
     </a>
 
     <nav class="site-menu" id="site-menu" aria-label="Principal">
-      <ul class="site-menu__list">
+      <ul class="site-menu__list" lang="en">
         <li class="site-menu__item"><a class="site-menu__link" href="/about"><span class="site-menu__label">About</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="/#contacto"><span class="site-menu__label">Contact</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="/direccion-creativa"><span class="site-menu__label">Creative direction</span></a></li>
@@ -73,15 +74,16 @@
 
   <main id="main" tabindex="-1">
     <article class="project" aria-labelledby="project-title">
-      <div class="project__tags ui-label"><span class="tag tag--pill"><span class="visually-hidden">Cliente: </span>HARPER’S BAZAAR MX</span><span class="tag tag--pill"><span class="visually-hidden">Servicio: </span>Fashion Styling</span></div>
+      <div class="project__tags ui-label"><span class="tag tag--pill"><span class="visually-hidden">Cliente: </span>Harper’s Bazaar MX</span><span class="tag tag--pill"><span class="visually-hidden">Servicio: </span>Fashion Styling</span></div>
       <h1 class="project__title" id="project-title">Harper’s Bazaar MX</h1>
       <hr class="project__rule">
       <figure class="project__hero"><img src="/assets/img/harpers-mx-hero.jpg" alt="Harper’s Bazaar MX: imagen principal." width="1600" height="1000" decoding="async" fetchpriority="high"></figure>
       <div class="project__body">
         <p class="project__lede">Una historia de <strong>Harper’s Bazaar México</strong> para su edición de junio/julio 2026 que celebra el fascinante diseño de uñas como un manifiesto de la creatividad.</p>
-        <ul class="project__credits" aria-label="Créditos">
-          <li>Fotografía Kon Kau Chuey</li>
-          <li>Producción Gio Lozano</li>
+        <h2 class="project__credits-title" id="project-credits">Créditos</h2>
+        <ul class="project__credits" aria-labelledby="project-credits">
+          <li>Fotografía: Kon Kau Chuey</li>
+          <li>Producción: Gio Lozano</li>
         </ul>
       </div>
       <ul class="project__gallery" style="--cols: 4" aria-label="Galería">
@@ -94,8 +96,8 @@
     <footer class="project-footer">
       <nav class="pager" aria-label="Proyecto anterior y siguiente">
         <ul class="pager__list">
-          <li class="pager__item pager__item--prev"><a class="pager__link" href="/proyectos/fabrica-social" rel="prev"><span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>Previous</span><span class="pager__title">FÁBRICA SOCIAL</span></a></li>
-          <li class="pager__item pager__item--next"><a class="pager__link" href="/proyectos/crocs-meow" rel="next"><span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>Next</span><span class="pager__title">Dark Romance</span></a></li>
+          <li class="pager__item pager__item--prev"><a class="pager__link" href="/proyectos/fabrica-social" rel="prev"><span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>Historia anterior</span><span class="pager__title">Fábrica Social</span></a></li>
+          <li class="pager__item pager__item--next"><a class="pager__link" href="/proyectos/crocs-meow" rel="next"><span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>Siguiente historia</span><span class="pager__title">Dark Romance</span></a></li>
         </ul>
       </nav>
     </footer>

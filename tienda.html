@@ -12,47 +12,48 @@
 
     key            current value                          markers
     -------------  -------------------------------------  -------
-    name           Tote Flor  (mailto: Tote%20Flor)            6
-    drop           Drop 01                                     1
-    price          MX$650                                      3
+    name           Tote Flor  (mailto: Tote%20Flor)            5
+    drop           edición 01                                  1
+    price          MX$650                                      2
     shipping-cost  envío aparte  (or: envío incluido)          1
-    edition        50                                          5
+    edition        50                                          3
     preorder-end   30 de noviembre                             2
     ship-date      15 de diciembre  (first shipping day)       1
-    made-in        CDMX                                        4
+    made-in        CDMX                                        2
     shipping       todo México                                 1
     material       Lona 100% algodón, bordada                  1
     size           38 × 42 × 10 cm · asas de 60 cm             1
-    buy-url        mailto:edna.sapi@gmail.com?subject=...      2
+    buy-url        mailto:edna.sapi@gmail.com?subject=...      1
     image          assets/img/tote-flor.jpg (+ -600.jpg)       1
+    image-caption  Foto de referencia.                         1
 
   Check the counts:
     grep -o 'data-placeholder="[a-z -]*"' tienda.html | cut -d'"' -f2 | tr ' ' '\n' | sort | uniq -c
 
-  Buy link: each buy-url marker also sits under a PLACEHOLDER comment; point
+  Buy link: the buy-url marker also sits under a PLACEHOLDER comment; point
   it at the Stripe Payment Link or the Tiendanube product URL. Until then
-  both buttons open an email to Edna to reserve a piece (that is why they
-  also carry the name key, in the mailto subject).
-  Band: store.js copies the band's list to make the loop, so each phrase is
-  written once here.
-  Copy: the standfirst and the step titles are draft text.
+  the button opens an email to Edna to reserve a piece (that is why it
+  also carries the name key, in the mailto subject).
+  Copy: the standfirst and the how-it-works sentence are draft text.
 
-  Photo: the hero shows assets/img/tote-flor.jpg (and the 600px copy in
-  srcset). A .jpg or .jpeg src fills the pink field edge to edge (cover),
-  with no flower or stickers on it. On phones it is cropped to a wide strip
-  from the middle; to move the crop, set style="--focus: 50% 60%" (x y) on
-  the <img>. A cut-out PNG or WebP instead sits on the flower stage.
-  Photos are never tinted or overlaid.
+  Photo: the left page shows assets/img/tote-flor.jpg (and the 600px copy
+  in srcset), cropped to fill. Replace it with Edna's own photograph of the
+  finished tote before launch. To move the crop, set style="--focus: 50% 60%"
+  (x y) on the <img>. Photos are never tinted or overlaid.
+  Caption (image-caption): "Foto de referencia." says honestly that the
+  picture is not the finished piece. Once the real photograph is in,
+  replace it with a real caption (what the picture shows: the piece, who
+  took it), here and on proximamente.html.
   ==========================================================================
 -->
-<html lang="es" class="no-js">
+<html lang="es" class="no-js" data-style-alt="/tienda-1">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tienda — Edna Pedraza</title>
-  <meta name="description" data-placeholder="name edition made-in preorder-end" content="Tote Flor, el primer drop de Edna Pedraza: edición limitada de 50 piezas numeradas, hecha en CDMX. Preventa abierta hasta el 30 de noviembre.">
+  <meta name="description" data-placeholder="name edition made-in preorder-end" content="Tote Flor, la primera edición de la tienda de Edna Pedraza: 50 piezas numeradas, hechas en CDMX. Preventa abierta hasta el 30 de noviembre.">
   <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#fcfaf5">
+  <meta name="theme-color" content="#f6f1e6">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -60,6 +61,7 @@
   <link rel="preload" href="assets/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/store.css">
+  <script src="/js/style-switch.js"></script>
   <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
   <script src="js/main.js" defer></script>
   <script src="js/store.js" defer></script>
@@ -73,7 +75,7 @@
     </a>
 
     <nav class="site-menu" id="site-menu" aria-label="Principal">
-      <ul class="site-menu__list">
+      <ul class="site-menu__list" lang="en">
         <li class="site-menu__item"><a class="site-menu__link" href="/about"><span class="site-menu__label">About</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="/#contacto"><span class="site-menu__label">Contact</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="/direccion-creativa"><span class="site-menu__label">Creative direction</span></a></li>
@@ -84,114 +86,54 @@
   </header>
 
   <main id="main" class="store" tabindex="-1">
-    <!-- Hero: the tote on a pink field, the buy panel beside it. -->
-    <section class="drop-hero" aria-labelledby="drop-title">
-      <figure class="drop-stage">
-        <svg class="drop-stage__flower" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-          <g fill="currentColor"><circle cx="32" cy="16" r="13"/><circle cx="47.22" cy="27.06" r="13"/><circle cx="41.4" cy="44.94" r="13"/><circle cx="22.6" cy="44.94" r="13"/><circle cx="16.78" cy="27.06" r="13"/></g>
-        </svg>
-        <img class="drop-stage__img" data-placeholder="image name" src="assets/img/tote-flor.jpg"
+    <!-- One spread: the photograph as the left page, all the type on the
+         right. Below it, the details on a morado band that closes the page
+         (outside the spread, so the sticky photograph lets go there). -->
+    <article class="drop" aria-labelledby="drop-title">
+      <figure class="drop-photo">
+        <img class="drop-photo__img" data-placeholder="image name" src="assets/img/tote-flor.jpg"
              srcset="assets/img/tote-flor-600.jpg 600w, assets/img/tote-flor.jpg 1016w"
              sizes="(max-width: 809.98px) 100vw, 52vw" width="1016" height="1020"
              fetchpriority="high" decoding="async"
              alt="Tote Flor: bolsa de lona color crudo con flores silvestres bordadas, sobre fondo rosa.">
-        <p class="drop-badge" aria-hidden="true"><span class="drop-badge__num" data-placeholder="edition">50</span><span class="drop-badge__text">piezas numeradas</span></p>
-        <p class="drop-stage__tag ui-label" aria-hidden="true">Hecho en <span data-placeholder="made-in">CDMX</span></p>
+        <figcaption class="drop-photo__caption" data-placeholder="image-caption">Foto de referencia.</figcaption>
       </figure>
 
-      <div class="drop-panel">
-        <p class="drop-kicker ui-label"><span data-placeholder="drop">Drop 01</span> · Edición limitada</p>
+      <div class="drop-text">
+        <p class="drop-kicker">La tienda, <span data-placeholder="drop">edición 01</span></p>
         <h1 class="drop-title" id="drop-title" data-placeholder="name">Tote Flor</h1>
         <p class="drop-standfirst">Lona cruda con flores bordadas.</p>
 
-        <p class="drop-price"><span class="visually-hidden">Precio: </span><span data-placeholder="price">MX$650</span> <span class="drop-price__note" data-placeholder="shipping-cost">envío aparte</span></p>
-
-        <p class="drop-status"><span class="drop-status__dot" aria-hidden="true"></span><span>Preventa abierta hasta el <span data-placeholder="preorder-end">30 de noviembre</span></span></p>
+        <p class="drop-price"><span class="visually-hidden">Precio: </span><span class="drop-price__amount" data-placeholder="price">MX$650</span> <span class="drop-price__note" data-placeholder="shipping-cost">envío aparte</span></p>
 
         <!-- PLACEHOLDER: replace the mailto with the Stripe Payment Link or Tiendanube product URL. -->
-        <a class="buy-button" href="mailto:edna.sapi@gmail.com?subject=Quiero%20apartar%20mi%20Tote%20Flor" data-placeholder="buy-url name">
-          <span class="buy-button__label">Comprar en preventa</span>
-          <span class="buy-button__price"><span data-placeholder="price">MX$650</span> <span aria-hidden="true">→</span></span>
-        </a>
+        <a class="buy-button" href="mailto:edna.sapi@gmail.com?subject=Quiero%20apartar%20mi%20Tote%20Flor" data-placeholder="buy-url name">Comprar en preventa, <span data-placeholder="price">MX$650</span> <span aria-hidden="true">→</span></a>
+        <p class="drop-status">Preventa abierta hasta el <span data-placeholder="preorder-end">30 de noviembre</span>.</p>
 
+        <p class="drop-how">Apartas la tuya en preventa, se hace en <span data-placeholder="made-in">CDMX</span> y llega a tu casa.</p>
       </div>
-    </section>
+    </article>
 
-    <!-- Marquee: the key facts, once. store.js adds a hidden copy of the list
-         to make the loop and shows the pause button; without JavaScript, or
-         with reduced motion, the band stands still. -->
-    <div class="drop-band" data-band>
-      <div class="drop-band__track">
-        <ul class="drop-band__group" data-band-group>
-          <li>Edición limitada</li>
-          <li><span data-placeholder="edition">50</span>&nbsp;piezas</li>
-          <li>Hecho en&nbsp;<span data-placeholder="made-in">CDMX</span></li>
-        </ul>
-      </div>
-      <button class="drop-band__toggle" type="button" aria-pressed="false" aria-label="Pausar la animación" data-band-toggle hidden>
-        <span class="drop-band__knob">
-          <svg class="drop-band__icon drop-band__icon--pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/></svg>
-          <svg class="drop-band__icon drop-band__icon--play" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3l8 5-8 5z" fill="currentColor"/></svg>
-        </span>
-      </button>
-    </div>
-
-    <!-- How the drop works -->
-    <section class="drop-steps" aria-labelledby="steps-title">
-      <h2 class="store-heading drop-steps__title" id="steps-title">Así funciona el drop</h2>
-      <ol class="drop-steps__list">
-        <li class="step step--mint">
-          <span class="step__num" aria-hidden="true">01</span>
-          <h3 class="step__title">Aparta la tuya</h3>
-        </li>
-        <li class="step step--yellow">
-          <span class="step__num" aria-hidden="true">02</span>
-          <h3 class="step__title">Se hace en <span data-placeholder="made-in">CDMX</span></h3>
-        </li>
-        <li class="step step--blush">
-          <span class="step__num" aria-hidden="true">03</span>
-          <h3 class="step__title">Llega a tu casa</h3>
-        </li>
-      </ol>
-    </section>
-
-    <!-- Details -->
-    <section class="drop-info" aria-label="Detalles">
-      <div class="drop-info__col">
-        <h2 class="store-heading drop-info__title">Detalles</h2>
+    <section class="drop-band" aria-labelledby="details-title">
+      <div class="drop-details">
+        <h2 class="drop-details__title" id="details-title">Detalles</h2>
         <dl class="specs">
-          <div class="specs__row"><dt class="ui-label">Material</dt><dd data-placeholder="material">Lona 100% algodón, bordada</dd></div>
-          <div class="specs__row"><dt class="ui-label">Medidas</dt><dd data-placeholder="size">38 × 42 × 10&nbsp;cm&nbsp;· asas de 60&nbsp;cm</dd></div>
-          <div class="specs__row"><dt class="ui-label">Envío</dt><dd>A <span data-placeholder="shipping">todo México</span> desde el <span data-placeholder="ship-date">15 de diciembre</span></dd></div>
+          <div class="specs__row"><dt>Edición</dt><dd><span data-placeholder="edition">50</span> piezas numeradas</dd></div>
+          <div class="specs__row"><dt>Material</dt><dd data-placeholder="material">Lona 100% algodón, bordada</dd></div>
+          <div class="specs__row"><dt>Medidas</dt><dd data-placeholder="size">38 × 42 × 10&nbsp;cm&nbsp;· asas de 60&nbsp;cm</dd></div>
+          <div class="specs__row"><dt>Envío</dt><dd>A <span data-placeholder="shipping">todo México</span> desde el <span data-placeholder="ship-date">15 de diciembre</span></dd></div>
         </dl>
       </div>
-    </section>
 
-    <!-- Closing call to action, with the edition stamp. -->
-    <section class="drop-cta" aria-labelledby="cta-title">
-      <div class="drop-cta__copy">
-        <h2 class="drop-cta__title" id="cta-title"><span data-placeholder="edition">50</span> piezas.<br> Ni una más.</h2>
-        <!-- PLACEHOLDER: replace the mailto with the Stripe Payment Link or Tiendanube product URL. -->
-        <a class="buy-button buy-button--light" href="mailto:edna.sapi@gmail.com?subject=Quiero%20apartar%20mi%20Tote%20Flor" data-placeholder="buy-url name">
-          <span class="buy-button__label">Comprar en preventa</span>
-          <span class="buy-button__price"><span data-placeholder="price">MX$650</span> <span aria-hidden="true">→</span></span>
-        </a>
-      </div>
-      <div class="drop-cta__art" aria-hidden="true">
-        <p class="stamp">
-          <span class="stamp__label">Edición limitada</span>
-          <span class="stamp__num"><span class="stamp__no">Nº</span>01<span class="stamp__of">/<span data-placeholder="edition">50</span></span></span>
-          <span class="stamp__label">Pieza numerada</span>
-        </p>
-      </div>
+      <p class="drop-edition"><span data-placeholder="edition">50</span> piezas.<br> <em>Ni una más.</em></p>
     </section>
   </main>
 
   <footer class="store-footer">
-    <a class="store-footer__back ui-label" href="/"><span aria-hidden="true">←</span> Volver al portafolio</a>
+    <a class="store-footer__back" href="/"><span aria-hidden="true">←</span> Volver al portafolio</a>
     <ul class="store-footer__tags">
-      <li><a class="store-footer__tag" href="mailto:edna.sapi@gmail.com?subject=Tote%20Flor" data-placeholder="name"><span class="store-footer__label">edna.sapi@gmail.com</span></a></li>
-      <li><a class="store-footer__tag" href="https://www.instagram.com/ednamiau/" rel="noopener"><span class="store-footer__label">@ednamiau</span></a></li>
+      <li><a class="store-footer__tag" href="mailto:edna.sapi@gmail.com?subject=Tote%20Flor" data-placeholder="name">edna.sapi@gmail.com</a></li>
+      <li><a class="store-footer__tag" href="https://www.instagram.com/ednamiau/" rel="noopener">@ednamiau</a></li>
     </ul>
   </footer>
 </body>

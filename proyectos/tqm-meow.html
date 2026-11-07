@@ -48,6 +48,7 @@
   <link rel="preload" href="/assets/fonts/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/style-switch.js"></script>
   <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
   <script src="/js/main.js" defer></script>
 </head>
@@ -60,7 +61,7 @@
     </a>
 
     <nav class="site-menu" id="site-menu" aria-label="Principal">
-      <ul class="site-menu__list">
+      <ul class="site-menu__list" lang="en">
         <li class="site-menu__item"><a class="site-menu__link" href="/about"><span class="site-menu__label">About</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="/#contacto"><span class="site-menu__label">Contact</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="/direccion-creativa"><span class="site-menu__label">Creative direction</span></a></li>
@@ -72,13 +73,14 @@
 
   <main id="main" tabindex="-1">
     <article class="project" aria-labelledby="project-title">
-      <div class="project__tags ui-label"><span class="tag tag--pill"><span class="visually-hidden">Cliente: </span>MEOW MAGAZINE PARA STEVE MADDEN</span><span class="tag tag--pill"><span class="visually-hidden">Servicio: </span>Dirección Creativa y Arte</span></div>
+      <div class="project__tags ui-label"><span class="tag tag--pill"><span class="visually-hidden">Cliente: </span>MEOW Magazine para Steve Madden</span><span class="tag tag--pill"><span class="visually-hidden">Servicio: </span>Dirección Creativa y Arte</span></div>
       <h1 class="project__title" id="project-title">TQM x MEOW</h1>
       <hr class="project__rule">
       <figure class="project__hero"><img src="/assets/img/tqm-meow-hero.jpg" alt="TQM x MEOW: imagen principal." width="1600" height="1000" decoding="async" fetchpriority="high"></figure>
       <div class="project__body">
         <p class="project__lede">Dirección creativa y de arte para una noche de celebración con la comunidad de DJs <strong>TQM</strong> como anfitrionas, para <strong>MEOW Magazine</strong> en colaboración con <strong>Steve Madden</strong>.</p>
-        <ul class="project__credits" aria-label="Créditos">
+        <h2 class="project__credits-title" id="project-credits">Créditos</h2>
+        <ul class="project__credits" aria-labelledby="project-credits">
           <li>Fotografía: Noel Higareda</li>
           <li>Producción: MEOW Magazine</li>
         </ul>
@@ -92,8 +94,8 @@
     <footer class="project-footer">
       <nav class="pager" aria-label="Proyecto anterior y siguiente">
         <ul class="pager__list">
-          <li class="pager__item pager__item--prev"><a class="pager__link" href="/proyectos/crocs-meow" rel="prev"><span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>Previous</span><span class="pager__title">Dark Romance</span></a></li>
-          <li class="pager__item pager__item--next"><a class="pager__link" href="/proyectos/mabel-meow" rel="next"><span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>Next</span><span class="pager__title">Mabel Cadena x MEOW</span></a></li>
+          <li class="pager__item pager__item--prev"><a class="pager__link" href="/proyectos/crocs-meow" rel="prev"><span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>Historia anterior</span><span class="pager__title">Dark Romance</span></a></li>
+          <li class="pager__item pager__item--next"><a class="pager__link" href="/proyectos/mabel-meow" rel="next"><span class="pager__label ui-label"><span class="pager__dot" aria-hidden="true"></span>Siguiente historia</span><span class="pager__title">Mabel Cadena x MEOW</span></a></li>
         </ul>
       </nav>
     </footer>
