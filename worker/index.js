@@ -1,12 +1,17 @@
 /*
  * The site's Worker. Files in the repo are served as static assets without
  * running this script (see wrangler.jsonc); it sees /api/* and some requests
- * for paths that match no file. It handles one: POST /api/contacto, the home
- * contact form, which it emails to Edna through Cloudflare Email Routing.
- * Every other path goes back to the assets, which answer with 404.html.
+ * for paths that match no file. It handles one: /api/contacto, the home
+ * contact form. POST emails the message to Edna through Cloudflare Email
+ * Routing; GET tells js/main.js whether to run the spam check. Every other
+ * path goes back to the assets, which answer with 404.html.
  *
  * The CONTACT_EMAIL binding can only send to the verified address set in
  * wrangler.jsonc, so the form can't be used to email anyone else.
+ *
+ * Spam check: Cloudflare Turnstile, on once the Worker has both the
+ * TURNSTILE_SITE_KEY and TURNSTILE_SECRET secrets (dashboard: the Worker's
+ * Settings > Variables and Secrets). Until then the form works without it.
  */
 
 const FORM_PATH = '/api/contacto';
@@ -14,12 +19,14 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/; // same check as js/main.
 const MAX_BODY_BYTES = 64 * 1024; // 5000 characters of any script, URL-encoded
 const MAX_LENGTH = { nombre: 100, correo: 254, mensaje: 5000 };
 const MIN_MESSAGE = 10;
+const SITEVERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
 const TEXT = {
   sent: 'Tu mensaje se envió. Te respondo pronto.',
   invalid: 'Revisa el formulario: falta tu nombre, un correo válido o un mensaje de al menos 10 caracteres.',
   tooLong: 'El mensaje es demasiado largo. Acórtalo un poco y vuelve a intentarlo.',
   tooMany: 'Has enviado varios mensajes seguidos. Espera un minuto y vuelve a intentarlo.',
+  robot: 'No pudimos comprobar que no eres un robot. Vuelve a intentarlo o escríbeme a edna.sapi@gmail.com.',
   failed: 'No se pudo enviar el mensaje. Escríbeme directamente a edna.sapi@gmail.com.'
 };
 
@@ -27,8 +34,13 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname !== FORM_PATH) return env.ASSETS.fetch(request);
+    if (request.method === 'GET') {
+      // The site key is public; it goes to the page so it can show Turnstile.
+      const turnstileSiteKey = spamCheckOn(env) ? env.TURNSTILE_SITE_KEY : null;
+      return Response.json({ turnstileSiteKey }, { headers: { 'Cache-Control': 'no-store' } });
+    }
     if (request.method !== 'POST') {
-      return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'POST' } });
+      return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, POST' } });
     }
     return handleContact(request, env, url);
   }
@@ -70,6 +82,9 @@ async function handleContact(request, env, url) {
   if (!nombre || !EMAIL_PATTERN.test(correo) || mensaje.length < MIN_MESSAGE) {
     return reply(400, false, TEXT.invalid);
   }
+  if (spamCheckOn(env) && !(await passesTurnstile(form, request, env))) {
+    return reply(403, false, TEXT.robot);
+  }
 
   try {
     await env.CONTACT_EMAIL.send({
@@ -95,6 +110,30 @@ async function handleContact(request, env, url) {
     return reply(502, false, TEXT.failed);
   }
   return reply(200, true, TEXT.sent);
+}
+
+function spamCheckOn(env) {
+  return Boolean(env.TURNSTILE_SITE_KEY && env.TURNSTILE_SECRET);
+}
+
+/** Asks Turnstile whether the token js/main.js sent is real and unused.
+    A form posted without JavaScript has none, so it fails. */
+async function passesTurnstile(form, request, env) {
+  const token = field(form, 'cf-turnstile-response');
+  if (!token || token.length > 2048) return false;
+  const body = new FormData();
+  body.append('secret', env.TURNSTILE_SECRET);
+  body.append('response', token);
+  const ip = request.headers.get('CF-Connecting-IP');
+  if (ip) body.append('remoteip', ip);
+  try {
+    const result = await (await fetch(SITEVERIFY_URL, { method: 'POST', body })).json();
+    if (!result.success) console.log('contact form: Turnstile said no', result['error-codes']);
+    return result.success === true;
+  } catch (error) {
+    console.error('contact form: Turnstile check failed', error.message);
+    return false;
+  }
 }
 
 /** Rate-limit key: the visitor's IP, or for IPv6 its /64, which one
