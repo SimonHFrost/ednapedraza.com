@@ -242,14 +242,15 @@
     if (!header) return;
     var lastY = window.scrollY;
     var ticking = false;
-    // Home, desktop and tablet: the head has no ground over the cover, so it
-    // stays away while the cover is part-scrolled (it would print over the
-    // contents) and comes back at the very top or on the contact wall.
+    // Home, desktop and tablet, style 2 (js/style-switch.js): the head has no
+    // ground over the cover, so it stays away while the cover is part-scrolled
+    // (it would print over the contents) and comes back at the very top or on
+    // the contact wall.
     var wall = document.body.getAttribute('data-page') === 'home' && document.getElementById('contacto');
 
     function update() {
       var y = window.scrollY;
-      var overCover = wall && window.innerWidth >= 810 && y > 0 && wall.getBoundingClientRect().top > 1;
+      var overCover = wall && document.documentElement.getAttribute('data-style') !== '1' && window.innerWidth >= 810 && y > 0 && wall.getBoundingClientRect().top > 1;
       header.style.setProperty('--header-h', header.offsetHeight + 'px');
       if (overCover || (y > lastY && y > header.offsetHeight)) header.classList.add('is-hidden');
       else if (y < lastY) header.classList.remove('is-hidden');
