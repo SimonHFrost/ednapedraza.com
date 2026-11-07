@@ -6,3 +6,5 @@
 worker
 wrangler.jsonc
 .assetsignore
+scripts
+templates
