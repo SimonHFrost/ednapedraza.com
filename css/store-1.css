@@ -1023,3 +1023,168 @@ html:has(.page-store) {
     order: 1;
   }
 }
+
+/* The tote's place on the coming-soon stage: one big question mark in the
+   display serif, white with an ink outline and offset ink shadow (the house
+   tag look), tilted against the flower. */
+.drop-stage__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  color: var(--c-white);
+  font: 400 min(30vw, 58vh, 460px) / 1 var(--f-display);
+  paint-order: stroke fill;
+  -webkit-text-stroke: max(4px, 0.025em) var(--c-ink);
+  text-shadow: 0.035em 0.035em 0 var(--c-ink);
+  transform: translate(-50%, -52%) rotate(8deg);
+}
+
+@media (max-width: 809.98px) {
+  .drop-stage__mark {
+    font-size: clamp(150px, 26svh, 210px);
+  }
+}
+
+/* The shop sign-up: a white field and the purple pill button, both in the
+   house outline and offset shadow. */
+.notify {
+  width: min(100%, 440px);
+  margin-top: 20px;
+}
+
+.notify__lead {
+  font: 600 13px / 1.3 var(--f-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.notify__row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.notify__control {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 56px;
+  padding: 0 20px;
+  border: 2px solid var(--c-ink);
+  border-radius: 100px;
+  background: var(--c-white);
+  box-shadow: 4px 4px 0 var(--c-ink);
+  color: var(--c-ink);
+  font: 400 16px / 1.2 var(--f-sans);
+}
+
+.notify__control:focus-visible {
+  outline: 3px solid var(--c-purple);
+  outline-offset: 3px;
+}
+
+.notify__control[aria-invalid="true"] {
+  border-color: var(--c-error);
+  box-shadow: 4px 4px 0 var(--c-error);
+}
+
+.notify__submit {
+  flex: none;
+  min-height: 56px;
+  padding: 0 24px;
+  border: 2px solid var(--c-ink);
+  border-radius: 100px;
+  background: var(--c-purple);
+  box-shadow: 4px 4px 0 var(--c-ink);
+  color: var(--c-cream);
+  font: 600 15px / 1 var(--f-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.notify__submit:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--c-ink);
+}
+
+.notify__submit:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--c-ink);
+}
+
+.notify__submit:focus-visible {
+  outline: 3px solid var(--c-ink);
+  outline-offset: 4px;
+}
+
+.notify__submit[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.notify__error,
+.notify__status {
+  margin-top: 12px;
+  font: 500 14px / 1.4 var(--f-sans);
+}
+
+.notify__error,
+.notify .contact-form__status--error {
+  color: var(--c-error);
+}
+
+.notify__error:empty,
+.notify__status:empty,
+.notify__check:empty {
+  display: none;
+}
+
+.notify__check {
+  margin-top: 12px;
+}
+
+.notify--done .notify__lead,
+.notify--done .notify__row {
+  display: none;
+}
+
+.notify--done .notify__status {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 2px solid var(--c-ink);
+  background: var(--c-white);
+  box-shadow: 4px 4px 0 var(--c-ink);
+  color: var(--c-ink);
+  font-size: 15px;
+}
+
+.soon-insta {
+  margin-top: 18px;
+  font: 400 15px / 1.4 var(--f-sans);
+}
+
+.soon-insta a {
+  color: var(--c-purple);
+  font-weight: 600;
+}
+
+@media (max-width: 809.98px) {
+  .page-soon .notify {
+    order: 1;
+  }
+
+  .page-soon .soon-insta {
+    order: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notify__submit,
+  .notify__submit:hover,
+  .notify__submit:active {
+    transform: none;
+    transition: none;
+  }
+}

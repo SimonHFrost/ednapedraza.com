@@ -3,7 +3,8 @@
      Style 1 (js/style-switch.js). Keep its content in step with proximamente.html. -->
 <!-- Tienda: "coming soon" page. The home menu's Shop link opens it on a
      tap; pressing and holding that link opens tienda.html (js/shop-link.js).
-     Reuses the store page's hero styles from css/store.css. -->
+     Reuses the store page's hero styles from css/store-1.css; the tote is
+     replaced by a large question mark on the flower (section 11). -->
 <html lang="es" class="no-js" data-style-only="1" data-style-alt="/proximamente">
 <head>
   <meta charset="utf-8">
@@ -47,13 +48,9 @@
     <section class="drop-hero soon-hero" aria-labelledby="soon-title">
       <figure class="drop-stage">
         <svg class="drop-stage__flower" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-          <g fill="currentColor"><circle cx="32" cy="16" r="13"/><circle cx="47.22" cy="27.06" r="13"/><circle cx="41.4" cy="44.94" r="13"/><circle cx="22.6" cy="44.94" r="13"/><circle cx="16.78" cy="27.06" r="13"/></g>
+          <g fill="currentColor"><circle cx="32" cy="16" r="13"/><circle cx="47.22" cy="27.06" r="13"/><circle cx="41.4" cy="44.94" r="13"/><circle cx="22.6" cy="44.94" r="13"/><circle cx="16.78" cy="27.06" r="13"/><circle cx="32" cy="32" r="14"/></g>
         </svg>
-        <img class="drop-stage__img" src="assets/img/tote-flor.jpg"
-             srcset="assets/img/tote-flor-600.jpg 600w, assets/img/tote-flor.jpg 1016w"
-             sizes="(max-width: 809.98px) 100vw, 52vw" width="1016" height="1020"
-             fetchpriority="high" decoding="async"
-             alt="Tote de lona color crudo con flores silvestres bordadas, sobre fondo rosa.">
+        <p class="drop-stage__mark" role="img" aria-label="Signo de interrogación: la pieza aún no se revela."><span aria-hidden="true">?</span></p>
         <p class="drop-badge" aria-hidden="true"><span class="drop-badge__num">01</span><span class="drop-badge__text">Primer drop</span></p>
         <p class="drop-stage__tag ui-label" aria-hidden="true">Hecho en CDMX</p>
       </figure>
@@ -63,10 +60,25 @@
         <h1 class="drop-title" id="soon-title">Muy pronto</h1>
         <p class="drop-standfirst">Primer drop: una tote de edición limitada.</p>
 
-        <a class="buy-button" href="https://www.instagram.com/ednamiau/" rel="noopener">
-          <span class="buy-button__label">Entérate primero</span>
-          <span class="buy-button__price">@ednamiau <span aria-hidden="true">→</span></span>
-        </a>
+        <form class="notify" data-notify-form action="/api/avisame" method="post" aria-labelledby="notify-lead">
+          <p class="notify__lead" id="notify-lead">Déjame tu correo y te aviso en cuanto salga.</p>
+          <div class="notify__row">
+            <label class="visually-hidden" for="n-correo">Tu correo</label>
+            <input class="notify__control" id="n-correo" name="correo" type="email" autocomplete="email"
+                   placeholder="nombre@ejemplo.com" required maxlength="254" pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+                   aria-describedby="n-correo-error" data-required-message="Escribe tu correo.">
+            <button class="notify__submit" type="submit">Avísame</button>
+          </div>
+          <p class="notify__error" id="n-correo-error"></p>
+          <!-- Spam trap and spam check, as on the contact form (index.html). -->
+          <div class="visually-hidden" aria-hidden="true">
+            <label for="n-sitio-web">Deja este campo vacío</label>
+            <input id="n-sitio-web" name="sitio_web" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="notify__check" data-spam-check></div>
+          <p class="notify__status" data-form-status role="status" aria-live="polite"></p>
+        </form>
+        <p class="soon-insta">Y mientras, en <a href="https://www.instagram.com/ednamiau/" rel="noopener">@ednamiau</a>.</p>
 
       </div>
     </section>
