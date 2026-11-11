@@ -827,10 +827,12 @@ body:not(.page-home) .brand__name {
   overflow: hidden;
 }
 
-.project__hero img {
+.project__hero img,
+.project__hero video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .project__body {

@@ -1006,9 +1006,11 @@ html:has(.page-project) {
   margin-top: 56px;
 }
 
-.project__hero img {
+.project__hero img,
+.project__hero video {
   width: 100%;
   height: auto;
+  display: block;
 }
 
 .project__hero.is-empty {
