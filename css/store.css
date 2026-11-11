@@ -430,3 +430,33 @@ html:has(.page-store) {
     margin-top: 24px;
   }
 }
+
+/* The left page before the piece is shown: a morado field with one large
+   question mark in the serif italic, in paper (9.9:1), and a marigold rule
+   under it (marigold only ever as an underline). */
+.drop-photo--soon .soon-mark {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--c-morado);
+}
+
+.soon-mark__glyph {
+  padding: 0 0.12em 0.04em 0;
+  border-bottom: max(6px, 0.035em) solid var(--store-marigold);
+  color: var(--c-paper);
+  font: italic 400 clamp(220px, min(38vw, 62vh), 560px) / 0.86 var(--f-display);
+}
+
+@media (max-width: 809.98px) {
+  .drop-photo--soon .soon-mark {
+    flex: none;
+    height: clamp(132px, calc(100svh - 460px), 320px);
+  }
+
+  .soon-mark__glyph {
+    font-size: clamp(110px, calc(100svh - 500px), 240px);
+  }
+}

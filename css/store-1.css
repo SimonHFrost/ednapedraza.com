@@ -1023,3 +1023,25 @@ html:has(.page-store) {
     order: 1;
   }
 }
+
+/* The tote's place on the coming-soon stage: one big question mark in the
+   display serif, white with an ink outline and offset ink shadow (the house
+   tag look), tilted against the flower. */
+.drop-stage__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  color: var(--c-white);
+  font: 400 min(30vw, 58vh, 460px) / 1 var(--f-display);
+  paint-order: stroke fill;
+  -webkit-text-stroke: max(4px, 0.025em) var(--c-ink);
+  text-shadow: 0.035em 0.035em 0 var(--c-ink);
+  transform: translate(-50%, -52%) rotate(8deg);
+}
+
+@media (max-width: 809.98px) {
+  .drop-stage__mark {
+    font-size: clamp(150px, 26svh, 210px);
+  }
+}
