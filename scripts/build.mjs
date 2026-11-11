@@ -245,11 +245,17 @@ function seoHead({ title, description, path: pagePath, image, schema }) {
 
 /* ------------------------------------------------------------ home lists */
 
+/** A home video shows its poster until main.js plays it (on hover, or in view on phones). */
+function loopVideo(project) {
+  return `<video src="${esc(project.video.src)}" poster="${esc(project.video.poster)}" width="1600" height="960" muted loop playsinline preload="none" aria-hidden="true"></video>`;
+}
+
 /** tone (js/data.js) picks the cover type colours that read on this photo. */
 function backgroundLayer(project, index, baseIndex) {
   const base = index === baseIndex;
   const classes = `home-bg__layer${base ? ' is-base' : ''}`;
   const tone = project.tone ? ` data-tone="${esc(project.tone)}"` : '';
+  if (project.video) return `<div class="${classes}" data-index="${index}"${tone}>${loopVideo(project)}</div>`;
   if (!project.hero) return `<div class="${classes} home-bg__layer--empty is-empty" data-index="${index}"${tone}></div>`;
   const loading = base ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
   return `<div class="${classes}" data-index="${index}"${tone}><img src="${esc(project.hero)}" alt="" width="1600" height="1000" decoding="async" ${loading}></div>`;
@@ -263,7 +269,9 @@ function row(project, index) {
 }
 
 function card(project) {
-  const media = project.hero
+  const media = project.video
+    ? `<span class="work-card__media">${loopVideo(project)}</span>`
+    : project.hero
     ? `<span class="work-card__media"><img src="${esc(project.hero)}" alt="" width="1600" height="1000" loading="lazy" decoding="async"></span>`
     : '<span class="work-card__media is-empty"></span>';
   return `<li class="work-card"><a class="work-card__link" href="${projectPath(project)}">` +
@@ -285,7 +293,11 @@ function projectArticle(project, index) {
     `<span class="tag tag--pill"><span class="visually-hidden">Cliente: </span>${esc(project.client)}</span>` +
     `<span class="tag tag--pill"><span class="visually-hidden">Servicio: </span>${esc(project.discipline)}</span></div>`;
 
-  const hero = project.hero
+  // A hero video plays silently on a loop, like a moving photo. Where
+  // autoplay is blocked (e.g. low-power mode) the poster frame shows.
+  const hero = project.video
+    ? `<figure class="project__hero project__hero--video"><video src="${esc(project.video.src)}" poster="${esc(project.video.poster)}" width="1600" height="960" autoplay muted loop playsinline preload="metadata" aria-label="${esc(project.title)}: video principal."></video></figure>`
+    : project.hero
     ? `<figure class="project__hero"><img src="${esc(project.hero)}" alt="${esc(project.title)}: imagen principal." width="1600" height="1000" decoding="async" fetchpriority="high"></figure>`
     : '<figure class="project__hero is-empty"><figcaption class="visually-hidden">Este proyecto no tiene imagen principal.</figcaption></figure>';
 

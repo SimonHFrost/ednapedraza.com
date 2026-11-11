@@ -410,7 +410,8 @@ body:not(.page-home) .site-header::after {
   transition: opacity 0.35s ease;
 }
 
-.home-bg__layer img {
+.home-bg__layer img,
+.home-bg__layer video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -893,7 +894,8 @@ html.no-js .page-home {
     margin-bottom: 10px;
   }
 
-  .work-card__media img {
+  .work-card__media img,
+  .work-card__media video {
     width: 100%;
     height: auto;
   }
@@ -1006,9 +1008,11 @@ html:has(.page-project) {
   margin-top: 56px;
 }
 
-.project__hero img {
+.project__hero img,
+.project__hero video {
   width: 100%;
   height: auto;
+  display: block;
 }
 
 .project__hero.is-empty {
