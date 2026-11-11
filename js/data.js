@@ -13,9 +13,9 @@
  *   client      Client label shown in the first pill on the project page
  *   bg / pill   Page colour and pill colour of the project page
  *   hero        Hero / background image, or null when the project has none
- *   video       Optional hero video on the project page: { src, poster }. It
- *               plays muted on a loop in place of the hero image; the home
- *               cover still uses hero
+ *   video       Optional hero video: { src, poster }. Plays muted on a loop in
+ *               place of hero on the project page, the home cover (on hover)
+ *               and the phone home grid. hero is still used for share images
  *   tone        Type colours over the hero on the home cover (see below)
  *   gallery     Square images, shown in one row under the description
  *   description Array of text runs; runs at odd positions are rendered bold
@@ -76,9 +76,9 @@
       client: 'Coca Cola / Stink',
       bg: 'rgb(189, 169, 235)',
       pill: 'rgb(89, 41, 41)',
-      hero: null, // the live page shows an empty media frame here
+      hero: null, // video only
       video: { src: '/assets/video/coca-cola-alina-hero.mp4', poster: IMG + 'coca-cola-alina-poster.jpg' },
-      tone: '',
+      tone: 'name-paper role-paper list-paper',
       gallery: gallery('coca-cola-alina', 3),
       description: [],
       credits: [

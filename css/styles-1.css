@@ -480,7 +480,8 @@ body:not(.page-home) .brand__name {
   transition: opacity 0.35s ease;
 }
 
-.home-bg__layer img {
+.home-bg__layer img,
+.home-bg__layer video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -745,7 +746,8 @@ body:not(.page-home) .brand__name {
     overflow: hidden;
   }
 
-  .work-card__media img {
+  .work-card__media img,
+  .work-card__media video {
     width: 100%;
     height: 100%;
     object-fit: cover;

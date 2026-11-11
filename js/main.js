@@ -56,6 +56,28 @@
 
   /* ------------------------------------------------------------------ home */
 
+  /** Plays or pauses the looping video inside el, if it has one. */
+  function setPlaying(el, play) {
+    var video = el && el.querySelector('video');
+    if (!video) return;
+    if (!play) { video.pause(); return; }
+    var started = video.play();
+    if (started && started.catch) started.catch(function () {});
+  }
+
+  /** Phone grid: a card's video plays only while it is on screen. */
+  function playCardsInView() {
+    var cards = document.querySelectorAll('.work-card__media video');
+    if (!cards.length || !('IntersectionObserver' in window)) return;
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var visible = entry.isIntersecting && entry.target.offsetParent !== null;
+        setPlaying(entry.target.parentNode, visible);
+      });
+    }, { threshold: 0.25 });
+    Array.prototype.forEach.call(cards, function (video) { observer.observe(video); });
+  }
+
   /** Hover / focus on a row cross-fades that project's image into the background. */
   function bindRowHighlight(list, layers) {
     var active = null;
@@ -64,12 +86,15 @@
       var layer = layers[index];
       if (layer === active) return;
       if (active) active.classList.remove('is-active');
+      setPlaying(active, false);
       active = layer || null;
       if (active) active.classList.add('is-active');
+      setPlaying(active, true);
     }
 
     function clear() {
       if (active) active.classList.remove('is-active');
+      setPlaying(active, false);
       active = null;
     }
 
@@ -95,6 +120,7 @@
     var list = document.querySelector('[data-work-list]');
     if (!list) return;
     bindRowHighlight(list, document.querySelectorAll('.home-bg__layer'));
+    playCardsInView();
   }
 
   /* --------------------------------------------------------------- contact */
