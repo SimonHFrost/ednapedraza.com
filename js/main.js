@@ -136,7 +136,7 @@
    * when the check is off or fails (the Worker then decides). Tokens work
    * once, so reset() after every send.
    */
-  function createSpamCheck(form, box, onInteractive) {
+  function createSpamCheck(form, box, onInteractive, action) {
     var state = 'idle'; // idle → loading → on | off
     var widget = null;
     var token = '';
@@ -156,7 +156,7 @@
     function render(siteKey) {
       widget = window.turnstile.render(box, {
         sitekey: siteKey,
-        action: 'contacto',
+        action: action || 'contacto',
         appearance: 'interaction-only',
         language: 'es',
         'response-field': false,
@@ -292,6 +292,58 @@
     });
   }
 
+  /**
+   * The shop sign-up on proximamente.html: one email field. Posts to
+   * /api/avisame (worker/index.js), which emails the address to Edna.
+   * Same checks and spam check as the contact form.
+   */
+  function initNotifyForm() {
+    var form = document.querySelector('[data-notify-form]');
+    if (!form) return;
+    var field = form.querySelector('.notify__control');
+    var status = form.querySelector('[data-form-status]');
+    var submit = form.querySelector('[type="submit"]');
+    var sending = false;
+    var spamCheck = createSpamCheck(form, form.querySelector('[data-spam-check]'), function () {
+      if (sending) showStatus(status, 'Marca la casilla para confirmar que no eres un robot.');
+    }, 'avisame');
+    form.noValidate = true;
+    form.addEventListener('focusin', spamCheck.start);
+    field.addEventListener('input', function () {
+      if (field.getAttribute('aria-invalid') === 'true') showFieldError(field, validateField(field));
+    });
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (sending) return;
+      var message = validateField(field);
+      showFieldError(field, message);
+      if (message) {
+        showStatus(status, '');
+        field.focus();
+        return;
+      }
+      sending = true;
+      submit.setAttribute('aria-disabled', 'true');
+      showStatus(status, 'Enviando…');
+      spamCheck.token().then(function (token) {
+        return sendContactForm(form, token);
+      }).then(function (result) {
+        sending = false;
+        submit.removeAttribute('aria-disabled');
+        spamCheck.reset();
+        if (!result.ok) {
+          showStatus(status, result.message || 'No se pudo guardar tu correo. Vuelve a intentarlo o sígueme en @ednamiau.', true);
+          return;
+        }
+        form.reset();
+        field.removeAttribute('aria-invalid');
+        form.classList.add('notify--done');
+        showStatus(status, result.message || '¡Listo! Te aviso por correo en cuanto abra la tienda.');
+      });
+    });
+  }
+
   /* ------------------------------------------------------------------- 404 */
 
   function pad(n) {
@@ -383,6 +435,7 @@
   function boot() {
     initContactScroll();
     initContactForm();
+    initNotifyForm();
     var setup = PAGE_SETUP[document.body.getAttribute('data-page')];
     if (setup) setup();
     initHeaderScroll();

@@ -1,10 +1,17 @@
 /*
  * The site's Worker. Files in the repo are served as static assets without
  * running this script (see wrangler.jsonc); it sees /api/* and some requests
- * for paths that match no file. It handles one: /api/contacto, the home
- * contact form. POST emails the message to Edna through Cloudflare Email
- * Routing; GET tells js/main.js whether to run the spam check. Every other
- * path goes back to the assets, which answer with 404.html.
+ * for paths that match no file. It handles two forms:
+ *   /api/contacto  the contact form (home, About, service pages), emailed
+ *                  to Edna through Cloudflare Email Routing
+ *   /api/avisame   the "tell me when the shop opens" sign-up on
+ *                  proximamente.html. Saves the address in the SIGNUPS
+ *                  KV store (no email to Edna); /api/avisame/lista
+ *                  downloads them all as a CSV with the SIGNUP_LIST_KEY
+ *                  secret. Until SIGNUPS is set up in wrangler.jsonc, each
+ *                  sign-up is emailed to Edna instead.
+ * POST sends; GET tells js/main.js whether to run the spam check. Every
+ * other path goes back to the assets, which answer with 404.html.
  *
  * The CONTACT_EMAIL binding can only send to the verified address set in
  * wrangler.jsonc, so the form can't be used to email anyone else.
@@ -15,6 +22,8 @@
  */
 
 const FORM_PATH = '/api/contacto';
+const NOTIFY_PATH = '/api/avisame';
+const SIGNUP_LIST_PATH = '/api/avisame/lista';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/; // same check as js/main.js
 const MAX_BODY_BYTES = 64 * 1024; // 5000 characters of any script, URL-encoded
 const MAX_LENGTH = { nombre: 100, correo: 254, mensaje: 5000 };
@@ -27,13 +36,17 @@ const TEXT = {
   tooLong: 'El mensaje es demasiado largo. Acórtalo un poco y vuelve a intentarlo.',
   tooMany: 'Has enviado varios mensajes seguidos. Espera un minuto y vuelve a intentarlo.',
   robot: 'No pudimos comprobar que no eres un robot. Vuelve a intentarlo o escríbeme a edna.sapi@gmail.com.',
-  failed: 'No se pudo enviar el mensaje. Escríbeme directamente a edna.sapi@gmail.com.'
+  failed: 'No se pudo enviar el mensaje. Escríbeme directamente a edna.sapi@gmail.com.',
+  notifySent: '¡Listo! Te aviso por correo en cuanto abra la tienda.',
+  notifyInvalid: 'Escribe un correo válido, por ejemplo nombre@ejemplo.com.',
+  notifyFailed: 'No se pudo guardar tu correo. Vuelve a intentarlo o sígueme en @ednamiau.'
 };
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname !== FORM_PATH) return env.ASSETS.fetch(request);
+    if (url.pathname === SIGNUP_LIST_PATH) return handleSignupList(request, env, url);
+    if (url.pathname !== FORM_PATH && url.pathname !== NOTIFY_PATH) return env.ASSETS.fetch(request);
     if (request.method === 'GET') {
       // The site key is public; it goes to the page so it can show Turnstile.
       const turnstileSiteKey = spamCheckOn(env) ? env.TURNSTILE_SITE_KEY : null;
@@ -42,16 +55,16 @@ export default {
     if (request.method !== 'POST') {
       return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, POST' } });
     }
-    return handleContact(request, env, url);
+    return url.pathname === NOTIFY_PATH ? handleNotify(request, env, url) : handleContact(request, env, url);
   }
 };
 
-async function handleContact(request, env, url) {
-  const reply = request.headers.get('Accept')?.includes('application/json') ? replyJson : replyPage;
-
+/** Checks shared by both forms: same-site origin, rate limit, body size.
+    Resolves to the parsed form, or to a Response to send back instead. */
+async function readGuardedForm(request, env, url, reply, text) {
   // Browsers send Origin on every POST; refuse forms posted from other sites.
   const origin = request.headers.get('Origin');
-  if (origin && origin !== url.origin) return reply(403, false, TEXT.failed);
+  if (origin && origin !== url.origin) return reply(403, false, text.failed);
 
   if (env.CONTACT_RATE_LIMIT) {
     const { success } = await env.CONTACT_RATE_LIMIT.limit({ key: clientKey(request) });
@@ -62,9 +75,125 @@ async function handleContact(request, env, url) {
   try {
     form = await readForm(request);
   } catch {
-    return reply(400, false, TEXT.invalid);
+    return reply(400, false, text.invalid);
   }
   if (!form) return reply(413, false, TEXT.tooLong);
+  return form;
+}
+
+/** The shop sign-up: one email address, sent to Edna as its own message. */
+async function handleNotify(request, env, url) {
+  const reply = request.headers.get('Accept')?.includes('application/json')
+    ? replyJson
+    : (status, ok, message) => replyPage(status, ok, message, '/proximamente');
+  const text = { failed: TEXT.notifyFailed, invalid: TEXT.notifyInvalid };
+  const form = await readGuardedForm(request, env, url, reply, text);
+  if (form instanceof Response) return form;
+
+  if (field(form, 'sitio_web')) return reply(200, true, TEXT.notifySent);
+  const correo = field(form, 'correo').toLowerCase();
+  if (correo.length > MAX_LENGTH.correo || !EMAIL_PATTERN.test(correo)) {
+    return reply(400, false, TEXT.notifyInvalid);
+  }
+  if (spamCheckOn(env) && !(await passesTurnstile(form, request, env))) {
+    return reply(403, false, TEXT.robot);
+  }
+
+  try {
+    if (env.SIGNUPS) {
+      await saveSignup(env.SIGNUPS, correo, url.host);
+    } else {
+      await emailSignup(env, correo, url.host);
+    }
+  } catch (error) {
+    console.error('shop sign-up: save failed', error.code || '', error.message);
+    return reply(502, false, TEXT.notifyFailed);
+  }
+  return reply(200, true, TEXT.notifySent);
+}
+
+/** One key per address (so signing up twice keeps one entry and the first
+    date). The details ride in the key's metadata, so the list can be read
+    in one pass without fetching each value. */
+async function saveSignup(kv, correo, host) {
+  if (await kv.get(correo) !== null) return;
+  await kv.put(correo, '', { metadata: { fecha: new Date().toISOString(), sitio: host } });
+}
+
+/** Before the SIGNUPS store exists (see wrangler.jsonc): email each one. */
+function emailSignup(env, correo, host) {
+  return env.CONTACT_EMAIL.send({
+    to: env.CONTACT_TO,
+    from: { email: env.CONTACT_FROM, name: 'Lista de la tienda' },
+    replyTo: { email: correo },
+    subject: `${env.CONTACT_SUBJECT_PREFIX || ''}Lista de la tienda: ${correo}`,
+    text: [
+      'Alguien quiere saber cuándo abre la tienda.',
+      '',
+      `Correo: ${correo}`,
+      '',
+      '--',
+      `Enviado desde la página "Muy pronto" de ${host}.`
+    ].join('\n')
+  });
+}
+
+/**
+ * GET /api/avisame/lista?clave=<SIGNUP_LIST_KEY> downloads every sign-up as
+ * a CSV (correo, fecha, sitio). Off (404) until the Worker has both the
+ * SIGNUPS store and the SIGNUP_LIST_KEY secret. A wrong key gets 404 too,
+ * so the address gives nothing away.
+ */
+async function handleSignupList(request, env, url) {
+  const notFound = () => env.ASSETS.fetch(new Request(new URL('/404.html', url), request))
+    .then((page) => new Response(page.body, { status: 404, headers: page.headers }));
+  if (request.method !== 'GET' || !env.SIGNUPS || !env.SIGNUP_LIST_KEY) return notFound();
+  if (!sameSecret(url.searchParams.get('clave') || '', env.SIGNUP_LIST_KEY)) return notFound();
+
+  const rows = [];
+  let cursor;
+  do {
+    const page = await env.SIGNUPS.list({ cursor });
+    for (const key of page.keys) {
+      rows.push([key.name, key.metadata?.fecha || '', key.metadata?.sitio || '']);
+    }
+    cursor = page.list_complete ? undefined : page.cursor;
+  } while (cursor);
+  rows.sort((a, b) => a[1].localeCompare(b[1]));
+
+  const csv = [['correo', 'fecha', 'sitio'], ...rows]
+    .map((row) => row.map(csvCell).join(','))
+    .join('\r\n');
+  return new Response('\ufeff' + csv + '\r\n', {
+    headers: {
+      'Content-Type': 'text/csv; charset=utf-8',
+      'Content-Disposition': 'attachment; filename="lista-tienda.csv"',
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex'
+    }
+  });
+}
+
+/** Quotes a CSV cell, and stops a spreadsheet reading it as a formula. */
+function csvCell(value) {
+  const safe = /^[=+\-@]/.test(value) ? `'${value}` : value;
+  return `"${safe.replace(/"/g, '""')}"`;
+}
+
+/** Compares the key without leaking, through timing, how much matched. */
+function sameSecret(given, expected) {
+  const enc = new TextEncoder();
+  const a = enc.encode(given);
+  const b = enc.encode(expected);
+  if (a.byteLength !== b.byteLength) return false;
+  return crypto.subtle.timingSafeEqual(a, b);
+}
+
+async function handleContact(request, env, url) {
+  const reply = request.headers.get('Accept')?.includes('application/json') ? replyJson : replyPage;
+
+  const form = await readGuardedForm(request, env, url, reply, TEXT);
+  if (form instanceof Response) return form;
 
   // Hidden field that people never see (index.html); bots fill it in. Answer
   // as if it worked so they don't retry.
@@ -187,7 +316,7 @@ function replyJson(status, ok, message) {
 }
 
 /** For browsers without JavaScript, where the form posts as a normal page. */
-function replyPage(status, ok, message) {
+function replyPage(status, ok, message, backLink = '/#contacto') {
   const html = `<!doctype html>
 <html lang="es">
 <head>
@@ -201,7 +330,7 @@ function replyPage(status, ok, message) {
   <main class="contact" style="min-height: 100vh; display: block;">
     <h1 class="contact__title">${ok ? '¡Gracias!' : 'Ups'}</h1>
     <p class="contact-form__status">${message}</p>
-    <p class="contact__links"><a href="/#contacto">Volver al sitio</a></p>
+    <p class="contact__links"><a href="${backLink}">Volver al sitio</a></p>
   </main>
 </body>
 </html>`;
