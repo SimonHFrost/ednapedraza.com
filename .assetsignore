@@ -3,6 +3,7 @@
 .git
 .gitignore
 .wrangler
+.dev.vars*
 worker
 wrangler.jsonc
 .assetsignore

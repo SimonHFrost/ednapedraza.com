@@ -289,6 +289,9 @@
             <label for="f-sitio-web">Deja este campo vacío</label>
             <input id="f-sitio-web" name="sitio_web" type="text" tabindex="-1" autocomplete="off">
           </div>
+          <!-- Spam check (Cloudflare Turnstile, set up by main.js): empty for
+               most visitors, a checkbox for the few it's unsure about. -->
+          <div class="contact-form__check" data-spam-check></div>
           <button class="contact-form__submit" type="submit">Enviar</button>
           <p class="contact-form__status" data-form-status role="status" aria-live="polite"></p>
         </form>

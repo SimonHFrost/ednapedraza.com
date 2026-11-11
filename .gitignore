@@ -1,2 +1,3 @@
-# Local `wrangler dev` state (also in .assetsignore).
+# Local `wrangler dev` state and secrets (also in .assetsignore).
 .wrangler/
+.dev.vars*

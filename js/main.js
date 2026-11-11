@@ -121,13 +121,109 @@
     status.classList.toggle('contact-form__status--error', Boolean(isError));
   }
 
+  function contactEndpoint(form) {
+    return form.getAttribute('action') || '/api/contacto';
+  }
+
+  var TURNSTILE_SCRIPT = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+  var TOKEN_WAIT_MS = 45000; // long enough to tick the box if Turnstile asks
+
+  /**
+   * The spam check, Cloudflare Turnstile. Starts the first time someone
+   * uses the form, and only if the Worker has keys for it (GET on the form's
+   * endpoint). In Managed mode most people never see it; a visitor it's unsure
+   * about gets a checkbox in `box`. token() resolves to a token, or to ''
+   * when the check is off or fails (the Worker then decides). Tokens work
+   * once, so reset() after every send.
+   */
+  function createSpamCheck(form, box, onInteractive) {
+    var state = 'idle'; // idle → loading → on | off
+    var widget = null;
+    var token = '';
+    var failed = false; // Turnstile reported an error; it keeps retrying
+    var waiting = [];
+
+    function settle(value) {
+      token = value;
+      waiting.splice(0).forEach(function (done) { done(value); });
+    }
+
+    function turnOff() {
+      state = 'off';
+      settle('');
+    }
+
+    function render(siteKey) {
+      widget = window.turnstile.render(box, {
+        sitekey: siteKey,
+        action: 'contacto',
+        appearance: 'interaction-only',
+        language: 'es',
+        'response-field': false,
+        callback: function (value) {
+          failed = false;
+          settle(value);
+        },
+        'expired-callback': function () { token = ''; },
+        'error-callback': function () {
+          failed = true;
+          settle('');
+        },
+        'before-interactive-callback': onInteractive
+      });
+    }
+
+    function start() {
+      if (state !== 'idle') return;
+      state = 'loading';
+      fetch(contactEndpoint(form), { headers: { Accept: 'application/json' } })
+        .then(function (response) { return response.json(); })
+        .then(function (config) {
+          if (!config.turnstileSiteKey) return turnOff();
+          var script = document.createElement('script');
+          script.src = TURNSTILE_SCRIPT;
+          script.async = true;
+          script.onload = function () {
+            try {
+              render(config.turnstileSiteKey);
+              state = 'on';
+            } catch (e) {
+              turnOff();
+            }
+          };
+          script.onerror = turnOff;
+          document.head.appendChild(script);
+        })
+        .catch(turnOff);
+    }
+
+    return {
+      start: start,
+      token: function () {
+        start();
+        if (state === 'off' || token || failed) return Promise.resolve(token);
+        return new Promise(function (resolve) {
+          waiting.push(resolve);
+          window.setTimeout(function () { resolve(''); }, TOKEN_WAIT_MS);
+        });
+      },
+      reset: function () {
+        token = '';
+        failed = false;
+        if (state === 'on') window.turnstile.reset(widget);
+      }
+    };
+  }
+
   /** Posts the form to the Worker (worker/index.js), which emails it to Edna.
       Resolves to { ok, message }; message is the Worker's, if it sent one. */
-  function sendContactForm(form) {
-    return fetch(form.getAttribute('action') || '/api/contacto', {
+  function sendContactForm(form, token) {
+    var body = new URLSearchParams(new FormData(form));
+    if (token) body.set('cf-turnstile-response', token);
+    return fetch(contactEndpoint(form), {
       method: 'POST',
       headers: { Accept: 'application/json' },
-      body: new URLSearchParams(new FormData(form))
+      body: body
     }).then(function (response) {
       return response.json().catch(function () { return {}; }).then(function (data) {
         return { ok: response.ok && data.ok === true, message: data.message };
@@ -145,7 +241,11 @@
     var status = form.querySelector('[data-form-status]');
     var submit = form.querySelector('[type="submit"]');
     var sending = false;
+    var spamCheck = createSpamCheck(form, form.querySelector('[data-spam-check]'), function () {
+      if (sending) showStatus(status, 'Marca la casilla para confirmar que no eres un robot.');
+    });
     form.noValidate = true; // show our messages, not the browser's
+    form.addEventListener('focusin', spamCheck.start);
 
     fields.forEach(function (field) {
       field.addEventListener('blur', function () {
@@ -175,9 +275,12 @@
       sending = true;
       submit.setAttribute('aria-disabled', 'true');
       showStatus(status, 'Enviando…');
-      sendContactForm(form).then(function (result) {
+      spamCheck.token().then(function (token) {
+        return sendContactForm(form, token);
+      }).then(function (result) {
         sending = false;
         submit.removeAttribute('aria-disabled');
+        spamCheck.reset();
         if (!result.ok) {
           showStatus(status, result.message || 'No se pudo enviar el mensaje. Escríbeme directamente a edna.sapi@gmail.com.', true);
           return;
