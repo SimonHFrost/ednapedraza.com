@@ -193,26 +193,23 @@
       ]
     },
     {
-      slug: 'skechers-meow',
-      title: 'Happy Feet',
-      discipline: 'Dirección de Arte',
-      client: 'MEOW Magazine para Skechers',
-      bg: 'rgb(125, 199, 146)',
-      pill: 'rgb(26, 58, 82)',
-      hero: IMG + 'skechers-meow-hero.jpg',
-      tone: 'menu-paper list-paper',
-      gallery: gallery('skechers-meow', 4),
+      slug: 'basicos-de-mexico-2026',
+      title: 'Básicos de México 2026',
+      discipline: 'Fashion Styling',
+      client: 'Básicos de México',
+      bg: 'rgb(214, 211, 206)',
+      pill: 'rgb(28, 63, 196)',
+      hero: IMG + 'basicos-de-mexico-2026-hero.jpg',
+      tone: '',
+      gallery: gallery('basicos-de-mexico-2026', 11),
       description: [
-        'Dirección creativa y de arte para ',
-        'Skechers',
-        ' por ',
-        'MEOW Magazine',
-        '.'
+        '',
+        'Básicos de México',
+        ' presentó su colección de ropa durante ',
+        'Mexico Fashion Week',
+        ' y fui invitada a colaborar en el fashion styling. El desfile se inspiró en las subculturas mexicanas, tanto en los acentos de los looks como en su banda sonora.'
       ],
-      credits: [
-        'Fotografía: Karla Ximena',
-        'Producción: MEOW Magazine'
-      ]
+      credits: []
     },
     {
       slug: 'kfc-alina',
