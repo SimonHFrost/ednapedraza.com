@@ -9,11 +9,12 @@
  *
  * In place, between <!-- build:NAME --> and <!-- /build:NAME --> markers:
  *   index.html   <head> SEO block, background photos, project list
- *   about.html   <head> SEO block, gallery
+ *   about.html   <head> SEO block
  * Whole files:
  *   direccion-creativa.html, fashion-styling.html, direccion-de-arte.html
  *                          about.html with that service's intro (SERVICES
- *                          below) and its projects' photos
+ *                          below) and its projects' photos in place of
+ *                          About's contact form
  *   proyectos/<slug>.html  one page per project, from templates/project.html
  *   sitemap.xml
  *
@@ -200,7 +201,6 @@ function finishGenerated(html, sources) {
 const sandbox = { window: {} };
 vm.runInNewContext(read('js/data.js'), sandbox, { filename: 'js/data.js' });
 const PROJECTS = sandbox.window.PROJECTS;
-const ABOUT_GALLERY = sandbox.window.ABOUT_GALLERY;
 if (!Array.isArray(PROJECTS) || !PROJECTS.length) throw new Error('js/data.js: no PROJECTS');
 
 /** The project shown full-screen when a list opens: the first with a photo. */
@@ -424,9 +424,6 @@ about = fill(about, 'seo', seoHead({
     ]
   }
 }), 'about.html');
-about = fill(about, 'about-gallery', ABOUT_GALLERY.map((image, i) =>
-  `<li class="masonry__item"><img src="${esc(image.src)}" alt="Trabajo de ${NAME}, foto ${i + 1}." width="${image.width}" height="${image.height}" loading="lazy" decoding="async"></li>`
-), 'about.html');
 write('about.html', about);
 
 /* ------------------------------------------------------- service pages */
@@ -477,6 +474,21 @@ function serviceIntro(service, projects) {
 }
 
 const aboutBio = /^([ \t]*)<section class="about__bio"[\s\S]*?<\/section>/m;
+// About's contact form (and the comment above it); service pages show photos there.
+const aboutContact = /^([ \t]*)(?:<!--(?:(?!-->)[\s\S])*-->\s*)?<section class="about-contact"[\s\S]*?<\/section>/m;
+
+function servicePhotoGrid(service, projects) {
+  return [
+    '<section class="about__gallery" aria-label="Galería">',
+    '  <ul class="masonry">',
+    ...servicePhotos(service, projects).map(({ src, project, n, total }) => {
+      const { width, height } = jpegSize(src);
+      return `    <li class="masonry__item"><a href="${projectPath(project)}"><img src="${esc(src)}" alt="${esc(project.title)}, foto ${n} de ${total}." width="${width}" height="${height}" loading="lazy" decoding="async"></a></li>`;
+    }),
+    '  </ul>',
+    '</section>'
+  ];
+}
 
 for (const service of SERVICES) {
   const file = `${service.slug}.html`;
@@ -503,10 +515,8 @@ for (const service of SERVICES) {
   html = replaceOnce(html, `href="/${service.slug}">`, `href="/${service.slug}" aria-current="page">`, file);
   if (!aboutBio.test(html)) throw new Error(`${file}: about.html has no <section class="about__bio">`);
   html = html.replace(aboutBio, (_, pad) => indent(serviceIntro(service, projects), pad));
-  html = fill(html, 'about-gallery', servicePhotos(service, projects).map(({ src, project, n, total }) => {
-    const { width, height } = jpegSize(src);
-    return `<li class="masonry__item"><a href="${projectPath(project)}"><img src="${esc(src)}" alt="${esc(project.title)}, foto ${n} de ${total}." width="${width}" height="${height}" loading="lazy" decoding="async"></a></li>`;
-  }), file);
+  if (!aboutContact.test(html)) throw new Error(`${file}: about.html has no <section class="about-contact">`);
+  html = html.replace(aboutContact, (_, pad) => indent(servicePhotoGrid(service, projects), pad));
   write(file, finishGenerated(html, 'about.html, js/data.js and the SERVICES list in scripts/build.mjs'));
 }
 

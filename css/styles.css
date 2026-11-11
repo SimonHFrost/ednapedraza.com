@@ -1383,6 +1383,70 @@ html:has(.page-about),
   .masonry__item:nth-child(9n + 2):last-child { grid-column: 7 / span 6; }
 }
 
+/* About's contact: the home page's grana wall in miniature, run to the
+   page edges after the bio. "Contact me" set large in the serif on the
+   left, the same form as on home on the right; its field styles already
+   speak paper on grana. */
+.about-contact {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  align-items: start;
+  margin: 88px calc(-1 * var(--gutter)) 0;
+  padding: 72px var(--gutter) 80px;
+  background: var(--c-grana);
+  color: var(--c-paper);
+}
+
+.about-contact :focus-visible {
+  outline: 2px solid var(--c-paper);
+  outline-offset: 4px;
+}
+
+@media (min-width: 810px) {
+  .about-contact :is(input, textarea, button) {
+    scroll-margin-top: 210px;
+  }
+}
+
+.about-contact__title {
+  grid-column: 1 / span 6;
+  margin: -0.08em 0 0; /* lines the cap tops up with the first label */
+  font: 400 clamp(52px, 7vw, 112px) / 0.95 var(--f-display);
+  letter-spacing: -0.01em;
+}
+
+.about-contact .contact-form {
+  grid-column: 8 / -1;
+  grid-row: 1;
+  margin-top: 0;
+}
+
+@media (max-width: 1099.98px) {
+  .about-contact .contact-form {
+    grid-column: 7 / -1;
+  }
+}
+
+@media (max-width: 809.98px) {
+  .about-contact {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 56px;
+    padding: 48px var(--gutter) 56px;
+  }
+
+  .about-contact__title {
+    grid-column: 1;
+    margin-bottom: 32px;
+    font-size: 44px;
+  }
+
+  .about-contact .contact-form {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
 /* Colophon. */
 .about-footer {
   display: grid;
@@ -1716,7 +1780,8 @@ html:has(.page-about),
   padding-bottom: 8px;
 }
 
-.contact .field__control:focus-visible {
+.contact .field__control:focus-visible,
+.about-contact .field__control:focus-visible {
   outline: 2px solid var(--c-paper);
   outline-offset: 4px;
 }

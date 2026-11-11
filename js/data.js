@@ -197,7 +197,7 @@
       title: 'Básicos de México 2026',
       discipline: 'Fashion Styling',
       client: 'Básicos de México',
-      bg: 'rgb(214, 211, 206)',
+      bg: 'rgb(130, 152, 98)',
       pill: 'rgb(28, 63, 196)',
       hero: IMG + 'basicos-de-mexico-2026-hero.jpg',
       tone: '',
@@ -272,18 +272,4 @@
       ]
     }
   ];
-
-  /* About page masonry: [file, width, height] — intrinsic sizes keep the
-     layout stable while images load. */
-  window.ABOUT_GALLERY = [
-    ['about-01.jpg', 839, 1200], ['about-02.jpg', 800, 1200], ['about-03.jpg', 805, 1200],
-    ['about-04.jpg', 806, 1200], ['about-05.jpg', 800, 1200], ['about-06.jpg', 800, 1200],
-    ['about-07.jpg', 800, 1200], ['about-08.jpg', 900, 1200], ['about-09.jpg', 900, 1200],
-    ['about-10.jpg', 801, 1200], ['about-11.jpg', 927, 1200], ['about-12.jpg', 900, 1200],
-    ['about-13.jpg', 800, 1200], ['about-14.jpg', 805, 1200], ['about-15.jpg', 1200, 800],
-    ['about-16.jpg', 1200, 799], ['about-17.jpg', 800, 1200], ['about-18.jpg', 961, 1200],
-    ['about-19.jpg', 900, 1200], ['about-20.jpg', 1200, 801]
-  ].map(function (row) {
-    return { src: IMG + row[0], width: row[1], height: row[2] };
-  });
 })();
