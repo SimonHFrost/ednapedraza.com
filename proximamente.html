@@ -55,7 +55,25 @@
         <p class="drop-kicker">La tienda</p>
         <h1 class="drop-title" id="soon-title">Muy pronto</h1>
         <p class="drop-standfirst">La primera pieza: una tote bordada, de tiraje limitado.</p>
-        <p class="soon-link">Entérate primero en <a href="https://www.instagram.com/ednamiau/" rel="noopener">@ednamiau</a>.</p>
+        <form class="notify" data-notify-form action="/api/avisame" method="post" aria-labelledby="notify-lead">
+          <p class="notify__lead" id="notify-lead">Déjame tu correo y te aviso en cuanto salga.</p>
+          <div class="notify__row">
+            <label class="visually-hidden" for="n-correo">Tu correo</label>
+            <input class="notify__control" id="n-correo" name="correo" type="email" autocomplete="email"
+                   placeholder="nombre@ejemplo.com" required maxlength="254" pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+                   aria-describedby="n-correo-error" data-required-message="Escribe tu correo.">
+            <button class="notify__submit" type="submit">Avísame</button>
+          </div>
+          <p class="notify__error" id="n-correo-error"></p>
+          <!-- Spam trap and spam check, as on the contact form (index.html). -->
+          <div class="visually-hidden" aria-hidden="true">
+            <label for="n-sitio-web">Deja este campo vacío</label>
+            <input id="n-sitio-web" name="sitio_web" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="notify__check" data-spam-check></div>
+          <p class="notify__status" data-form-status role="status" aria-live="polite"></p>
+        </form>
+        <p class="soon-link">Y mientras, en <a href="https://www.instagram.com/ednamiau/" rel="noopener">@ednamiau</a>.</p>
       </div>
     </article>
   </main>

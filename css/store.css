@@ -460,3 +460,127 @@ html:has(.page-store) {
     font-size: clamp(110px, calc(100svh - 500px), 240px);
   }
 }
+
+/* The shop sign-up: one ruled line to write on and a morado button, set
+   like a reply coupon. Error and status lines in grana / ink. */
+.notify {
+  width: min(100%, 460px);
+  margin-top: 40px;
+}
+
+.notify__lead {
+  font: 400 17px / 1.4 var(--f-sans);
+}
+
+.notify__row {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.notify__control {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 52px;
+  padding: 10px 2px 8px;
+  border: 0;
+  border-bottom: 2px solid var(--c-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--c-ink);
+  font: italic 400 22px / 1.2 var(--f-display);
+}
+
+.notify__control::placeholder {
+  color: var(--c-ink);
+  opacity: 0.45;
+}
+
+.notify__control:focus {
+  outline: none;
+  border-bottom-color: var(--c-morado);
+  box-shadow: 0 2px 0 var(--c-morado);
+}
+
+.notify__control[aria-invalid="true"] {
+  border-bottom-color: var(--c-grana);
+}
+
+.notify__submit {
+  flex: none;
+  min-height: 52px;
+  padding: 0 24px;
+  border: 0;
+  background: var(--c-morado);
+  color: var(--c-paper);
+  font: 600 16px / 1 var(--f-sans);
+  cursor: pointer;
+}
+
+.notify__submit:hover {
+  background: var(--c-ink);
+}
+
+.notify__submit:focus-visible {
+  outline: 2px solid var(--c-morado);
+  outline-offset: 3px;
+}
+
+.notify__submit[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.notify__error,
+.notify__status {
+  margin-top: 10px;
+  font: 400 15px / 1.4 var(--f-sans);
+}
+
+.notify__error {
+  color: var(--c-grana);
+}
+
+.notify__error:empty,
+.notify__status:empty {
+  display: none;
+}
+
+.notify .contact-form__status--error {
+  color: var(--c-grana);
+}
+
+.notify__check:empty {
+  display: none;
+}
+
+.notify__check {
+  margin-top: 12px;
+}
+
+/* Once signed up, the coupon becomes the thank-you line. */
+.notify--done .notify__lead,
+.notify--done .notify__row {
+  display: none;
+}
+
+.notify--done .notify__status {
+  color: var(--c-morado);
+  font: italic 400 22px / 1.3 var(--f-display);
+}
+
+.page-soon .notify + .soon-link {
+  margin-top: 28px;
+  font-size: 15px;
+}
+
+@media (max-width: 809.98px) {
+  .notify {
+    margin-top: 28px;
+  }
+
+  .notify__control {
+    font-size: 19px;
+  }
+}
