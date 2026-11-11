@@ -1,5 +1,6 @@
 /*
- * Style 1 / Style 2 switch, in the bottom-right corner of every page.
+ * Design 1 / Design 2 switch, floating in the bottom-right corner of every
+ * page (on phones, just above the bottom menu bar).
  *
  *   Style 1  the previous design: css/styles-1.css (+ css/store-1.css)
  *   Style 2  the current design:  css/styles.css   (+ css/store.css)
@@ -142,14 +143,14 @@
     var control = document.createElement('div');
     control.className = 'style-switch';
     control.setAttribute('role', 'group');
-    control.setAttribute('aria-label', 'Site style');
+    control.setAttribute('aria-label', 'Site design');
     control.setAttribute('lang', 'en');
 
     var buttons = ['1', '2'].map(function (value) {
       var button = document.createElement('button');
       button.type = 'button';
       button.className = 'style-switch__button';
-      button.textContent = 'Style ' + value;
+      button.textContent = 'Design ' + value;
       button.setAttribute('aria-pressed', String(value === style));
       button.addEventListener('click', function () { choose(value); });
       control.appendChild(button);

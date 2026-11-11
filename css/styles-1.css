@@ -1107,6 +1107,41 @@ html:has(.page-about) {
   }
 }
 
+/* About's contact form (when About has one): the home contact wall in
+   miniature, "Contact me" on the left, the form on the right. */
+.about-contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px 40px;
+  align-items: start;
+  margin: 108px -24px 0;
+  padding: 64px 24px 72px;
+  background: var(--c-contact-page);
+}
+
+.about-contact__title {
+  margin: 0;
+  color: var(--c-purple);
+  font: 400 var(--fs-display) / 0.95 var(--f-display);
+  text-transform: uppercase;
+}
+
+.about-contact .contact-form {
+  margin: 0;
+}
+
+@media (max-width: 809.98px) {
+  .about-contact {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 72px;
+    padding: 48px 24px 56px;
+  }
+
+  .about-contact__title {
+    font-size: 48px;
+  }
+}
+
 /* 9. Contact ---------------------------------------------------------------
    A full-height section below the project list on the home page; its solid
    background covers the fixed project image as it scrolls up. Intro on the
