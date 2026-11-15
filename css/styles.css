@@ -325,6 +325,11 @@ body:not(.page-home) .site-header::after {
   display: flex;
 }
 
+/* The shop is hidden for now (hidden attribute on its <li>). */
+.site-menu__item[hidden] {
+  display: none;
+}
+
 .site-menu__link {
   display: inline-block;
   color: inherit;

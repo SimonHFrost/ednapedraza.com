@@ -4,3 +4,13 @@
 /proyectos/ / 301
 /proyectos/skechers-meow / 301
 /proyectos/skechers-meow.html / 301
+# SHOP HIDDEN for now: the store pages go home. Delete these lines (and the
+# `hidden` on the Shop menu item) to bring the shop back.
+/tienda / 302
+/tienda.html / 302
+/tienda-1 / 302
+/tienda-1.html / 302
+/proximamente / 302
+/proximamente.html / 302
+/proximamente-1 / 302
+/proximamente-1.html / 302
