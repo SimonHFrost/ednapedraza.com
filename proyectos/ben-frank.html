@@ -70,7 +70,10 @@
         <li class="site-menu__item"><a class="site-menu__link" href="/direccion-creativa"><span class="site-menu__label">Creative direction</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="/fashion-styling"><span class="site-menu__label">Fashion styling</span></a></li>
         <li class="site-menu__item"><a class="site-menu__link" href="/direccion-de-arte"><span class="site-menu__label">Art direction</span></a></li>
-        <li class="site-menu__item"><a class="site-menu__link" href="/proximamente" data-shop-link data-hold-href="/tienda"><span class="site-menu__label">Shop</span></a></li>
+        <!-- SHOP HIDDEN for now: remove `hidden` from this <li> (here, in index.html,
+             about.html, 404.html and templates/project.html), drop the shop
+             lines in _redirects, then run node scripts/build.mjs. -->
+        <li class="site-menu__item" hidden><a class="site-menu__link" href="/proximamente" data-shop-link data-hold-href="/tienda"><span class="site-menu__label">Shop</span></a></li>
       </ul>
     </nav>
   </header>
